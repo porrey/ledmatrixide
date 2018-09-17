@@ -1,0 +1,236 @@
+﻿<Page x:Class="LedMatrixIde.Views.ImageEditorPage"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	  xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+	  Style="{StaticResource PageStyle}"
+	  xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+	  xmlns:controls="using:LedMatrixControl"
+	  prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+	  mc:Ignorable="d">
+
+	<Grid x:Name="ContentArea"
+		  Margin="{StaticResource MediumLeftRightMargin}">
+		<Grid Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+
+			<!-- Tool Bar -->
+			<CommandBar Grid.Row="0"
+						DefaultLabelPosition="Collapsed"
+						HorizontalAlignment="Left"
+						HorizontalContentAlignment="Left">
+
+				<!-- Load Image -->
+				<AppBarButton BorderBrush="Transparent"
+							  BorderThickness="0,0,0,0"
+							  Icon="OpenFile"
+							  ToolTipService.ToolTip="Open an image from a file."
+							  ToolTipService.Placement="Bottom"
+							  Click="LoadImage_Click"
+							  IsEnabled="{x:Bind LoadIsEnabled, Mode=OneWay}" />
+
+				<!-- Save Image -->
+				<AppBarButton BorderBrush="Transparent"
+							  BorderThickness="0,0,0,0"
+							  Icon="Save"
+							  ToolTipService.ToolTip="Save the current image to a file."
+							  ToolTipService.Placement="Bottom"
+							  Click="SaveImage_Click"
+							  IsEnabled="{x:Bind SaveIsEnabled, Mode=OneWay}" />
+
+				<AppBarSeparator />
+
+				<!-- Undo -->
+				<AppBarButton BorderBrush="Transparent"
+							  BorderThickness="0,0,0,0"
+							  Icon="Undo"
+							  ToolTipService.ToolTip="Undo the last action."
+							  ToolTipService.Placement="Bottom"
+							  IsEnabled="{x:Bind UndoIsEnabled, Mode=OneWay}" />
+
+				<!-- Redo -->
+				<AppBarButton BorderBrush="Transparent"
+							  BorderThickness="0,0,0,0"
+							  Icon="Redo"
+							  ToolTipService.ToolTip="Redo the last action."
+							  ToolTipService.Placement="Bottom"
+							  IsEnabled="{x:Bind RedoIsEnabled, Mode=OneWay}" />
+
+				<AppBarSeparator />
+
+				<!-- Draw -->
+				<AppBarToggleButton BorderBrush="Transparent"
+									BorderThickness="0,0,0,0"
+									ToolTipService.ToolTip="Set to drawing mode."
+									ToolTipService.Placement="Bottom"
+									IsChecked="{x:Bind DrawIsChecked, Mode=TwoWay}"
+									IsEnabled="{x:Bind DrawIsEnabled, Mode=OneWay}">
+					<AppBarToggleButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xE70F;" />
+					</AppBarToggleButton.Icon>
+				</AppBarToggleButton>
+
+				<!-- Erase -->
+				<AppBarToggleButton BorderBrush="Transparent"
+									BorderThickness="0,0,0,0"
+									ToolTipService.ToolTip="Set to erasing mode."
+									ToolTipService.Placement="Bottom"
+									IsChecked="{x:Bind DrawIsChecked, Converter={StaticResource NotBooleanConverter}, Mode=TwoWay}"
+									IsEnabled="{x:Bind EraseIsEnabled, Mode=OneWay}">
+					<AppBarToggleButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xE75C;" />
+					</AppBarToggleButton.Icon>
+				</AppBarToggleButton>
+
+				<AppBarSeparator />
+
+				<!-- Color -->
+				<AppBarButton ToolTipService.ToolTip="Select the current drawing color from a color picker."
+							  ToolTipService.Placement="Bottom"
+							  Margin="0"
+							  BorderBrush="{Binding ElementName=PixelColor,Path=Color, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+							  BorderThickness="6"
+							  IsEnabled="{x:Bind ColorPickerIsEnabled, Mode=OneWay}">
+					<AppBarButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xE790;" />
+					</AppBarButton.Icon>
+					<AppBarButton.Flyout>
+						<Flyout>
+							<ColorPicker x:Name="PixelColor"
+										 IsAlphaEnabled="True"
+										 IsAlphaSliderVisible="True"
+										 IsColorChannelTextInputVisible="True"
+										 IsColorPreviewVisible="True"
+										 IsColorSliderVisible="True"
+										 IsColorSpectrumVisible="True"
+										 ColorSpectrumShape="Ring"
+										 IsMoreButtonVisible="False" />
+						</Flyout>
+					</AppBarButton.Flyout>
+				</AppBarButton>
+
+				<!-- Pick Color -->
+				<AppBarToggleButton BorderBrush="Transparent"
+									BorderThickness="0,0,0,0"
+									ToolTipService.ToolTip="Select the current drawing color from a pixel in the matrix."
+									ToolTipService.Placement="Bottom"
+									IsChecked="{x:Bind PickColorIsChecked, Mode=TwoWay}">
+					<AppBarToggleButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xEF3C;" />
+					</AppBarToggleButton.Icon>
+				</AppBarToggleButton>
+
+				<AppBarSeparator />
+
+				<!-- Rotate Counter-Clockwise -->
+				<AppBarButton BorderBrush="Transparent"
+							  BorderThickness="0,0,0,0"
+							  ToolTipService.ToolTip="Rotate the image counter-clockwise."
+							  ToolTipService.Placement="Bottom"
+							  IsEnabled="{x:Bind RotateCounterClockwiseIsEnabled, Mode=OneWay}"
+							  Click="RotateCounterClockwise_Click">
+					<AppBarButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xE7AD;"
+								  RenderTransformOrigin=".5,.5">
+							<FontIcon.RenderTransform>
+								<ScaleTransform ScaleX="-1" />
+							</FontIcon.RenderTransform>
+						</FontIcon>
+					</AppBarButton.Icon>
+				</AppBarButton>
+
+				<!-- Rotate Clockwise -->
+				<AppBarButton BorderBrush="Transparent"
+							  BorderThickness="0,0,0,0"
+							  ToolTipService.ToolTip="Rotate the image clockwise."
+							  ToolTipService.Placement="Bottom"
+							  IsEnabled="{x:Bind RotateClockwiseIsEnabled, Mode=OneWay}"
+							  Click="RotateClockwise_Click">
+					<AppBarButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xE7AD;" />
+					</AppBarButton.Icon>
+				</AppBarButton>
+
+				<!-- Flip Horizontal -->
+				<AppBarButton BorderBrush="Transparent"
+							  BorderThickness="0,0,0,0"
+							  ToolTipService.ToolTip="Mirror the image horizontally."
+							  ToolTipService.Placement="Bottom"
+							  IsEnabled="{x:Bind FlipHorizontalIsEnabled, Mode=OneWay}"
+							  Click="FlipHorizontal_Click">
+					<AppBarButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xE7FD;" />
+					</AppBarButton.Icon>
+				</AppBarButton>
+
+				<AppBarButton BorderBrush="Transparent"
+							  BorderThickness="0,0,0,0"
+							  ToolTipService.ToolTip="Mirror the image vertically."
+							  ToolTipService.Placement="Bottom"
+							  IsEnabled="{x:Bind FlipVerticalIsEnabled, Mode=OneWay}"
+							  Click="FlipVertical_Click">
+					<AppBarButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xE7FD;"
+								  RenderTransformOrigin=".5,.5">
+							<FontIcon.RenderTransform>
+								<RotateTransform Angle="90" />
+							</FontIcon.RenderTransform>
+						</FontIcon>
+					</AppBarButton.Icon>
+				</AppBarButton>
+
+				<AppBarSeparator />
+
+				<!-- Clear -->
+				<AppBarButton BorderBrush="Transparent"
+							  BorderThickness="0,0,0,0"
+							  ToolTipService.ToolTip="Clear and reset all of the pixels in the image."
+							  ToolTipService.Placement="Bottom"
+							  Click="Clear_Click"
+							  IsEnabled="{x:Bind ClearIsEnabled, Mode=OneWay}">
+					<AppBarButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xED62;" />
+					</AppBarButton.Icon>
+				</AppBarButton>
+
+				<AppBarSeparator />
+
+				<!-- Build -->
+				<AppBarButton BorderBrush="Transparent"
+							  BorderThickness="0,0,0,0"
+							  ToolTipService.ToolTip="Build the source code from for this image."
+							  ToolTipService.Placement="Bottom"
+							  Click="Build_Click"
+							  IsEnabled="{x:Bind BuildIsEnabled, Mode=OneWay}">
+					<AppBarButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xEC58;" />
+					</AppBarButton.Icon>
+				</AppBarButton>
+			</CommandBar>
+
+			<!-- Matrix -->
+			<controls:PixelMatrix x:Name="Matrix"
+								  Grid.Row="1"
+								  Margin="0,10,0,10"
+								  BorderThickness="4"
+								  PixelSelected="Matrix_PixelChanged"
+								  extensions:Mouse.Cursor="Hand" />
+		</Grid>
+	</Grid>
+
+	<!-- Width="{Binding ElementName=Matrix, Path=ActualHeight}" -->
+</Page>

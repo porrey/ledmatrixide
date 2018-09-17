@@ -1,0 +1,36 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:local="using:LedMatrixControl">
+
+	<Style TargetType="local:PixelMatrix"
+		   xmlns:local2="using:Matrix.ImageEditor.Controls">
+		<Setter Property="Padding"
+				Value="0, 0, 1, 1" />
+		<Setter Property="VerticalAlignment"
+				Value="Stretch" />
+		<Setter Property="HorizontalAlignment"
+				Value="Stretch" />
+		<Setter Property="RowCount"
+				Value="64" />
+		<Setter Property="ColumnCount"
+				Value="64" />
+		<Setter Property="BorderThickness"
+				Value="1" />
+		<Setter Property="BorderBrush"
+				Value="DarkGray" />
+
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:PixelMatrix">
+					<Border Background="{TemplateBinding Background}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							BorderThickness="{TemplateBinding BorderThickness}"
+							Padding="{TemplateBinding Padding}">
+						<Grid Name="PART_Grid"
+							  Margin="{TemplateBinding Padding}">
+						</Grid>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>
