@@ -106,6 +106,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="IPixelMatrix.cs" />
     <Compile Include="PixelChangeEventArgs.cs" />
     <Compile Include="PixelMatrix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

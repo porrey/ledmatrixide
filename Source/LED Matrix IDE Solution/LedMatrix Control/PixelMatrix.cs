@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Media;
 
 namespace LedMatrixControl
 {
-	public class PixelMatrix : Control
+	public class PixelMatrix : Control, IPixelMatrix
 	{
 		public event EventHandler<PixelSelectedEventArgs> PixelSelected = null;
 

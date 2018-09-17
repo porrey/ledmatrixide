@@ -30,8 +30,7 @@
 							  Icon="OpenFile"
 							  ToolTipService.ToolTip="Open an image from a file."
 							  ToolTipService.Placement="Bottom"
-							  Click="LoadImage_Click"
-							  IsEnabled="{x:Bind LoadIsEnabled, Mode=OneWay}" />
+							  Command="{Binding LoadCommand}" />
 
 				<!-- Save Image -->
 				<AppBarButton BorderBrush="Transparent"
@@ -39,8 +38,7 @@
 							  Icon="Save"
 							  ToolTipService.ToolTip="Save the current image to a file."
 							  ToolTipService.Placement="Bottom"
-							  Click="SaveImage_Click"
-							  IsEnabled="{x:Bind SaveIsEnabled, Mode=OneWay}" />
+							  Command="{Binding SaveCommand}" />
 
 				<AppBarSeparator />
 
@@ -50,7 +48,7 @@
 							  Icon="Undo"
 							  ToolTipService.ToolTip="Undo the last action."
 							  ToolTipService.Placement="Bottom"
-							  IsEnabled="{x:Bind UndoIsEnabled, Mode=OneWay}" />
+							  Command="{Binding UndoCommand}" />
 
 				<!-- Redo -->
 				<AppBarButton BorderBrush="Transparent"
@@ -58,7 +56,7 @@
 							  Icon="Redo"
 							  ToolTipService.ToolTip="Redo the last action."
 							  ToolTipService.Placement="Bottom"
-							  IsEnabled="{x:Bind RedoIsEnabled, Mode=OneWay}" />
+							  Command="{Binding RedoCommand}" />
 
 				<AppBarSeparator />
 
@@ -67,8 +65,8 @@
 									BorderThickness="0,0,0,0"
 									ToolTipService.ToolTip="Set to drawing mode."
 									ToolTipService.Placement="Bottom"
-									IsChecked="{x:Bind DrawIsChecked, Mode=TwoWay}"
-									IsEnabled="{x:Bind DrawIsEnabled, Mode=OneWay}">
+									IsChecked="{Binding DrawIsChecked, Mode=TwoWay}"
+									IsEnabled="{Binding DrawIsEnabled, Mode=OneWay}">
 					<AppBarToggleButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE70F;" />
@@ -80,8 +78,8 @@
 									BorderThickness="0,0,0,0"
 									ToolTipService.ToolTip="Set to erasing mode."
 									ToolTipService.Placement="Bottom"
-									IsChecked="{x:Bind DrawIsChecked, Converter={StaticResource NotBooleanConverter}, Mode=TwoWay}"
-									IsEnabled="{x:Bind EraseIsEnabled, Mode=OneWay}">
+									IsChecked="{Binding DrawIsChecked, Converter={StaticResource NotBooleanConverter}, Mode=TwoWay}"
+									IsEnabled="{Binding EraseIsEnabled, Mode=OneWay}">
 					<AppBarToggleButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE75C;" />
@@ -96,7 +94,7 @@
 							  Margin="0"
 							  BorderBrush="{Binding ElementName=PixelColor,Path=Color, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
 							  BorderThickness="6"
-							  IsEnabled="{x:Bind ColorPickerIsEnabled, Mode=OneWay}">
+							  IsEnabled="{Binding ColorPickerIsEnabled, Mode=OneWay}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE790;" />
@@ -104,6 +102,7 @@
 					<AppBarButton.Flyout>
 						<Flyout>
 							<ColorPicker x:Name="PixelColor"
+										 Color="{Binding PixelColor, Mode=TwoWay}"
 										 IsAlphaEnabled="True"
 										 IsAlphaSliderVisible="True"
 										 IsColorChannelTextInputVisible="True"
@@ -121,7 +120,7 @@
 									BorderThickness="0,0,0,0"
 									ToolTipService.ToolTip="Select the current drawing color from a pixel in the matrix."
 									ToolTipService.Placement="Bottom"
-									IsChecked="{x:Bind PickColorIsChecked, Mode=TwoWay}">
+									IsChecked="{Binding PickColorIsChecked, Mode=TwoWay}">
 					<AppBarToggleButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xEF3C;" />
@@ -135,8 +134,7 @@
 							  BorderThickness="0,0,0,0"
 							  ToolTipService.ToolTip="Rotate the image counter-clockwise."
 							  ToolTipService.Placement="Bottom"
-							  IsEnabled="{x:Bind RotateCounterClockwiseIsEnabled, Mode=OneWay}"
-							  Click="RotateCounterClockwise_Click">
+							  Command="{Binding RotateCounterClockwiseCommand}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE7AD;"
@@ -153,8 +151,7 @@
 							  BorderThickness="0,0,0,0"
 							  ToolTipService.ToolTip="Rotate the image clockwise."
 							  ToolTipService.Placement="Bottom"
-							  IsEnabled="{x:Bind RotateClockwiseIsEnabled, Mode=OneWay}"
-							  Click="RotateClockwise_Click">
+							  Command="{Binding RotateClockwiseCommand}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE7AD;" />
@@ -166,8 +163,7 @@
 							  BorderThickness="0,0,0,0"
 							  ToolTipService.ToolTip="Mirror the image horizontally."
 							  ToolTipService.Placement="Bottom"
-							  IsEnabled="{x:Bind FlipHorizontalIsEnabled, Mode=OneWay}"
-							  Click="FlipHorizontal_Click">
+							  Command="{Binding FlipHorizontalCommand}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE7FD;" />
@@ -178,8 +174,7 @@
 							  BorderThickness="0,0,0,0"
 							  ToolTipService.ToolTip="Mirror the image vertically."
 							  ToolTipService.Placement="Bottom"
-							  IsEnabled="{x:Bind FlipVerticalIsEnabled, Mode=OneWay}"
-							  Click="FlipVertical_Click">
+							  Command="{Binding FlipVerticalCommand}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE7FD;"
@@ -198,8 +193,7 @@
 							  BorderThickness="0,0,0,0"
 							  ToolTipService.ToolTip="Clear and reset all of the pixels in the image."
 							  ToolTipService.Placement="Bottom"
-							  Click="Clear_Click"
-							  IsEnabled="{x:Bind ClearIsEnabled, Mode=OneWay}">
+							  Command="{Binding ClearCommand}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xED62;" />
@@ -213,8 +207,7 @@
 							  BorderThickness="0,0,0,0"
 							  ToolTipService.ToolTip="Build the source code from for this image."
 							  ToolTipService.Placement="Bottom"
-							  Click="Build_Click"
-							  IsEnabled="{x:Bind BuildIsEnabled, Mode=OneWay}">
+							  Command="{Binding BuildCommand}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xEC58;" />
@@ -227,7 +220,6 @@
 								  Grid.Row="1"
 								  Margin="0,10,0,10"
 								  BorderThickness="4"
-								  PixelSelected="Matrix_PixelChanged"
 								  extensions:Mouse.Cursor="Hand" />
 		</Grid>
 	</Grid>
