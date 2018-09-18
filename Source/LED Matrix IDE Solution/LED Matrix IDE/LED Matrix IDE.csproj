@@ -140,9 +140,11 @@
     <Compile Include="Services\DragAndDrop\DropConfiguration.cs" />
     <Compile Include="Services\DragAndDrop\ListViewDropConfiguration.cs" />
     <Compile Include="Services\DragAndDrop\VisualDropConfiguration.cs" />
-    <Compile Include="Services\ISampleDataService.cs" />
+    <Compile Include="Interfaces\ISampleDataService.cs" />
+    <Compile Include="Interfaces\IUndoService.cs" />
     <Compile Include="Services\SampleDataService.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
+    <Compile Include="Services\UndoService.cs" />
     <Compile Include="TemplateSelectors\SharedContentTemplateSelector.cs" />
     <Compile Include="ViewModels\ImageEditorViewModel.cs" />
     <Compile Include="ViewModels\ImageGalleryDetailViewModel.cs" />

@@ -3,23 +3,19 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
 using LedMatrixIde.Helpers;
+using LedMatrixIde.Interfaces;
 using LedMatrixIde.Models;
-using LedMatrixIde.Services;
-using LedMatrixIde.Views;
-
 using Prism.Commands;
 using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
-
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace LedMatrixIde.ViewModels
 {
-    public class ImageGalleryViewModel : ViewModelBase
+	public class ImageGalleryViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
         private readonly ISampleDataService _sampleDataService;
@@ -46,7 +42,7 @@ namespace LedMatrixIde.ViewModels
 
             // TODO WTS: Replace this with your actual data
             _sampleDataService = sampleDataServiceInstance;
-            Source = _sampleDataService.GetGallerySampleData();
+			this.Source = _sampleDataService.GetGallerySampleData();
         }
 
         public void Initialize(GridView imagesGridView)
@@ -56,10 +52,10 @@ namespace LedMatrixIde.ViewModels
 
         public async Task LoadAnimationAsync()
         {
-            var selectedImageId = await ApplicationData.Current.LocalSettings.ReadAsync<string>(ImageGallerySelectedIdKey);
-            if (!string.IsNullOrEmpty(selectedImageId))
+			string selectedImageId = await ApplicationData.Current.LocalSettings.ReadAsync<string>(ImageGallerySelectedIdKey);
+            if (!String.IsNullOrEmpty(selectedImageId))
             {
-                var animation = ConnectedAnimationService.GetForCurrentView().GetAnimation(ImageGalleryAnimationClose);
+				ConnectedAnimation animation = ConnectedAnimationService.GetForCurrentView().GetAnimation(ImageGalleryAnimationClose);
                 if (animation != null)
                 {
                     var item = _imagesGridView.Items.FirstOrDefault(i => ((SampleImage)i).ID == selectedImageId);
@@ -67,13 +63,13 @@ namespace LedMatrixIde.ViewModels
                     await _imagesGridView.TryStartConnectedAnimationAsync(animation, item, "galleryImage");
                 }
 
-                ApplicationData.Current.LocalSettings.SaveString(ImageGallerySelectedIdKey, string.Empty);
+                ApplicationData.Current.LocalSettings.SaveString(ImageGallerySelectedIdKey, String.Empty);
             }
         }
 
         private void OnsItemSelected(ItemClickEventArgs args)
         {
-            var selected = args.ClickedItem as SampleImage;
+			SampleImage selected = args.ClickedItem as SampleImage;
             _imagesGridView.PrepareConnectedAnimation(ImageGalleryAnimationOpen, selected, "galleryImage");
             _navigationService.Navigate(PageTokens.ImageGalleryDetailPage, selected.ID);
         }

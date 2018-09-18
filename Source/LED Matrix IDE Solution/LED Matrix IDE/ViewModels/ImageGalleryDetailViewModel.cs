@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-
 using LedMatrixIde.Helpers;
+using LedMatrixIde.Interfaces;
 using LedMatrixIde.Models;
-using LedMatrixIde.Services;
-
 using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
-
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -19,7 +15,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace LedMatrixIde.ViewModels
 {
-    public class ImageGalleryDetailViewModel : ViewModelBase
+	public class ImageGalleryDetailViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
         private readonly ISampleDataService _sampleDataService;
