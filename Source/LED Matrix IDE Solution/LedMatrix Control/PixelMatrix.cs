@@ -94,39 +94,39 @@ namespace LedMatrixControl
 			}
 		}
 
-		public Task<Color> GetPixel(int row, int column)
+		public Task<Color> GetPixelAsync(int row, int column)
 		{
 			Color color = ((SolidColorBrush)this.Cells[row, column].Background).Color;
 			return Task.FromResult(color);
 		}
 
-		public Task SetPixel(int row, int column, Color color)
+		public Task SetPixelAsync(int row, int column, Color color)
 		{
 			this.Cells[row, column].Background = new SolidColorBrush(color);
 			this.Cells[row, column].BorderBrush = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
 			return Task.FromResult(0);
 		}
 
-		public Task ResetPixel(int row, int column)
+		public Task ResetPixelAsync(int row, int column)
 		{
 			this.Cells[row, column].Background = this.PixelBackground;
 			this.Cells[row, column].BorderBrush = this.PixelBorder;
 			return Task.FromResult(0);
 		}
 
-		public async Task ClearMatrix()
+		public async Task ClearMatrixAsync()
 		{
 			for (int row = 0; row < this.RowCount; row++)
 			{
 				for (int column = 0; column < this.ColumnCount; column++)
 				{
 
-					await this.ResetPixel(row, column);
+					await this.ResetPixelAsync(row, column);
 				}
 			}
 		}
 
-		public async Task<ColorMatrix> GetColorMatrix()
+		public async Task<ColorMatrix> GetColorMatrixAsync()
 		{
 			ColorMatrix returnValue = new ColorMatrix((uint)this.RowCount, (uint)this.ColumnCount);
 
@@ -134,14 +134,14 @@ namespace LedMatrixControl
 			{
 				for (int column = 0; column < this.ColumnCount; column++)
 				{
-					returnValue.Colors[row, column] = await this.GetPixel(row, column);
+					returnValue.Colors[row, column] = await this.GetPixelAsync(row, column);
 				}
 			}
 
 			return returnValue;
 		}
 
-		public async Task SetColorMatrix(ColorMatrix colorMatrix)
+		public async Task SetColorMatrixAsync(ColorMatrix colorMatrix)
 		{
 			for (int row = 0; row < this.RowCount; row++)
 			{
@@ -151,7 +151,7 @@ namespace LedMatrixControl
 
 					if (color.A > 0)
 					{
-						await this.SetPixel(row, column, color);
+						await this.SetPixelAsync(row, column, color);
 					}
 				}
 			}

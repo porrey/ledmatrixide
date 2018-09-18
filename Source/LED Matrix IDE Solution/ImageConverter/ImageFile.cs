@@ -21,7 +21,7 @@ namespace ImageConverter
 		protected uint MaximumHeight { get; set; }
 		protected uint MaximumWidth { get; set; }
 
-		public async Task<ColorMatrix> Load()
+		public async Task<ColorMatrix> LoadAsync()
 		{
 			ColorMatrix returnValue = new ColorMatrix(this.MaximumHeight, this.MaximumWidth);
 
@@ -39,7 +39,7 @@ namespace ImageConverter
 				{
 					for (int column = 0; column < dec.PixelWidth; column++)
 					{
-						Color color = this.GetPixel(bytes, row, column, dec.OrientedPixelWidth, dec.OrientedPixelHeight);
+						Color color = await this.GetPixelAsync(bytes, row, column, dec.OrientedPixelWidth, dec.OrientedPixelHeight);
 
 						if (color.A > 0)
 						{
@@ -52,18 +52,18 @@ namespace ImageConverter
 			return returnValue;
 		}
 
-		public async Task<bool> Save(ColorMatrix colorMatrix)
+		public async Task<bool> SaveAsync(ColorMatrix colorMatrix)
 		{
 			bool returnValue = false;
 		 
-			byte[] data = await this.CreateImageData(this.MaximumHeight, this.MaximumWidth, colorMatrix);
-			await this.CreateImage(this.MaximumHeight, this.MaximumWidth, data, this.File);
+			byte[] data = await this.CreateImageDataAsync(this.MaximumHeight, this.MaximumWidth, colorMatrix);
+			await this.CreateImageAsync(this.MaximumHeight, this.MaximumWidth, data, this.File);
 			returnValue = true;
 
 			return returnValue;
 		}
 
-		protected async Task CreateImage(uint height, uint width, byte[] data, StorageFile storageFile)
+		protected async Task CreateImageAsync(uint height, uint width, byte[] data, StorageFile storageFile)
 		{
 			using (IRandomAccessStream stream = await storageFile.OpenAsync(FileAccessMode.ReadWrite))
 			{
@@ -73,7 +73,7 @@ namespace ImageConverter
 			}
 		}
 
-		protected Color GetPixel(byte[] pixels, int row, int column, uint width, uint height)
+		protected Task<Color> GetPixelAsync(byte[] pixels, int row, int column, uint width, uint height)
 		{
 			int index = (row * (int)width + column) * 4;
 
@@ -82,10 +82,10 @@ namespace ImageConverter
 			byte r = pixels[index + 2];
 			byte a = pixels[index + 3];
 
-			return Color.FromArgb(a, r, g, b);
+			return Task.FromResult(Color.FromArgb(a, r, g, b));
 		}
 
-		protected Task<byte[]> CreateImageData(uint height, uint width, ColorMatrix colorMatrix)
+		protected Task<byte[]> CreateImageDataAsync(uint height, uint width, ColorMatrix colorMatrix)
 		{
 			byte[] returnValue = new byte[height * width * 4];
 			int index = 0;

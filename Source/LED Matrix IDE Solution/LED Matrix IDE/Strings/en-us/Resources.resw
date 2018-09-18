@@ -209,4 +209,46 @@
     <value>Web link shared with the application</value>
     <comment>Page title for ShareTarget when web link is shared</comment>
   </data>
+  <data name="ImageEditor_ToolTip_BuildButton" xml:space="preserve">
+    <value>Build the source code from for this image.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_ClearButton" xml:space="preserve">
+    <value>Clear and reset all of the pixels in the image.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_ColorButton" xml:space="preserve">
+    <value>Select the current drawing color from a color picker.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_DrawButton" xml:space="preserve">
+    <value>Set to drawing mode.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_EraseButton" xml:space="preserve">
+    <value>Set to erasing mode.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_FlipHorizontalButton" xml:space="preserve">
+    <value>Flip the image horizontally.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_FlipVerticalButton" xml:space="preserve">
+    <value>Flip the image vertically.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_LoadButton" xml:space="preserve">
+    <value>Open an image from a file.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_PickColorButton" xml:space="preserve">
+    <value>Select the current drawing color from a pixel in the matrix.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_RedoButton" xml:space="preserve">
+    <value>Redo the last action.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_RotateClockwiseButton" xml:space="preserve">
+    <value>Rotate the image clockwise.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_RotateCounterClockwiseButton" xml:space="preserve">
+    <value>Rotate the image counter-clockwise.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_SaveButton" xml:space="preserve">
+    <value>Save the current image to a file.</value>
+  </data>
+  <data name="ImageEditor_ToolTip_UndoButton" xml:space="preserve">
+    <value>Undo the last action.</value>
+  </data>
 </root>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using ImageConverter;
+using LedMatrixIde.Helpers;
 using LedMatrixIde.Interfaces;
 using LedMatrixIde.Services;
 using LedMatrixIde.Views;
@@ -12,12 +12,13 @@ using Prism.Windows.AppModel;
 using Prism.Windows.Navigation;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace LedMatrixIde
 {
-    [Windows.UI.Xaml.Data.Bindable]
+	[Windows.UI.Xaml.Data.Bindable]
     public sealed partial class App : PrismUnityApplication
     {
         public App()
@@ -27,8 +28,8 @@ namespace LedMatrixIde
 
         protected override void ConfigureContainer()
         {
-            // register a singleton using Container.RegisterType<IInterface, Type>(new ContainerControlledLifetimeManager());
             base.ConfigureContainer();
+
 			this.Container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
 			this.Container.RegisterType<ISampleDataService, SampleDataService>();
 			this.Container.RegisterType<IUndoService, UndoService>();
@@ -43,7 +44,9 @@ namespace LedMatrixIde
         {
             ThemeSelectorService.SetRequestedTheme();
 
-			//this.SessionStateService.RegisterKnownType(typeof(ColorMatrix));
+			this.SessionStateService.RegisterKnownType(typeof(Color));
+
+
 			this.NavigationService.Navigate(page, launchParam);
             Window.Current.Activate();
             await Task.CompletedTask;
@@ -58,8 +61,6 @@ namespace LedMatrixIde
         {
             await ThemeSelectorService.InitializeAsync().ConfigureAwait(false);
 
-            // We are remapping the default ViewNamePage and ViewNamePageViewModel naming to ViewNamePage and ViewNameViewModel to
-            // gain better code reuse with other frameworks and pages within Windows Template Studio
             ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
             {
 				string viewModelTypeName = String.Format(CultureInfo.InvariantCulture, "LedMatrixIde.ViewModels.{0}ViewModel, LedMatrixIde", viewType.Name.Substring(0, viewType.Name.Length - 4));

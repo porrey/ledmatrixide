@@ -28,7 +28,7 @@
 				<AppBarButton BorderBrush="Transparent"
 							  BorderThickness="0,0,0,0"
 							  Icon="OpenFile"
-							  ToolTipService.ToolTip="Open an image from a file."
+							  ToolTipService.ToolTip="{x:Bind LoadButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
 							  Command="{Binding LoadCommand}" />
 
@@ -36,7 +36,7 @@
 				<AppBarButton BorderBrush="Transparent"
 							  BorderThickness="0,0,0,0"
 							  Icon="Save"
-							  ToolTipService.ToolTip="Save the current image to a file."
+							  ToolTipService.ToolTip="{x:Bind SaveButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
 							  Command="{Binding SaveCommand}" />
 
@@ -46,7 +46,7 @@
 				<AppBarButton BorderBrush="Transparent"
 							  BorderThickness="0,0,0,0"
 							  Icon="Undo"
-							  ToolTipService.ToolTip="Undo the last action."
+							  ToolTipService.ToolTip="{x:Bind UndoButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
 							  Command="{Binding UndoCommand}" />
 
@@ -54,7 +54,7 @@
 				<AppBarButton BorderBrush="Transparent"
 							  BorderThickness="0,0,0,0"
 							  Icon="Redo"
-							  ToolTipService.ToolTip="Redo the last action."
+							  ToolTipService.ToolTip="{x:Bind RedoButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
 							  Command="{Binding RedoCommand}" />
 
@@ -63,7 +63,7 @@
 				<!-- Draw -->
 				<AppBarToggleButton BorderBrush="Transparent"
 									BorderThickness="0,0,0,0"
-									ToolTipService.ToolTip="Set to drawing mode."
+									ToolTipService.ToolTip="{x:Bind DrawButtonToolTip}"
 									ToolTipService.Placement="Bottom"
 									IsChecked="{Binding DrawIsChecked, Mode=TwoWay}"
 									IsEnabled="{Binding DrawIsEnabled, Mode=OneWay}">
@@ -76,7 +76,7 @@
 				<!-- Erase -->
 				<AppBarToggleButton BorderBrush="Transparent"
 									BorderThickness="0,0,0,0"
-									ToolTipService.ToolTip="Set to erasing mode."
+									ToolTipService.ToolTip="{x:Bind EraseButtonToolTip}"
 									ToolTipService.Placement="Bottom"
 									IsChecked="{Binding DrawIsChecked, Converter={StaticResource NotBooleanConverter}, Mode=TwoWay}"
 									IsEnabled="{Binding EraseIsEnabled, Mode=OneWay}">
@@ -89,7 +89,7 @@
 				<AppBarSeparator />
 
 				<!-- Color -->
-				<AppBarButton ToolTipService.ToolTip="Select the current drawing color from a color picker."
+				<AppBarButton ToolTipService.ToolTip="{x:Bind ColorButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
 							  Margin="0"
 							  BorderBrush="{Binding PixelColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
@@ -117,7 +117,7 @@
 				<!-- Pick Color -->
 				<AppBarToggleButton BorderBrush="Transparent"
 									BorderThickness="0,0,0,0"
-									ToolTipService.ToolTip="Select the current drawing color from a pixel in the matrix."
+									ToolTipService.ToolTip="{x:Bind PickColorButtonToolTip}"
 									ToolTipService.Placement="Bottom"
 									IsChecked="{Binding PickColorIsChecked, Mode=TwoWay}">
 					<AppBarToggleButton.Icon>
@@ -131,7 +131,7 @@
 				<!-- Rotate Counter-Clockwise -->
 				<AppBarButton BorderBrush="Transparent"
 							  BorderThickness="0,0,0,0"
-							  ToolTipService.ToolTip="Rotate the image counter-clockwise."
+							  ToolTipService.ToolTip="{x:Bind RotateCounterClockwiseButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
 							  Command="{Binding RotateCounterClockwiseCommand}">
 					<AppBarButton.Icon>
@@ -148,7 +148,7 @@
 				<!-- Rotate Clockwise -->
 				<AppBarButton BorderBrush="Transparent"
 							  BorderThickness="0,0,0,0"
-							  ToolTipService.ToolTip="Rotate the image clockwise."
+							  ToolTipService.ToolTip="{x:Bind RotateClockwiseButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
 							  Command="{Binding RotateClockwiseCommand}">
 					<AppBarButton.Icon>
@@ -160,7 +160,7 @@
 				<!-- Flip Horizontal -->
 				<AppBarButton BorderBrush="Transparent"
 							  BorderThickness="0,0,0,0"
-							  ToolTipService.ToolTip="Mirror the image horizontally."
+							  ToolTipService.ToolTip="{x:Bind FlipHorizontalButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
 							  Command="{Binding FlipHorizontalCommand}">
 					<AppBarButton.Icon>
@@ -171,7 +171,7 @@
 
 				<AppBarButton BorderBrush="Transparent"
 							  BorderThickness="0,0,0,0"
-							  ToolTipService.ToolTip="Mirror the image vertically."
+							  ToolTipService.ToolTip="{x:Bind FlipVerticalButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
 							  Command="{Binding FlipVerticalCommand}">
 					<AppBarButton.Icon>
@@ -190,7 +190,7 @@
 				<!-- Clear -->
 				<AppBarButton BorderBrush="Transparent"
 							  BorderThickness="0,0,0,0"
-							  ToolTipService.ToolTip="Clear and reset all of the pixels in the image."
+							  ToolTipService.ToolTip="{x:Bind ClearButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
 							  Command="{Binding ClearCommand}">
 					<AppBarButton.Icon>
@@ -204,7 +204,7 @@
 				<!-- Build -->
 				<AppBarButton BorderBrush="Transparent"
 							  BorderThickness="0,0,0,0"
-							  ToolTipService.ToolTip="Build the source code from for this image."
+							  ToolTipService.ToolTip="{x:Bind BuildButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
 							  Command="{Binding BuildCommand}">
 					<AppBarButton.Icon>
@@ -222,6 +222,4 @@
 								  extensions:Mouse.Cursor="Hand" />
 		</Grid>
 	</Grid>
-
-	<!-- Width="{Binding ElementName=Matrix, Path=ActualHeight}" -->
 </Page>

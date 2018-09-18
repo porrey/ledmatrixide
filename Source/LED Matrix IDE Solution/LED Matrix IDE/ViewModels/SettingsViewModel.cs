@@ -1,79 +1,127 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-
 using LedMatrixIde.Helpers;
 using LedMatrixIde.Services;
-
 using Prism.Commands;
 using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
-
 using Windows.ApplicationModel;
+using Windows.Storage;
 using Windows.UI.Xaml;
 
 namespace LedMatrixIde.ViewModels
 {
-    // TODO WTS: Add other settings as necessary. For help see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/pages/settings.md
-    public class SettingsViewModel : ViewModelBase
-    {
-        private ElementTheme _elementTheme = ThemeSelectorService.Theme;
+	public class SettingsViewModel : ViewModelBase
+	{
+		public const string BuildPathKey = "BuildPathKey";
 
-        public ElementTheme ElementTheme
-        {
-            get { return _elementTheme; }
+		public SettingsViewModel()
+		{
+			this.BrowseBuildPathCommand = new DelegateCommand(this.OnBrowseBuildPathCommand, this.OnEnableBrowseBuildPathCommand);
+		}
 
-            set { SetProperty(ref _elementTheme, value); }
-        }
+		public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
+		{
+			base.OnNavigatedTo(e, viewModelState);
 
-        private string _versionDescription;
+			// ***
+			// *** Get the build output folder.
+			// ***
+			string defaultPath = $@"{KnownFolders.DocumentsLibrary.Name}\LED Matrix Output";
+			this.BuildPath = await ApplicationData.Current.LocalSettings.ReadAsync<string>(SettingsViewModel.BuildPathKey, defaultPath);
 
-        public string VersionDescription
-        {
-            get { return _versionDescription; }
+			this.VersionDescription = this.GetVersionDescription();
+		}
 
-            set { SetProperty(ref _versionDescription, value); }
-        }
+		public override async void OnNavigatingFrom(NavigatingFromEventArgs e, Dictionary<string, object> viewModelState, bool suspending)
+		{
+			// ***
+			// *** Save the build output folder.
+			// ***
+			await ApplicationData.Current.LocalSettings.SaveAsync<string>(SettingsViewModel.BuildPathKey, this.BuildPath);
 
-        private ICommand _switchThemeCommand;
+			base.OnNavigatingFrom(e, viewModelState, suspending);
+		}
 
-        public ICommand SwitchThemeCommand
-        {
-            get
-            {
-                if (_switchThemeCommand == null)
-                {
-                    _switchThemeCommand = new DelegateCommand<object>(
-                        async (param) =>
-                        {
-                            ElementTheme = (ElementTheme)param;
-                            await ThemeSelectorService.SetThemeAsync((ElementTheme)param);
-                        });
-                }
+		private ElementTheme _elementTheme = ThemeSelectorService.Theme;
+		public ElementTheme ElementTheme
+		{
+			get
+			{
+				return _elementTheme;
+			}
+			set
+			{
+				this.SetProperty(ref _elementTheme, value);
+			}
+		}
 
-                return _switchThemeCommand;
-            }
-        }
+		private string _versionDescription;
+		public string VersionDescription
+		{
+			get
+			{
+				return _versionDescription;
+			}
+			set
+			{
+				this.SetProperty(ref _versionDescription, value);
+			}
+		}
 
-        public SettingsViewModel()
-        {
-        }
+		private ICommand _switchThemeCommand;
+		public ICommand SwitchThemeCommand
+		{
+			get
+			{
+				if (_switchThemeCommand == null)
+				{
+					_switchThemeCommand = new DelegateCommand<object>(
+						async (param) =>
+						{
+							this.ElementTheme = (ElementTheme)param;
+							await ThemeSelectorService.SetThemeAsync((ElementTheme)param);
+						});
+				}
 
-        public override void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
-        {
-            base.OnNavigatedTo(e, viewModelState);
+				return _switchThemeCommand;
+			}
+		}
 
-            VersionDescription = GetVersionDescription();
-        }
+		public DelegateCommand BrowseBuildPathCommand { get; set; }
 
-        private string GetVersionDescription()
-        {
-            var appName = "AppDisplayName".GetLocalized();
-            var package = Package.Current;
-            var packageId = package.Id;
-            var version = packageId.Version;
+		private string GetVersionDescription()
+		{
+			string appName = "AppDisplayName".GetLocalized();
+			Package package = Package.Current;
+			PackageId packageId = package.Id;
+			PackageVersion version = packageId.Version;
 
-            return $"{appName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
-        }
-    }
+			return $"{appName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+		}
+
+		private string _buildPath = String.Empty;
+		public string BuildPath
+		{
+			get
+			{
+				return _buildPath;
+			}
+			set
+			{
+				this.SetProperty(ref _buildPath, value);
+			}
+		}
+
+		protected bool OnEnableBrowseBuildPathCommand()
+		{
+			return true;
+		}
+
+		protected void OnBrowseBuildPathCommand()
+		{
+
+		}
+	}
 }

@@ -15,11 +15,11 @@ namespace LedMatrixControl
 		Brush PixelBackground { get; set; }
 		Brush PixelBorder { get; set; }
 		int RowCount { get; set; }
-		Task ClearMatrix();
-		Task<ColorMatrix> GetColorMatrix();
-		Task<Color> GetPixel(int row, int column);
-		Task ResetPixel(int row, int column);
-		Task SetColorMatrix(ColorMatrix colorMatrix);
-		Task SetPixel(int row, int column, Color color);
+		Task ClearMatrixAsync();
+		Task<ColorMatrix> GetColorMatrixAsync();
+		Task<Color> GetPixelAsync(int row, int column);
+		Task ResetPixelAsync(int row, int column);
+		Task SetColorMatrixAsync(ColorMatrix colorMatrix);
+		Task SetPixelAsync(int row, int column, Color color);
 	}
 }

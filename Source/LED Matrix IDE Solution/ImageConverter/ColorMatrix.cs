@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Windows.UI;
 
 namespace ImageConverter
@@ -13,11 +15,19 @@ namespace ImageConverter
 			this.Colors = new Color[this.Height, this.Width];
 		}
 
+		[JsonConstructor]
+		protected ColorMatrix(uint height, uint width, Color[,] colors)
+		{
+			this.Height = height;
+			this.Width = width;
+			this.Colors = colors;
+		}
+
 		public uint Height { get; protected set; }
 		public uint Width { get; protected set; }
 		public Color[,] Colors { get; protected set; }
 
-		public Task<IList<Color>> Pallet()
+		public Task<IList<Color>> GetPaletteAsync()
 		{
 			IList<Color> colors = new List<Color>();
 
@@ -36,9 +46,9 @@ namespace ImageConverter
 			return Task.FromResult(colors);
 		}
 
-		public async Task RotateClockwise()
+		public async Task RotateClockwiseAsync()
 		{
-			ColorMatrix me = await this.Clone();
+			ColorMatrix me = await this.CloneAsync();
 
 			for (uint row = 0; row < this.Height; row++)
 			{
@@ -49,9 +59,9 @@ namespace ImageConverter
 			}
 		}
 
-		public async Task RotateCounterClockwise()
+		public async Task RotateCounterClockwiseAsync()
 		{
-			ColorMatrix me = await this.Clone();
+			ColorMatrix me = await this.CloneAsync();
 
 			for (uint row = 0; row < this.Height; row++)
 			{
@@ -62,9 +72,9 @@ namespace ImageConverter
 			}
 		}
 
-		public async Task FlipVertical()
+		public async Task FlipVerticalAsync()
 		{
-			ColorMatrix me = await this.Clone();
+			ColorMatrix me = await this.CloneAsync();
 
 			for (uint row = 0; row < this.Height; row++)
 			{
@@ -75,9 +85,9 @@ namespace ImageConverter
 			}
 		}
 
-		public async Task FlipHorizontal()
+		public async Task FlipHorizontalAsync()
 		{
-			ColorMatrix me = await this.Clone();
+			ColorMatrix me = await this.CloneAsync();
 
 			for (uint row = 0; row < this.Height; row++)
 			{
@@ -88,7 +98,7 @@ namespace ImageConverter
 			}
 		}
 
-		public Task<ColorMatrix> Clone()
+		public Task<ColorMatrix> CloneAsync()
 		{
 			ColorMatrix returnValue = new ColorMatrix(this.Height, this.Width);
 
