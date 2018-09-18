@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ImageConverter;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
@@ -24,8 +25,8 @@ namespace LedMatrixControl
 			this.PointerPressed += this.UiElement_PointerPressed;
 			this.PointerReleased += this.UiElement_PointerReleased;
 
-			this.PixelBackground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-			this.PixelBorder = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+			this.PixelBackground = new SolidColorBrush(this.DefaultBackgroundColor);
+			this.PixelBorder = new SolidColorBrush(this.DefaultBorderColor);
 
 			this.SizeChanged += this.PixelMatrix_SizeChanged;
 		}
@@ -38,6 +39,12 @@ namespace LedMatrixControl
 		protected Border[,] Cells { get; set; }
 		protected bool PointerIsPressed = false;
 		protected Grid MainGrid { get; set; }
+		protected int PreviousRow { get; set; } = 0;
+		protected int PreviousColumn { get; set; } = 0;
+		protected VirtualKeyModifiers PreviousKeyModifiers { get; set; } = VirtualKeyModifiers.None;
+
+		public Color DefaultBackgroundColor => Color.FromArgb(255, 0, 0, 0);
+		public Color DefaultBorderColor => Color.FromArgb(255, 0, 0, 0);
 
 		public int RowCount
 		{
@@ -246,7 +253,17 @@ namespace LedMatrixControl
 				if (elements.FirstOrDefault() is Border border)
 				{
 					(int row, int column) = await this.GetPixelCoordinates(border);
-					this.OnPixelChanged(new PixelSelectedEventArgs(row, column, e.KeyModifiers));
+
+					if (this.PreviousRow != row ||
+						this.PreviousColumn != column ||
+						this.PreviousKeyModifiers != e.KeyModifiers)
+					{
+						this.OnPixelChanged(new PixelSelectedEventArgs(row, column, e.KeyModifiers));
+
+						this.PreviousRow = row;
+						this.PreviousColumn = column;
+						this.PreviousKeyModifiers = e.KeyModifiers;
+					}
 				}
 			}
 		}
