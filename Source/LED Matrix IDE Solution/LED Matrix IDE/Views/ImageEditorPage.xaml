@@ -4,10 +4,10 @@
 	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	  xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
-	  Style="{StaticResource PageStyle}"
 	  xmlns:prismMvvm="using:Prism.Windows.Mvvm"
 	  xmlns:controls="using:LedMatrixControl"
 	  prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+	  Style="{StaticResource PageStyle}"
 	  mc:Ignorable="d">
 
 	<Grid x:Name="ContentArea"
@@ -92,7 +92,7 @@
 				<AppBarButton ToolTipService.ToolTip="Select the current drawing color from a color picker."
 							  ToolTipService.Placement="Bottom"
 							  Margin="0"
-							  BorderBrush="{Binding ElementName=PixelColor,Path=Color, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+							  BorderBrush="{Binding PixelColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
 							  BorderThickness="6"
 							  IsEnabled="{Binding ColorPickerIsEnabled, Mode=OneWay}">
 					<AppBarButton.Icon>
@@ -101,8 +101,7 @@
 					</AppBarButton.Icon>
 					<AppBarButton.Flyout>
 						<Flyout>
-							<ColorPicker x:Name="PixelColor"
-										 Color="{Binding PixelColor, Mode=TwoWay}"
+							<ColorPicker Color="{Binding PixelColor, Mode=TwoWay}"
 										 IsAlphaEnabled="True"
 										 IsAlphaSliderVisible="True"
 										 IsColorChannelTextInputVisible="True"

@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using ImageConverter;
 using LedMatrixIde.Interfaces;
 using LedMatrixIde.Services;
 using LedMatrixIde.Views;
-
 using Microsoft.Practices.Unity;
-
 using Prism.Mvvm;
 using Prism.Unity.Windows;
 using Prism.Windows.AppModel;
 using Prism.Windows.Navigation;
-
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
@@ -24,7 +22,7 @@ namespace LedMatrixIde
     {
         public App()
         {
-            InitializeComponent();
+			this.InitializeComponent();
         }
 
         protected override void ConfigureContainer()
@@ -38,12 +36,14 @@ namespace LedMatrixIde
 
         protected override async Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
-            await LaunchApplicationAsync(PageTokens.ImageEditorPage, null);
+            await this.LaunchApplicationAsync(PageTokens.ImageEditorPage, null);
         }
 
         private async Task LaunchApplicationAsync(string page, object launchParam)
         {
-            Services.ThemeSelectorService.SetRequestedTheme();
+            ThemeSelectorService.SetRequestedTheme();
+
+			//this.SessionStateService.RegisterKnownType(typeof(ColorMatrix));
 			this.NavigationService.Navigate(page, launchParam);
             Window.Current.Activate();
             await Task.CompletedTask;
@@ -62,21 +62,22 @@ namespace LedMatrixIde
             // gain better code reuse with other frameworks and pages within Windows Template Studio
             ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
             {
-				string viewModelTypeName = string.Format(CultureInfo.InvariantCulture, "LedMatrixIde.ViewModels.{0}ViewModel, LedMatrixIde", viewType.Name.Substring(0, viewType.Name.Length - 4));
+				string viewModelTypeName = String.Format(CultureInfo.InvariantCulture, "LedMatrixIde.ViewModels.{0}ViewModel, LedMatrixIde", viewType.Name.Substring(0, viewType.Name.Length - 4));
                 return Type.GetType(viewModelTypeName);
             });
+
             await base.OnInitializeAsync(args);
         }
 
         public void SetNavigationFrame(Frame frame)
         {
-            var sessionStateService = this.Container.Resolve<ISessionStateService>();
-            CreateNavigationService(new FrameFacadeAdapter(frame), sessionStateService);
+			ISessionStateService sessionStateService = this.Container.Resolve<ISessionStateService>();
+			this.CreateNavigationService(new FrameFacadeAdapter(frame), sessionStateService);
         }
 
         protected override UIElement CreateShell(Frame rootFrame)
         {
-            var shell = this.Container.Resolve<ShellPage>();
+			ShellPage shell = this.Container.Resolve<ShellPage>();
             shell.SetRootFrame(rootFrame);
             return shell;
         }

@@ -1,14 +1,11 @@
-﻿using System;
-
-using LedMatrixIde.ViewModels;
-
+﻿using LedMatrixIde.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace LedMatrixIde.TemplateSelectors
 {
-    public class SharedContentTemplateSelector : DataTemplateSelector
+	public class SharedContentTemplateSelector : DataTemplateSelector
     {
         public DataTemplate DefaultTemplate { get; set; }
 

@@ -1,12 +1,4 @@
-﻿using System;
-using ImageConverter;
-using LedMatrixControl;
-using LedMatrixIde.ViewModels;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.System;
-using Windows.UI;
-using Windows.UI.Xaml;
+﻿using LedMatrixIde.ViewModels;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -25,6 +17,7 @@ namespace LedMatrixIde.Views
 		{
 			if (this.ViewModel != null)
 			{
+				this.Matrix.ApplyTemplate();
 				this.ViewModel.PixelMatrix = this.Matrix;
 			}
 
@@ -33,12 +26,12 @@ namespace LedMatrixIde.Views
 
 		protected override void OnNavigatedFrom(NavigationEventArgs e)
 		{
+			base.OnNavigatedFrom(e);
+
 			if (this.ViewModel != null)
 			{
 				this.ViewModel.PixelMatrix = null;
 			}
-
-			base.OnNavigatedFrom(e);
 		}
 	}
 }
