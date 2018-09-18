@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-
+using LedMatrixIde.Interfaces;
 using LedMatrixIde.Models;
 
 using Windows.UI.Xaml.Controls;
