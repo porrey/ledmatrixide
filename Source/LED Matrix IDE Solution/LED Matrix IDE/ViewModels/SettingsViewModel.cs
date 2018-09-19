@@ -7,41 +7,20 @@ using Prism.Commands;
 using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
 using Windows.ApplicationModel;
-using Windows.Storage;
 using Windows.UI.Xaml;
 
 namespace LedMatrixIde.ViewModels
 {
 	public class SettingsViewModel : ViewModelBase
 	{
-		public const string BuildPathKey = "BuildPathKey";
-
 		public SettingsViewModel()
 		{
-			this.BrowseBuildPathCommand = new DelegateCommand(this.OnBrowseBuildPathCommand, this.OnEnableBrowseBuildPathCommand);
 		}
 
-		public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
+		public override void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
 		{
 			base.OnNavigatedTo(e, viewModelState);
-
-			// ***
-			// *** Get the build output folder.
-			// ***
-			string defaultPath = $@"{KnownFolders.DocumentsLibrary.Name}\LED Matrix Output";
-			this.BuildPath = await ApplicationData.Current.LocalSettings.ReadAsync<string>(SettingsViewModel.BuildPathKey, defaultPath);
-
 			this.VersionDescription = this.GetVersionDescription();
-		}
-
-		public override async void OnNavigatingFrom(NavigatingFromEventArgs e, Dictionary<string, object> viewModelState, bool suspending)
-		{
-			// ***
-			// *** Save the build output folder.
-			// ***
-			await ApplicationData.Current.LocalSettings.SaveAsync<string>(SettingsViewModel.BuildPathKey, this.BuildPath);
-
-			base.OnNavigatingFrom(e, viewModelState, suspending);
 		}
 
 		private ElementTheme _elementTheme = ThemeSelectorService.Theme;
@@ -89,8 +68,6 @@ namespace LedMatrixIde.ViewModels
 			}
 		}
 
-		public DelegateCommand BrowseBuildPathCommand { get; set; }
-
 		private string GetVersionDescription()
 		{
 			string appName = "AppDisplayName".GetLocalized();
@@ -112,16 +89,6 @@ namespace LedMatrixIde.ViewModels
 			{
 				this.SetProperty(ref _buildPath, value);
 			}
-		}
-
-		protected bool OnEnableBrowseBuildPathCommand()
-		{
-			return true;
-		}
-
-		protected void OnBrowseBuildPathCommand()
-		{
-
 		}
 	}
 }

@@ -21,6 +21,7 @@
 			<!-- COnverters -->
 			<converters:NotBooleanConverter x:Key="NotBooleanConverter" />
 			<converters:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter" />
+			<converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 		</ResourceDictionary>
     </prismUnity:PrismUnityApplication.Resources>
 </prismUnity:PrismUnityApplication>

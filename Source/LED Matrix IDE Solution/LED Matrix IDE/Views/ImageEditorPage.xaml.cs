@@ -35,6 +35,7 @@ namespace LedMatrixIde.Views
 			}
 		}
 
+		public string ProjectName => "ImageEditor_ProjectName".GetLocalized();
 		public string LoadButtonToolTip => "ImageEditor_ToolTip_LoadButton".GetLocalized();
 		public string SaveButtonToolTip => "ImageEditor_ToolTip_SaveButton".GetLocalized();
 		public string UndoButtonToolTip => "ImageEditor_ToolTip_UndoButton".GetLocalized();
@@ -49,5 +50,7 @@ namespace LedMatrixIde.Views
 		public string FlipVerticalButtonToolTip => "ImageEditor_ToolTip_FlipVerticalButton".GetLocalized();
 		public string ClearButtonToolTip => "ImageEditor_ToolTip_ClearButton".GetLocalized();
 		public string BuildButtonToolTip => "ImageEditor_ToolTip_BuildButton".GetLocalized();
+		public string OutputButtonToolTip => "ImageEditor_ToolTip_OutputButton".GetLocalized();
+		
 	}
 }

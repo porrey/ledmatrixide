@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using CodeBuilder;
 using ImageConverter;
 using LedMatrixControl;
 using LedMatrixIde.Helpers;
@@ -39,6 +40,7 @@ namespace LedMatrixIde.ViewModels
 		protected const string SelectedColorKey = "SelectedColorKey";
 		protected const string ColorMatrixKey = "ColorMatrix";
 		protected const string PixelColorKey = "PixelColorKey";
+		protected const string ProjectNameKey = "ProjectNameKey";
 
 		protected IUndoService UndoService { get; set; }
 		protected ColorMatrix CachedColorMatrix { get; set; }
@@ -92,6 +94,11 @@ namespace LedMatrixIde.ViewModels
 					this.PixelColor = (Color)viewModelState[ImageEditorViewModel.SelectedColorKey];
 				}
 
+				if (viewModelState.ContainsKey(ImageEditorViewModel.ProjectNameKey))
+				{
+					this.ProjectName = (string)viewModelState[ImageEditorViewModel.ProjectNameKey];
+				}
+
 				viewModelState.Clear();
 			}
 
@@ -112,6 +119,7 @@ namespace LedMatrixIde.ViewModels
 
 				viewModelState[ImageEditorViewModel.ColorMatrixKey] = json;
 				viewModelState[ImageEditorViewModel.SelectedColorKey] = this.PixelColor;
+				viewModelState[ImageEditorViewModel.ProjectNameKey] = this.ProjectName;
 			}
 
 			// ***
@@ -247,6 +255,37 @@ namespace LedMatrixIde.ViewModels
 			}
 		}
 
+		private string _projectName = String.Empty;
+		public string ProjectName
+		{
+			get
+			{
+				return _projectName;
+			}
+			set
+			{
+				this.SetProperty(ref _projectName, value);
+
+				this.SaveCommand.RaiseCanExecuteChanged();
+				this.BuildCommand.RaiseCanExecuteChanged();
+			}
+		}
+
+		private bool _showOutput = false;
+		public bool ShowOutput
+		{
+			get
+			{
+				return _showOutput;
+			}
+			set
+			{
+				this.SetProperty(ref _showOutput, value);
+			}
+		}
+
+		public ObservableCollection<BuildEventArgs> OutputItems { get; } = new ObservableCollection<BuildEventArgs>();
+
 		public async void OnLoadCommand()
 		{
 			FileOpenPicker openPicker = new FileOpenPicker
@@ -264,6 +303,11 @@ namespace LedMatrixIde.ViewModels
 
 			if (file != null)
 			{
+				// ***
+				// *** Use the filename as the project name.
+				// ***
+				this.ProjectName = file.DisplayName;
+
 				// ***
 				// *** Get a copy of the current color matrix.
 				// ***
@@ -293,6 +337,7 @@ namespace LedMatrixIde.ViewModels
 		public async void OnSaveCommand()
 		{
 			FileSavePicker fileSave = new FileSavePicker();
+			fileSave.SuggestedFileName = this.ProjectName;
 			fileSave.FileTypeChoices.Add("Image", new string[] { ".png" });
 			StorageFile storageFile = await fileSave.PickSaveFileAsync();
 
@@ -306,7 +351,8 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableSaveCommand()
 		{
-			return !this.PickColorIsChecked;
+			return !this.PickColorIsChecked &&
+					!String.IsNullOrWhiteSpace(this.ProjectName);
 		}
 
 		public async void OnClearCommand()
@@ -442,13 +488,39 @@ namespace LedMatrixIde.ViewModels
 			return !this.PickColorIsChecked;
 		}
 
-		public void OnBuildCommand()
+		public async void OnBuildCommand()
 		{
+			FolderPicker folderPicker = new FolderPicker()
+			{
+				SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+				ViewMode = PickerViewMode.Thumbnail,
+				CommitButtonText = "ImageEditor_BuildHere".GetLocalized()
+			};
+
+			folderPicker.FileTypeFilter.Add("*");
+
+			StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+
+			if (folder != null)
+			{
+				this.OutputItems.Clear();
+				this.ShowOutput = true;
+
+				ColorMatrix colorMatrix = await this.PixelMatrix.GetColorMatrixAsync();
+
+				IBuilder codeBuilder = new Builder();
+				codeBuilder.BuildEvent += (s, e) =>
+				{
+					this.OutputItems.Add(e);
+				};
+
+				bool result = await codeBuilder.Build(folder, this.ProjectName, colorMatrix, null);
+			}
 		}
 
 		public bool OnEnableBuildCommand()
 		{
-			return false;
+			return !String.IsNullOrWhiteSpace(this.ProjectName);
 		}
 
 		public async void OnRedoCommand()

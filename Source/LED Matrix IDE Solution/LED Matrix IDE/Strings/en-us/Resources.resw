@@ -251,4 +251,13 @@
   <data name="ImageEditor_ToolTip_UndoButton" xml:space="preserve">
     <value>Undo the last action.</value>
   </data>
+  <data name="ImageEditor_BuildHere" xml:space="preserve">
+    <value>Build Here</value>
+  </data>
+  <data name="ImageEditor_ProjectName" xml:space="preserve">
+    <value>Project Name</value>
+  </data>
+  <data name="ImageEditor_ToolTip_OutputButton" xml:space="preserve">
+    <value>Show/hide output window.</value>
+  </data>
 </root>
