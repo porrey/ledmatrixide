@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CodeBuilder;
 using ImageConverter;
@@ -35,6 +36,7 @@ namespace LedMatrixIde.ViewModels
 			this.BuildCommand = new DelegateCommand(this.OnBuildCommand, this.OnEnableBuildCommand);
 			this.RedoCommand = new DelegateCommand(this.OnRedoCommand, this.OnEnableRedoCommand);
 			this.UndoCommand = new DelegateCommand(this.OnUndoCommand, this.OnEnableUndoCommand);
+			this.ClearOutputCommand = new DelegateCommand(this.OnClearOutputCommand, this.OnEnableClearOutputCommand);
 		}
 
 		protected const string SelectedColorKey = "SelectedColorKey";
@@ -204,6 +206,7 @@ namespace LedMatrixIde.ViewModels
 		public DelegateCommand BuildCommand { get; set; }
 		public DelegateCommand RedoCommand { get; set; }
 		public DelegateCommand UndoCommand { get; set; }
+		public DelegateCommand ClearOutputCommand { get; set; }
 
 		private bool _pickColorIsChecked = false;
 		public bool PickColorIsChecked
@@ -512,6 +515,7 @@ namespace LedMatrixIde.ViewModels
 				codeBuilder.BuildEvent += (s, e) =>
 				{
 					this.OutputItems.Add(e);
+					this.ClearOutputCommand.RaiseCanExecuteChanged();
 				};
 
 				bool result = await codeBuilder.Build(folder, this.ProjectName, colorMatrix, null);
@@ -541,6 +545,17 @@ namespace LedMatrixIde.ViewModels
 		public bool OnEnableUndoCommand()
 		{
 			return this.UndoService.CanUndo;
+		}
+
+		public void OnClearOutputCommand()
+		{
+			this.OutputItems.Clear();
+			this.ClearOutputCommand.RaiseCanExecuteChanged();
+		}
+
+		public bool OnEnableClearOutputCommand()
+		{
+			return this.OutputItems.Count() > 0;
 		}
 	}
 }

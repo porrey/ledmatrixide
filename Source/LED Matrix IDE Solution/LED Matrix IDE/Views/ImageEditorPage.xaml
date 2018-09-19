@@ -280,23 +280,45 @@
 				</toolkit:GridSplitter.Element>
 			</toolkit:GridSplitter>
 			-->
-			
+
 			<!-- Output Window -->
 			<Grid Grid.Row="3"
-				  BorderBrush="DarkGray"
+				  BorderBrush="{ThemeResource ContentDialogBorderThemeBrush}"
 				  BorderThickness="3"
+				  Background="{ThemeResource ContentDialogBackgroundThemeBrush}"
 				  Height="250"
 				  Visibility="{Binding ShowOutput, Converter={StaticResource BooleanToVisibilityConverter}}">
 				<Grid.RowDefinitions>
-					<RowDefinition Height="35" />
+					<RowDefinition Height="40" />
 					<RowDefinition Height="*" />
 				</Grid.RowDefinitions>
+				<Grid Grid.Row="0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
 
-				<TextBlock Grid.Row="0"
-						   Text="Output Window"
-						   VerticalAlignment="Center"
-						   HorizontalAlignment="Left"
-						   Margin="5,0,0,0" />
+					<TextBlock Grid.Column="0"
+							   Text="Output Window"
+							   VerticalAlignment="Center"
+							   HorizontalAlignment="Left"
+							   Foreground="{ThemeResource ContentDialogContentForegroundBrush}"
+							   Margin="5,0,0,0" />
+
+					<Button Grid.Column="1"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Right"
+							Margin="0,0,3,3"
+							Command="{Binding ClearOutputCommand}"
+							Foreground="{ThemeResource ContentDialogContentForegroundBrush}">
+						<Button.Content>
+							<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+									  Glyph="&#xE8E6;"
+									  Foreground="{ThemeResource ContentDialogContentForegroundBrush}">
+							</FontIcon>
+						</Button.Content>
+					</Button>
+				</Grid>
 
 				<ListView Grid.Row="1"
 						  BorderThickness="0"
@@ -304,30 +326,47 @@
 						  IsSwipeEnabled="False"
 						  CanDragItems="False"
 						  SelectionMode="None"
+						  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 						  ItemsSource="{Binding OutputItems}">
 					<ListView.ItemTemplate>
 						<DataTemplate>
 							<Grid>
 								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="120" />
+									<ColumnDefinition Width="Auto" />
+									<ColumnDefinition Width="110" />
 									<ColumnDefinition Width="*" />
 								</Grid.ColumnDefinitions>
 
-								<TextBlock Grid.Column="0"
-										   Text="{Binding EventType}"
-										   FontFamily="Consolas"
-										   FontSize="12"
-										   VerticalAlignment="Center" />
+								<Border Grid.Column="0"
+										BorderBrush="{Binding EventType, Converter={StaticResource EventTypeToBackgroundBrushConverter}}"
+										BorderThickness="2"
+										Width="28"
+										Height="28"
+										VerticalAlignment="Center"
+										HorizontalAlignment="Left">
+									<Image Margin="1,1,1,1"
+										   Source="{Binding EventType, Converter={StaticResource EventTypeToImageSourceConverter}}" />
+								</Border>
+
 
 								<TextBlock Grid.Column="1"
+										   Text="{Binding EventType, Converter={StaticResource EventTypeToBracketedTextConverter}}"
+										   FontFamily="Consolas"
+										   FontSize="14"
+										   VerticalAlignment="Center"
+										   Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+										   Margin="5,0,0,0" />
+
+								<TextBlock Grid.Column="2"
 										   Text="{Binding Message}"
 										   FontFamily="Consolas"
-										   FontSize="12"
-										   VerticalAlignment="Center" />
+										   FontSize="14"
+										   Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+										   VerticalAlignment="Center"
+										   Margin="3,0,0,0" />
 							</Grid>
 						</DataTemplate>
 					</ListView.ItemTemplate>
-
 					<ListView.ItemContainerStyle>
 						<Style TargetType="ListViewItem">
 							<Setter Property="HorizontalContentAlignment"
