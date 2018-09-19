@@ -5,6 +5,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace ImageConverter
 {
@@ -25,27 +26,45 @@ namespace ImageConverter
 		{
 			ColorMatrix returnValue = new ColorMatrix(this.MaximumHeight, this.MaximumWidth);
 
-			Stream imagestream = await this.File.OpenStreamForReadAsync();
-			BitmapDecoder dec = await BitmapDecoder.CreateAsync(imagestream.AsRandomAccessStream());
-			PixelDataProvider data = await dec.GetPixelDataAsync();
-			byte[] bytes = data.DetachPixelData();
-
-			if (dec.OrientedPixelWidth <= this.MaximumWidth && dec.OrientedPixelHeight <= this.MaximumHeight)
+			using (Stream imageStream = await this.File.OpenStreamForReadAsync())
 			{
-				int startColumn = (int)((this.MaximumWidth - dec.OrientedPixelWidth) / 2.0);
-				int startRow = (int)((this.MaximumHeight - dec.OrientedPixelHeight) / 2.0);
+				BitmapDecoder dec = await BitmapDecoder.CreateAsync(imageStream.AsRandomAccessStream());
+				PixelDataProvider data = await dec.GetPixelDataAsync();
+				byte[] bytes = data.DetachPixelData();
 
-				for (int row = 0; row < dec.PixelHeight; row++)
+				uint width = dec.OrientedPixelWidth;
+				uint height = dec.OrientedPixelHeight;
+
+				if (width >= this.MaximumWidth && height >= this.MaximumHeight)
 				{
-					for (int column = 0; column < dec.PixelWidth; column++)
-					{
-						Color color = await this.GetPixelAsync(bytes, row, column, dec.OrientedPixelWidth, dec.OrientedPixelHeight);
+					WriteableBitmap bitmap = await imageStream.ResizeImageAsync(this.MaximumHeight, this.MaximumWidth);
+					bytes = await bitmap.ToArrayAsync();
 
-						if (color.A > 0)
+					height = this.MaximumHeight;
+					width = this.MaximumWidth;
+				}
+
+				if (width <= this.MaximumWidth && height <= this.MaximumHeight)
+				{
+					int startColumn = (int)((this.MaximumWidth - dec.OrientedPixelWidth) / 2.0);
+					int startRow = (int)((this.MaximumHeight - dec.OrientedPixelHeight) / 2.0);
+
+					for (int row = 0; row < height; row++)
+					{
+						for (int column = 0; column < width; column++)
 						{
-							returnValue.Colors[row + startRow, column + startColumn] = color;
+							Color color = await this.GetPixelAsync(bytes, row, column, width, height);
+
+							if (color.A > 0)
+							{
+								returnValue.Colors[row + startRow, column + startColumn] = color;
+							}
 						}
 					}
+				}
+				else
+				{
+					throw new BadImageFormatException();
 				}
 			}
 
@@ -55,7 +74,7 @@ namespace ImageConverter
 		public async Task<bool> SaveAsync(ColorMatrix colorMatrix)
 		{
 			bool returnValue = false;
-		 
+
 			byte[] data = await this.CreateImageDataAsync(this.MaximumHeight, this.MaximumWidth, colorMatrix);
 			await this.CreateImageAsync(this.MaximumHeight, this.MaximumWidth, data, this.File);
 			returnValue = true;

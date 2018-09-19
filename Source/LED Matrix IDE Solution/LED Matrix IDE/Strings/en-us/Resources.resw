@@ -260,4 +260,10 @@
   <data name="ImageEditor_ToolTip_OutputButton" xml:space="preserve">
     <value>Show/hide output window.</value>
   </data>
+  <data name="Exception" xml:space="preserve">
+    <value>Exception</value>
+  </data>
+  <data name="ExceptionImageTooLarge" xml:space="preserve">
+    <value>The selected image is too large for the matrix display.</value>
+  </data>
 </root>

@@ -15,6 +15,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.System;
 using Windows.UI;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 
@@ -291,44 +292,57 @@ namespace LedMatrixIde.ViewModels
 
 		public async void OnLoadCommand()
 		{
-			FileOpenPicker openPicker = new FileOpenPicker
+			try
 			{
-				ViewMode = PickerViewMode.Thumbnail,
-				SuggestedStartLocation = PickerLocationId.PicturesLibrary
-			};
+				FileOpenPicker openPicker = new FileOpenPicker
+				{
+					ViewMode = PickerViewMode.Thumbnail,
+					SuggestedStartLocation = PickerLocationId.PicturesLibrary
+				};
 
-			openPicker.FileTypeFilter.Add(".jpg");
-			openPicker.FileTypeFilter.Add(".jpeg");
-			openPicker.FileTypeFilter.Add(".png");
-			openPicker.FileTypeFilter.Add(".bmp");
+				openPicker.FileTypeFilter.Add(".jpg");
+				openPicker.FileTypeFilter.Add(".jpeg");
+				openPicker.FileTypeFilter.Add(".png");
+				openPicker.FileTypeFilter.Add(".bmp");
 
-			StorageFile file = await openPicker.PickSingleFileAsync();
+				StorageFile file = await openPicker.PickSingleFileAsync();
 
-			if (file != null)
+				if (file != null)
+				{
+					// ***
+					// *** Use the filename as the project name.
+					// ***
+					this.ProjectName = file.DisplayName;
+
+					// ***
+					// *** Get a copy of the current color matrix.
+					// ***
+					ColorMatrix oldColorMatrix = await this.PixelMatrix.GetColorMatrixAsync();
+
+					// ***
+					// ***
+					// ***
+					ImageFile imageFile = new ImageFile(file, (uint)this.PixelMatrix.RowCount, (uint)this.PixelMatrix.ColumnCount);
+					ColorMatrix colorMatrix = await imageFile.LoadAsync();
+					await this.PixelMatrix.SetColorMatrixAsync(colorMatrix);
+
+					// ***
+					// *** Set up the undo task.
+					// ***
+					async Task undoAction() { await this.PixelMatrix.SetColorMatrixAsync(oldColorMatrix); }
+					async Task redoAction() { await this.PixelMatrix.SetColorMatrixAsync(colorMatrix); }
+					await this.UndoService.AddUndoTask(undoAction, redoAction, $"Load File [{file.Name}]");
+				}
+			}
+			catch (BadImageFormatException)
 			{
-				// ***
-				// *** Use the filename as the project name.
-				// ***
-				this.ProjectName = file.DisplayName;
-
-				// ***
-				// *** Get a copy of the current color matrix.
-				// ***
-				ColorMatrix oldColorMatrix = await this.PixelMatrix.GetColorMatrixAsync();
-
-				// ***
-				// ***
-				// ***
-				ImageFile imageFile = new ImageFile(file, (uint)this.PixelMatrix.RowCount, (uint)this.PixelMatrix.ColumnCount);
-				ColorMatrix colorMatrix = await imageFile.LoadAsync();
-				await this.PixelMatrix.SetColorMatrixAsync(colorMatrix);
-
-				// ***
-				// *** Set up the undo task.
-				// ***
-				async Task undoAction() { await this.PixelMatrix.SetColorMatrixAsync(oldColorMatrix); }
-				async Task redoAction() { await this.PixelMatrix.SetColorMatrixAsync(colorMatrix); }
-				await this.UndoService.AddUndoTask(undoAction, redoAction, $"Load File [{file.Name}]");
+				MessageDialog dialog = new MessageDialog("ExceptionImageTooLarge".GetLocalized(), "Exception".GetLocalized());
+				await dialog.ShowAsync();
+			}
+			catch (Exception ex)
+			{
+				MessageDialog dialog = new MessageDialog(ex.Message, "Exception".GetLocalized());
+				await dialog.ShowAsync();
 			}
 		}
 
