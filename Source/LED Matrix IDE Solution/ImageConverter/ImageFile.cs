@@ -51,7 +51,7 @@ namespace ImageConverter
 
 							if (color.A > 0)
 							{
-								returnValue.Colors[row + startRow, column + startColumn] = color;
+								returnValue.ColorItems[row + startRow, column + startColumn] = color;
 							}
 						}
 					}

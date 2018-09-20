@@ -134,7 +134,7 @@ namespace LedMatrixControl
 			{
 				for (int column = 0; column < this.ColumnCount; column++)
 				{
-					returnValue.Colors[row, column] = await this.GetPixelAsync(row, column);
+					returnValue.ColorItems[row, column] = await this.GetPixelAsync(row, column);
 				}
 			}
 
@@ -147,7 +147,7 @@ namespace LedMatrixControl
 			{
 				for (int column = 0; column < this.ColumnCount; column++)
 				{
-					Color color = colorMatrix.Colors[row, column];
+					Color color = colorMatrix.ColorItems[row, column];
 
 					if (color.A > 0)
 					{

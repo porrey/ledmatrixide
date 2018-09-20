@@ -6,36 +6,55 @@ using Windows.UI;
 
 namespace ImageConverter
 {
+	public struct ColorItem
+	{
+		public byte A { get; set; }
+		public byte B { get; set; }
+		public byte G { get; set; }
+		public byte R { get; set; }
+
+		public static implicit operator Color(ColorItem c)
+		{
+			return Color.FromArgb(c.A, c.R, c.G, c.B);
+		}
+
+		public static implicit operator ColorItem(Color c)
+		{
+			return new ColorItem() { A = c.A, R = c.R, B = c.B, G = c.G };
+		}
+	}
+
 	public class ColorMatrix
 	{
 		public ColorMatrix(uint height, uint width)
 		{
 			this.Height = height;
 			this.Width = width;
-			this.Colors = new Color[this.Height, this.Width];
+			this.ColorItems = new ColorItem[this.Height, this.Width];
 		}
 
 		[JsonConstructor]
-		protected ColorMatrix(uint height, uint width, Color[,] colors)
+		protected ColorMatrix(uint height, uint width, ColorItem[,] colorItems)
 		{
 			this.Height = height;
 			this.Width = width;
-			this.Colors = colors;
+			this.ColorItems = colorItems;
 		}
 
 		public uint Height { get; protected set; }
 		public uint Width { get; protected set; }
-		public Color[,] Colors { get; protected set; }
+		public ColorItem[,] ColorItems { get; protected set; }
 
-		public Task<IList<Color>> GetPaletteAsync()
+		public Task<IList<ColorItem>> GetPaletteAsync()
 		{
-			IList<Color> colors = new List<Color>();
+			IList<ColorItem> colors = new List<ColorItem>();
 
 			for (int row = 0; row < this.Height; row++)
 			{
 				for (int column = 0; column < this.Width; column++)
 				{
-					Color color = this.Colors[row, column];
+					ColorItem color = this.ColorItems[row, column];
+
 					if (!colors.Contains(color))
 					{
 						colors.Add(color);
@@ -54,7 +73,7 @@ namespace ImageConverter
 			{
 				for (uint column = 0; column < this.Width; column++)
 				{
-					this.Colors[row, column] = me.Colors[(this.Height - 1) - column, row];
+					this.ColorItems[row, column] = me.ColorItems[(this.Height - 1) - column, row];
 				}
 			}
 		}
@@ -67,7 +86,7 @@ namespace ImageConverter
 			{
 				for (uint column = 0; column < this.Width; column++)
 				{
-					this.Colors[row, column] = me.Colors[column, (this.Height - 1) - row];
+					this.ColorItems[row, column] = me.ColorItems[column, (this.Height - 1) - row];
 				}
 			}
 		}
@@ -80,7 +99,7 @@ namespace ImageConverter
 			{
 				for (uint column = 0; column < this.Width; column++)
 				{
-					this.Colors[row, column] = me.Colors[(this.Height - 1) - row, column];
+					this.ColorItems[row, column] = me.ColorItems[(this.Height - 1) - row, column];
 				}
 			}
 		}
@@ -93,7 +112,7 @@ namespace ImageConverter
 			{
 				for (uint column = 0; column < this.Width; column++)
 				{
-					this.Colors[row, column] = me.Colors[row, (this.Width - 1) - column];
+					this.ColorItems[row, column] = me.ColorItems[row, (this.Width - 1) - column];
 				}
 			}
 		}
@@ -106,7 +125,7 @@ namespace ImageConverter
 			{
 				for (uint column = 0; column < this.Width; column++)
 				{
-					returnValue.Colors[column, row] = this.Colors[column, row];
+					returnValue.ColorItems[column, row] = this.ColorItems[column, row];
 				}
 			}
 
@@ -128,10 +147,10 @@ namespace ImageConverter
 			{
 				for (int column = 0; column < width; column++)
 				{
-					returnValue[index + 0] = this.Colors[row, column].B;
-					returnValue[index + 1] = this.Colors[row, column].G;
-					returnValue[index + 2] = this.Colors[row, column].R;
-					returnValue[index + 3] = this.Colors[row, column].A;
+					returnValue[index + 0] = this.ColorItems[row, column].B;
+					returnValue[index + 1] = this.ColorItems[row, column].G;
+					returnValue[index + 2] = this.ColorItems[row, column].R;
+					returnValue[index + 3] = this.ColorItems[row, column].A;
 					index += 4;
 				}
 			}

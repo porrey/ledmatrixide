@@ -1,7 +1,6 @@
 ﻿using LedMatrixIde.Helpers;
 using LedMatrixIde.ViewModels;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
 namespace LedMatrixIde.Views
 {
@@ -12,17 +11,9 @@ namespace LedMatrixIde.Views
 		public ImageEditorPage()
 		{
 			this.InitializeComponent();
-		}
 
-		protected override void OnNavigatedTo(NavigationEventArgs e)
-		{
-			if (this.ViewModel != null)
-			{
-				this.Matrix.ApplyTemplate();
-				this.ViewModel.PixelMatrix = this.Matrix;
-			}
-
-			base.OnNavigatedTo(e);
+			this.Matrix.ApplyTemplate();
+			this.ViewModel.PixelMatrix = this.Matrix;
 		}
 
 		public string ProjectName => "ImageEditor_ProjectName".GetLocalized();

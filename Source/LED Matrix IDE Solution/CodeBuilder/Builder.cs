@@ -68,7 +68,7 @@ namespace CodeBuilder
 			{
 				for (uint column = 0; column < colorMatrix.Width; column++)
 				{
-					Color color = colorMatrix.Colors[row, column];
+					Color color = colorMatrix.ColorItems[row, column];
 
 					if (i == 0)
 					{
@@ -118,7 +118,7 @@ namespace CodeBuilder
 			{
 				for (uint column = 0; column < colorMatrix.Width; column++)
 				{
-					Color color = colorMatrix.Colors[row, column];
+					Color color = colorMatrix.ColorItems[row, column];
 
 					if (i == 0)
 					{
@@ -181,7 +181,7 @@ namespace CodeBuilder
 				{
 					for (uint column = 0; column < grainMatrix.Width; column++)
 					{
-						Color color = grainMatrix.Colors[row, column];
+						Color color = grainMatrix.ColorItems[row, column];
 						returnValue.Append($"\t{column}, {row}, {this.ColorToHex(color)}");
 						index++;
 
@@ -274,7 +274,7 @@ namespace CodeBuilder
 			{
 				for (uint column = 0; column < colorMatrix.Width; column++)
 				{
-					Color color = colorMatrix.Colors[row, column];
+					Color color = colorMatrix.ColorItems[row, column];
 
 					if (color.A == 0 || color == Colors.Black)
 					{
