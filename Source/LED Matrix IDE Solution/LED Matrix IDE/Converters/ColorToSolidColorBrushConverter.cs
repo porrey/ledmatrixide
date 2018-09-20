@@ -1,15 +1,27 @@
 ﻿using System;
-using Windows.UI.Xaml;
+using Windows.UI;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
 
 namespace LedMatrixIde.Converters
 {
 	public class ColorToSolidColorBrushConverter : IValueConverter
     {
-		public object Convert(object value, Type targetType, object parameter, string language) =>
-			(value is bool && (bool)value) ? Visibility.Visible : Visibility.Collapsed;
+		public object Convert(object value, Type targetType, object parameter, string language)
+		{
+			SolidColorBrush returnValue = null;
 
-		public object ConvertBack(object value, Type targetType, object parameter, string language) =>
-			value is Visibility && (Visibility)value == Visibility.Visible;
+			if (value is Color color)
+			{
+				returnValue = new SolidColorBrush(color);
+			}
+
+			return returnValue;
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, string language)
+		{
+			throw new NotSupportedException();
+		}
 	}
 }
