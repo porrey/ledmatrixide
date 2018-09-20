@@ -6,12 +6,21 @@ using Windows.UI;
 
 namespace ImageConverter
 {
-	public struct ColorItem
+	public class ColorItem
 	{
+		public enum ColorItemType
+		{
+			Background,
+			Pixel,
+			Sand
+		}
+
 		public byte A { get; set; }
 		public byte B { get; set; }
 		public byte G { get; set; }
 		public byte R { get; set; }
+
+		public ColorItemType ItemType { get; set; } = ColorItemType.Pixel;
 
 		public static implicit operator Color(ColorItem c)
 		{
