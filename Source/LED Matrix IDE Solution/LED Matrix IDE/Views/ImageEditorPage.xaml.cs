@@ -25,16 +25,6 @@ namespace LedMatrixIde.Views
 			base.OnNavigatedTo(e);
 		}
 
-		protected override void OnNavigatedFrom(NavigationEventArgs e)
-		{
-			base.OnNavigatedFrom(e);
-
-			if (this.ViewModel != null)
-			{
-				this.ViewModel.PixelMatrix = null;
-			}
-		}
-
 		public string ProjectName => "ImageEditor_ProjectName".GetLocalized();
 		public string LoadButtonToolTip => "ImageEditor_ToolTip_LoadButton".GetLocalized();
 		public string SaveButtonToolTip => "ImageEditor_ToolTip_SaveButton".GetLocalized();

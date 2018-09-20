@@ -348,7 +348,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableLoadCommand()
 		{
-			return !this.PickColorIsChecked;
+			return !this.PickColorIsChecked && this.PixelMatrix != null;
 		}
 
 		public async void OnSaveCommand()
@@ -369,7 +369,8 @@ namespace LedMatrixIde.ViewModels
 		public bool OnEnableSaveCommand()
 		{
 			return !this.PickColorIsChecked &&
-					!String.IsNullOrWhiteSpace(this.ProjectName);
+				   !String.IsNullOrWhiteSpace(this.ProjectName)
+				   && this.PixelMatrix != null;
 		}
 
 		public async void OnClearCommand()
@@ -394,7 +395,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableClearCommand()
 		{
-			return !this.PickColorIsChecked;
+			return !this.PickColorIsChecked && this.PixelMatrix != null;
 		}
 
 		public async void OnRotateClockwiseCommand()
@@ -421,7 +422,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableRotateClockwiseCommand()
 		{
-			return !this.PickColorIsChecked;
+			return !this.PickColorIsChecked && this.PixelMatrix != null;
 		}
 
 		public async void OnRotateCounterClockwiseCommand()
@@ -448,7 +449,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableRotateCounterClockwiseCommand()
 		{
-			return !this.PickColorIsChecked;
+			return !this.PickColorIsChecked && this.PixelMatrix != null;
 		}
 
 		public async void OnFlipHorizontalCommand()
@@ -475,7 +476,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableFlipHorizontalCommand()
 		{
-			return !this.PickColorIsChecked;
+			return !this.PickColorIsChecked && this.PixelMatrix != null;
 		}
 
 		public async void OnFlipVerticalCommand()
@@ -502,7 +503,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableFlipVerticalCommand()
 		{
-			return !this.PickColorIsChecked;
+			return !this.PickColorIsChecked && this.PixelMatrix != null;
 		}
 
 		public async void OnBuildCommand()
@@ -538,7 +539,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableBuildCommand()
 		{
-			return !String.IsNullOrWhiteSpace(this.ProjectName);
+			return !String.IsNullOrWhiteSpace(this.ProjectName) && this.PixelMatrix != null;
 		}
 
 		public async void OnRedoCommand()
@@ -548,7 +549,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableRedoCommand()
 		{
-			return this.UndoService.CanRedo;
+			return this.UndoService.CanRedo && this.PixelMatrix != null;
 		}
 
 		public async void OnUndoCommand()
@@ -558,7 +559,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableUndoCommand()
 		{
-			return this.UndoService.CanUndo;
+			return this.UndoService.CanUndo && this.PixelMatrix != null;
 		}
 
 		public void OnClearOutputCommand()
@@ -569,7 +570,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableClearOutputCommand()
 		{
-			return this.OutputItems.Count() > 0;
+			return (this.OutputItems.Count() > 0) && this.PixelMatrix != null;
 		}
 	}
 }

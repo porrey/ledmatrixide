@@ -17,22 +17,9 @@ namespace CodeBuilder
 			bool returnValue = false;
 
 			// ***
-			// *** Get the .cpp code and format it.
+			// *** Get the .cpp code, format it and write the file.
 			// ***
-			this.OnBuildEvent(BuildEventArgs.BuildEventType.Information, "Reading code template.");
-			ResourceContext resourceContext = ResourceContext.GetForViewIndependentUse();
-			ResourceMap resourceMap = ResourceManager.Current.MainResourceMap.GetSubtree("CodeBuilder/Code");
-			ResourceCandidate resourceValue = resourceMap.GetValue("cpp", resourceContext);
-			string codeTemplate = resourceValue.ValueAsString;
-			string code = String.Format(codeTemplate, projectName);
-
-			// ***
-			// *** Write the .cpp file.
-			// ***
-			string cppFileName = $"{projectName}-image.cpp";
-			this.OnBuildEvent(BuildEventArgs.BuildEventType.Information, $"Writing .cpp code file '{cppFileName}'.");
-			StorageFile cppFile = await folder.CreateFileAsync(cppFileName, CreationCollisionOption.ReplaceExisting);
-			await FileIO.WriteTextAsync(cppFile, code, Windows.Storage.Streams.UnicodeEncoding.Utf8);
+			await this.CreateCodeFile(folder, projectName);
 
 			// ***
 			// *** Generate the header file (.h)
@@ -49,10 +36,15 @@ namespace CodeBuilder
 			// ***
 			// *** Write the header file (.h)
 			// ***
-			string hFileName = $"{projectName}-image.h";
-			this.OnBuildEvent(BuildEventArgs.BuildEventType.Information, $"Writing .h code file '{hFileName}'.");
-			StorageFile hFile = await folder.CreateFileAsync(hFileName, CreationCollisionOption.ReplaceExisting);
+			this.OnBuildEvent(BuildEventArgs.BuildEventType.Information, $"Writing .h code file '{this.HeaderFileName(projectName)}'.");
+			StorageFile hFile = await folder.CreateFileAsync(this.HeaderFileName(projectName), CreationCollisionOption.ReplaceExisting);
 			await FileIO.WriteTextAsync(hFile, headerCode, Windows.Storage.Streams.UnicodeEncoding.Utf8);
+
+			// ***
+			// *** Create make file text file.
+			// ***
+			await this.CreateMakeFile(folder, projectName);
+			await this.CreateInstructionsFile(folder, projectName);
 
 			this.OnBuildEvent(BuildEventArgs.BuildEventType.Information, $"Completed.");
 			returnValue = true;
@@ -224,6 +216,51 @@ namespace CodeBuilder
 			return returnValue.ToString();
 		}
 
+		private async Task CreateCodeFile(StorageFolder folder, string projectName)
+		{
+			this.OnBuildEvent(BuildEventArgs.BuildEventType.Information, "Reading code template.");
+			ResourceContext resourceContext = ResourceContext.GetForViewIndependentUse();
+			ResourceMap resourceMap = ResourceManager.Current.MainResourceMap.GetSubtree("CodeBuilder/Code");
+			ResourceCandidate resourceValue = resourceMap.GetValue("cpp", resourceContext);
+
+			string template = resourceValue.ValueAsString;
+			string contents = String.Format(template, projectName);
+
+			this.OnBuildEvent(BuildEventArgs.BuildEventType.Information, $"Writing C++ code file '{this.CppFileName(projectName)}'.");
+			StorageFile file = await folder.CreateFileAsync(this.CppFileName(projectName), CreationCollisionOption.ReplaceExisting);
+			await FileIO.WriteTextAsync(file, contents, Windows.Storage.Streams.UnicodeEncoding.Utf8);
+		}
+
+		private async Task CreateMakeFile(StorageFolder folder, string projectName)
+		{
+			StringBuilder contents = new StringBuilder();
+			contents.AppendLine($"{projectName}: {this.CppFileName(projectName)} {this.HeaderFileName(projectName)} $(LIBS)");
+			contents.AppendLine($"\t$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) - o $@");
+			contents.AppendLine($"\tstrip $@");
+
+			this.OnBuildEvent(BuildEventArgs.BuildEventType.Information, $"Writing make file '{this.MakeFileName(projectName)}'.");
+			StorageFile file = await folder.CreateFileAsync(this.MakeFileName(projectName), CreationCollisionOption.ReplaceExisting);
+			await FileIO.WriteTextAsync(file, contents.ToString(), Windows.Storage.Streams.UnicodeEncoding.Utf8);
+		}
+
+		private async Task CreateInstructionsFile(StorageFolder folder, string projectName)
+		{
+			this.OnBuildEvent(BuildEventArgs.BuildEventType.Information, "Reading instructions template.");
+			ResourceContext resourceContext = ResourceContext.GetForViewIndependentUse();
+			ResourceMap resourceMap = ResourceManager.Current.MainResourceMap.GetSubtree("CodeBuilder/Code");
+			ResourceCandidate resourceValue = resourceMap.GetValue("instructions", resourceContext);
+
+			string template = resourceValue.ValueAsString;
+			string contents = String.Format(template, this.CppFileName(projectName),
+													  this.HeaderFileName(projectName),
+													  this.MakeFileName(projectName),
+													  projectName);
+
+			this.OnBuildEvent(BuildEventArgs.BuildEventType.Information, $"Writing instructions file '{this.InstructionsFileName(projectName)}'.");
+			StorageFile file = await folder.CreateFileAsync(this.InstructionsFileName(projectName), CreationCollisionOption.ReplaceExisting);
+			await FileIO.WriteTextAsync(file, contents, Windows.Storage.Streams.UnicodeEncoding.Utf8);
+		}
+
 		private string ColorToHex(Color color)
 		{
 			return $"0x{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
@@ -253,5 +290,10 @@ namespace CodeBuilder
 		{
 			this.BuildEvent?.Invoke(this, new BuildEventArgs(eventType, message));
 		}
+
+		private string CppFileName(string projectName) => $"{projectName}-image.cpp";
+		private string HeaderFileName(string projectName) => $"{projectName}-image.h";
+		private string MakeFileName(string projectName) => $"{projectName}-make.txt";
+		private string InstructionsFileName(string projectName) => $"{projectName}-instructions.txt";
 	}
 }
