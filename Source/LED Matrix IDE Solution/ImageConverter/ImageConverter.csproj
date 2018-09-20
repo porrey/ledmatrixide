@@ -106,6 +106,8 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ColorItem.cs" />
+    <Compile Include="PixelChangedEventArgs.cs" />
     <Compile Include="ColorMatrix.cs" />
     <Compile Include="BitmapDecoderDecorator.cs" />
     <Compile Include="ImageFile.cs" />

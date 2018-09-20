@@ -76,12 +76,25 @@
 					</AppBarToggleButton.Icon>
 				</AppBarToggleButton>
 
+				<!-- Sand -->
+				<AppBarToggleButton BorderBrush="Transparent"
+									BorderThickness="0,0,0,0"
+									ToolTipService.ToolTip="{x:Bind SandButtonToolTip}"
+									ToolTipService.Placement="Bottom"
+									IsChecked="{Binding SandIsChecked, Mode=TwoWay}"
+									IsEnabled="{Binding SandIsEnabled, Mode=OneWay}">
+					<AppBarToggleButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xED67;" />
+					</AppBarToggleButton.Icon>
+				</AppBarToggleButton>
+
 				<!-- Erase -->
 				<AppBarToggleButton BorderBrush="Transparent"
 									BorderThickness="0,0,0,0"
 									ToolTipService.ToolTip="{x:Bind EraseButtonToolTip}"
 									ToolTipService.Placement="Bottom"
-									IsChecked="{Binding DrawIsChecked, Converter={StaticResource NotBooleanConverter}, Mode=TwoWay}"
+									IsChecked="{Binding EraseIsChecked, Mode=TwoWay}"
 									IsEnabled="{Binding EraseIsEnabled, Mode=OneWay}">
 					<AppBarToggleButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
@@ -254,6 +267,7 @@
 				</AppBarToggleButton>
 			</CommandBar>
 
+			<!-- Project Name -->
 			<Grid Grid.Row="1">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto" />
@@ -273,39 +287,11 @@
 			</Grid>
 
 			<!-- Matrix -->
-			<controls:PixelMatrix x:Name="Matrix"
+			<controls:PixelMatrix x:Name="LedMatrix"
 								  Grid.Row="2"
 								  Margin="0,10,0,10"
 								  BorderThickness="4"
 								  extensions:Mouse.Cursor="Hand" />
-
-			<!--
-			<toolkit:GridSplitter x:Name="splitter"
-								  Grid.Row="3"
-								  Visibility="{Binding ShowOutput, Converter={StaticResource BooleanToVisibilityConverter}}"
-								  ResizeBehavior="BasedOnAlignment"
-								  ResizeDirection="Auto"
-								  Background="{ThemeResource ComboBoxItemBackgroundSelected}"
-								  Foreground="Black"
-								  FontSize="9">
-				<toolkit:GridSplitter.Element>
-					<Border BorderBrush="Black"
-							BorderThickness="1,0,0,0"
-							VerticalAlignment="Stretch"
-							HorizontalAlignment="Stretch">
-						<Grid>
-							<TextBlock HorizontalAlignment="Center"
-									   IsHitTestVisible="False"
-									   VerticalAlignment="Center"
-									   Text="&#xE76F;"
-									   Foreground="Black"
-									   FontFamily="Segoe MDL2 Assets">
-							</TextBlock>
-						</Grid>
-					</Border>
-				</toolkit:GridSplitter.Element>
-			</toolkit:GridSplitter>
-			-->
 
 			<!-- Output Window -->
 			<Grid Grid.Row="3"

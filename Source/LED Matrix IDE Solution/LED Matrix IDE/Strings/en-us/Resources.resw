@@ -259,4 +259,7 @@
   <data name="ImageEditor_ToolTip_BackgroundColorButtonToolTip" xml:space="preserve">
     <value>Select the background color.</value>
   </data>
+  <data name="ImageEditor_ToolTip_SandButton" xml:space="preserve">
+    <value>Set to sand mode.</value>
+  </data>
 </root>

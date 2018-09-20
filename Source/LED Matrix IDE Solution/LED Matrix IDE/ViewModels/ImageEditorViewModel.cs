@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CodeBuilder;
 using ImageConverter;
 using LedMatrixControl;
+using LedMatrixIde.Decorators;
 using LedMatrixIde.Helpers;
 using LedMatrixIde.Interfaces;
 using Prism.Commands;
@@ -45,33 +46,42 @@ namespace LedMatrixIde.ViewModels
 		protected const string ColorMatrixKey = "ColorMatrix";
 		protected const string PixelColorKey = "PixelColorKey";
 		protected const string ProjectNameKey = "ProjectNameKey";
+		protected const string DrawIsCheckedKey = "DrawIsCheckedKey";
+		protected const string SandIsCheckedKey = "SandIsCheckedKey";
+		protected const string EraseIsCheckedKey = "EraseIsCheckedKey";
+
+		/// <summary>
+		/// This is the primary color matrix used to drive the display
+		/// and the code build process.
+		/// </summary>
+		public ColorMatrix Matrix { get; } = new ColorMatrix(64, 64);
 
 		protected IUndoService UndoService { get; set; }
 		protected ColorMatrix CachedColorMatrix { get; set; }
 
-		private IPixelMatrix _pixelMatrix = null;
-		public IPixelMatrix PixelMatrix
+		private IPixelMatrix _ledMatrix = null;
+		public IPixelMatrix LedMatrix
 		{
 			get
 			{
-				return _pixelMatrix;
+				return _ledMatrix;
 			}
 			set
 			{
-				if (value == null && this.PixelMatrix != null)
+				if (value == null && this.LedMatrix != null)
 				{
-					this.PixelMatrix.PixelSelected -= this.PixelMatrix_PixelSelected;
+					this.LedMatrix.PixelSelected -= this.PixelMatrix_PixelSelected;
 				}
 
-				this.SetProperty(ref _pixelMatrix, value);
+				this.SetProperty(ref _ledMatrix, value);
 
-				if (this.PixelMatrix != null)
+				if (this.LedMatrix != null)
 				{
-					this.PixelMatrix.PixelSelected += this.PixelMatrix_PixelSelected;
+					this.LedMatrix.PixelSelected += this.PixelMatrix_PixelSelected;
 
 					if (this.CachedColorMatrix != null)
 					{
-						this.PixelMatrix.SetColorMatrixAsync(this.CachedColorMatrix);
+						this.CachedColorMatrix.SetColorMatrixAsync(this.LedMatrix).Wait();
 					}
 				}
 			}
@@ -83,21 +93,12 @@ namespace LedMatrixIde.ViewModels
 
 			if (e.NavigationMode == NavigationMode.Back)
 			{
-				if (viewModelState.ContainsKey(ImageEditorViewModel.ColorMatrixKey))
-				{
-					string json = (string)viewModelState[ImageEditorViewModel.ColorMatrixKey];
-					this.CachedColorMatrix = await Json.ToObjectAsync<ColorMatrix>(json);
-				}
-
-				if (viewModelState.ContainsKey(ImageEditorViewModel.SelectedColorKey))
-				{
-					this.PixelColor = (Color)viewModelState[ImageEditorViewModel.SelectedColorKey];
-				}
-
-				if (viewModelState.ContainsKey(ImageEditorViewModel.ProjectNameKey))
-				{
-					this.ProjectName = (string)viewModelState[ImageEditorViewModel.ProjectNameKey];
-				}
+				this.CachedColorMatrix = await Json.ToObjectAsync<ColorMatrix>(await viewModelState.TryGetValue<string, object, string>(ImageEditorViewModel.ColorMatrixKey, "{}"));
+				this.PixelColor = await viewModelState.TryGetValue<string, object, Color>(ImageEditorViewModel.SelectedColorKey, Colors.White); ;
+				this.ProjectName = await viewModelState.TryGetValue<string, object, string>(ImageEditorViewModel.ProjectNameKey, String.Empty);
+				this.DrawIsChecked = await viewModelState.TryGetValue<string, object, bool>(ImageEditorViewModel.DrawIsCheckedKey, true);
+				this.SandIsChecked = await viewModelState.TryGetValue<string, object, bool>(ImageEditorViewModel.SandIsCheckedKey, false);
+				this.EraseIsChecked = await viewModelState.TryGetValue<string, object, bool>(ImageEditorViewModel.EraseIsCheckedKey, false);
 
 				viewModelState.Clear();
 			}
@@ -115,12 +116,12 @@ namespace LedMatrixIde.ViewModels
 		{
 			if (e.NavigationMode == NavigationMode.New && !suspending)
 			{
-				ColorMatrix colorMatrix = await this.PixelMatrix.GetColorMatrixAsync();
-				string json = await Json.StringifyAsync(colorMatrix);
-
-				viewModelState[ImageEditorViewModel.ColorMatrixKey] = json;
+				viewModelState[ImageEditorViewModel.ColorMatrixKey] = await Json.StringifyAsync(await this.LedMatrix.GetColorMatrixAsync()); ;
 				viewModelState[ImageEditorViewModel.SelectedColorKey] = this.PixelColor;
 				viewModelState[ImageEditorViewModel.ProjectNameKey] = this.ProjectName;
+				viewModelState[ImageEditorViewModel.DrawIsCheckedKey] = this.DrawIsChecked;
+				viewModelState[ImageEditorViewModel.SandIsCheckedKey] = this.SandIsChecked;
+				viewModelState[ImageEditorViewModel.EraseIsCheckedKey] = this.EraseIsChecked;
 			}
 
 			// ***
@@ -139,12 +140,12 @@ namespace LedMatrixIde.ViewModels
 			this.RedoCommand.RaiseCanExecuteChanged();
 		}
 
-		private async void PixelMatrix_PixelSelected(object sender, PixelSelectedEventArgs e)
+		public async void PixelMatrix_PixelSelected(object sender, PixelSelectedEventArgs e)
 		{
 			if (this.PickColorIsChecked)
 			{
-				Color color = await this.PixelMatrix.GetPixelAsync(e.Row, e.Column);
-				this.PixelColor = color;
+				ColorItem colorItem = await this.Matrix.GetItem(e.Row, e.Column);
+				this.PixelColor = colorItem;
 				this.PickColorIsChecked = false;
 				this.DrawIsChecked = true;
 			}
@@ -153,44 +154,63 @@ namespace LedMatrixIde.ViewModels
 				// ***
 				// *** Cache the old color of this pixel.
 				// ***
-				Color oldColor = await this.PixelMatrix.GetPixelAsync(e.Row, e.Column);
+				ColorItem oldColorItem = await this.Matrix.GetItem(e.Row, e.Column);
 
-				if (!this.DrawIsChecked ||
+				if (this.EraseIsChecked ||
 					e.KeyModifiers == VirtualKeyModifiers.Control ||
 					e.KeyModifiers == VirtualKeyModifiers.Shift ||
 					e.KeyModifiers == VirtualKeyModifiers.Menu)
 				{
-					if (oldColor != this.PixelMatrix.BackgroundColor)
+					if (oldColorItem.ItemType != ColorItem.ColorItemType.Background)
 					{
 						// ***
 						// *** Update the pixel.
 						// ***
-						await this.PixelMatrix.ResetPixelAsync(e.Row, e.Column);
+						await this.Matrix.SetItem(e.Row, e.Column, this.PixelColor);
 
 						// ***
 						// *** Set up the undo task.
 						// ***
-						async Task undoAction() { await this.PixelMatrix.SetPixelAsync(e.Row, e.Column, oldColor); }
-						async Task redoAction() { await this.PixelMatrix.ResetPixelAsync(e.Row, e.Column); }
+						async Task undoAction() { await this.Matrix.SetItem(e.Row, e.Column, oldColorItem); }
+						async Task redoAction() { await this.Matrix.SetItem(e.Row, e.Column, this.BackgroundColor, ColorItem.ColorItemType.Background); }
 						await this.UndoService.AddUndoTask(undoAction, redoAction, $"Reset Pixel [{e.Column}, {e.Row}]");
 					}
 				}
 				else
 				{
-					if (oldColor != this.PixelColor)
+					if (this.DrawIsChecked)
 					{
-						// ***
-						// *** Update the pixel.
-						// ***
-						await this.PixelMatrix.SetPixelAsync(e.Row, e.Column, this.PixelColor);
+						if (oldColorItem != this.PixelColor || oldColorItem.ItemType != ColorItem.ColorItemType.Pixel)
+						{
+							// ***
+							// *** Update the pixel.
+							// ***
+							await this.Matrix.SetItem(e.Row, e.Column, this.PixelColor, ColorItem.ColorItemType.Pixel);
 
-						// ***
-						// *** Set up the undo task.
-						// ***
-						Color color = this.PixelColor;
-						async Task undoAction() { await this.PixelMatrix.SetPixelAsync(e.Row, e.Column, oldColor); }
-						async Task redoAction() { await this.PixelMatrix.SetPixelAsync(e.Row, e.Column, color); }
-						await this.UndoService.AddUndoTask(undoAction, redoAction, $"Set Pixel [{e.Column}, {e.Row}, {color.ToString()}]");
+							// ***
+							// *** Set up the undo task.
+							// ***
+							async Task undoAction() { await this.Matrix.SetItem(e.Row, e.Column, oldColorItem); }
+							async Task redoAction() { await this.Matrix.SetItem(e.Row, e.Column, this.PixelColor, ColorItem.ColorItemType.Pixel); }
+							await this.UndoService.AddUndoTask(undoAction, redoAction, $"Set Pixel [{e.Column}, {e.Row}, {this.PixelColor.ToString()}]");
+						}
+					}
+					else
+					{
+						if (oldColorItem != this.PixelColor || oldColorItem.ItemType != ColorItem.ColorItemType.Sand)
+						{
+							// ***
+							// *** Update the pixel.
+							// ***
+							await this.Matrix.SetItem(e.Row, e.Column, this.PixelColor, ColorItem.ColorItemType.Sand);
+
+							// ***
+							// *** Set up the undo task.
+							// ***
+							async Task undoAction() { await this.Matrix.SetItem(e.Row, e.Column, oldColorItem); }
+							async Task redoAction() { await this.Matrix.SetItem(e.Row, e.Column, this.PixelColor, ColorItem.ColorItemType.Sand); }
+							await this.UndoService.AddUndoTask(undoAction, redoAction, $"Set Pixel [{e.Column}, {e.Row}, {this.PixelColor.ToString()}]");
+						}
 					}
 				}
 			}
@@ -209,6 +229,7 @@ namespace LedMatrixIde.ViewModels
 		public DelegateCommand ClearOutputCommand { get; set; }
 
 		public bool DrawIsEnabled => !this.PickColorIsChecked;
+		public bool SandIsEnabled => !this.PickColorIsChecked;
 		public bool EraseIsEnabled => !this.PickColorIsChecked;
 		public bool ColorPickerIsEnabled => !this.PickColorIsChecked;
 		public bool BackgroundColorPickerIsEnabled => !this.PickColorIsChecked;
@@ -225,6 +246,7 @@ namespace LedMatrixIde.ViewModels
 				this.SetProperty(ref _pickColorIsChecked, value);
 
 				this.RaisePropertyChanged(nameof(this.DrawIsEnabled));
+				this.RaisePropertyChanged(nameof(this.SandIsEnabled));
 				this.RaisePropertyChanged(nameof(this.EraseIsEnabled));
 				this.RaisePropertyChanged(nameof(this.ColorPickerIsEnabled));
 				this.RaisePropertyChanged(nameof(this.BackgroundColorPickerIsEnabled));
@@ -252,6 +274,50 @@ namespace LedMatrixIde.ViewModels
 			set
 			{
 				this.SetProperty(ref _drawIsChecked, value);
+
+				if (this.DrawIsChecked)
+				{
+					this.SandIsChecked = false;
+					this.EraseIsChecked = false;
+				}
+			}
+		}
+
+		private bool _sandIsChecked = false;
+		public bool SandIsChecked
+		{
+			get
+			{
+				return _sandIsChecked;
+			}
+			set
+			{
+				this.SetProperty(ref _sandIsChecked, value);
+
+				if (this.SandIsChecked)
+				{
+					this.DrawIsChecked = false;
+					this.EraseIsChecked = false;
+				}
+			}
+		}
+
+		private bool _eraseIsChecked = false;
+		public bool EraseIsChecked
+		{
+			get
+			{
+				return _eraseIsChecked;
+			}
+			set
+			{
+				this.SetProperty(ref _eraseIsChecked, value);
+
+				if (this.EraseIsChecked)
+				{
+					this.DrawIsChecked = false;
+					this.SandIsChecked = false;
+				}
 			}
 		}
 
@@ -278,7 +344,6 @@ namespace LedMatrixIde.ViewModels
 			set
 			{
 				this.SetProperty(ref _backgroundColor, value);
-				this.PixelMatrix.BackgroundColor = this.BackgroundColor;
 			}
 		}
 
@@ -335,25 +400,25 @@ namespace LedMatrixIde.ViewModels
 					// ***
 					// *** Use the filename as the project name.
 					// ***
-					this.ProjectName = file.DisplayName;
+					this.ProjectName = file.DisplayName.Replace(" ", "");
 
 					// ***
 					// *** Get a copy of the current color matrix.
 					// ***
-					ColorMatrix oldColorMatrix = await this.PixelMatrix.GetColorMatrixAsync();
+					ColorMatrix oldColorMatrix = await this.LedMatrix.GetColorMatrixAsync();
 
 					// ***
 					// ***
 					// ***
-					ImageFile imageFile = new ImageFile(file, (uint)this.PixelMatrix.RowCount, (uint)this.PixelMatrix.ColumnCount);
+					ImageFile imageFile = new ImageFile(file, (uint)this.LedMatrix.RowCount, (uint)this.LedMatrix.ColumnCount);
 					ColorMatrix colorMatrix = await imageFile.LoadAsync();
-					await this.PixelMatrix.SetColorMatrixAsync(colorMatrix);
+					await colorMatrix.SetColorMatrixAsync(this.LedMatrix);
 
 					// ***
 					// *** Set up the undo task.
 					// ***
-					async Task undoAction() { await this.PixelMatrix.SetColorMatrixAsync(oldColorMatrix); }
-					async Task redoAction() { await this.PixelMatrix.SetColorMatrixAsync(colorMatrix); }
+					async Task undoAction() { await oldColorMatrix.SetColorMatrixAsync(this.LedMatrix); }
+					async Task redoAction() { await colorMatrix.SetColorMatrixAsync(this.LedMatrix); }
 					await this.UndoService.AddUndoTask(undoAction, redoAction, $"Load File [{file.Name}]");
 				}
 			}
@@ -371,7 +436,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableLoadCommand()
 		{
-			return !this.PickColorIsChecked && this.PixelMatrix != null;
+			return !this.PickColorIsChecked;// && this.LedMatrix != null;
 		}
 
 		public async void OnSaveCommand()
@@ -383,8 +448,8 @@ namespace LedMatrixIde.ViewModels
 
 			if (storageFile != null)
 			{
-				ColorMatrix colorMatrix = await this.PixelMatrix.GetColorMatrixAsync();
-				ImageFile imageFile = new ImageFile(storageFile, (uint)this.PixelMatrix.RowCount, (uint)this.PixelMatrix.ColumnCount);
+				ColorMatrix colorMatrix = await this.LedMatrix.GetColorMatrixAsync();
+				ImageFile imageFile = new ImageFile(storageFile, (uint)this.LedMatrix.RowCount, (uint)this.LedMatrix.ColumnCount);
 				bool isSaved = await imageFile.SaveAsync(colorMatrix);
 			}
 		}
@@ -392,8 +457,7 @@ namespace LedMatrixIde.ViewModels
 		public bool OnEnableSaveCommand()
 		{
 			return !this.PickColorIsChecked &&
-				   !String.IsNullOrWhiteSpace(this.ProjectName)
-				   && this.PixelMatrix != null;
+				   !String.IsNullOrWhiteSpace(this.ProjectName);
 		}
 
 		public async void OnClearCommand()
@@ -401,24 +465,24 @@ namespace LedMatrixIde.ViewModels
 			// ***
 			// *** Get a copy of the current color matrix.
 			// ***
-			ColorMatrix oldColorMatrix = await this.PixelMatrix.GetColorMatrixAsync();
+			ColorMatrix oldColorMatrix = await this.LedMatrix.GetColorMatrixAsync();
 
 			// ***
 			// *** Clear the matrix.
 			// ***
-			await this.PixelMatrix.ClearMatrixAsync();
+			await this.LedMatrix.ClearAsync();
 
 			// ***
 			// *** Set up the undo task.
 			// ***
-			async Task undoAction() { await this.PixelMatrix.SetColorMatrixAsync(oldColorMatrix); }
-			async Task redoAction() { await this.PixelMatrix.ClearMatrixAsync(); }
+			async Task undoAction() { await oldColorMatrix.SetColorMatrixAsync(this.LedMatrix); }
+			async Task redoAction() { await this.LedMatrix.ClearAsync(); }
 			await this.UndoService.AddUndoTask(undoAction, redoAction, "Clear");
 		}
 
 		public bool OnEnableClearCommand()
 		{
-			return !this.PickColorIsChecked && this.PixelMatrix != null;
+			return !this.PickColorIsChecked;
 		}
 
 		public async void OnRotateClockwiseCommand()
@@ -426,26 +490,26 @@ namespace LedMatrixIde.ViewModels
 			// ***
 			// *** Get a copy of the current color matrix.
 			// ***
-			ColorMatrix colorMatrix = await this.PixelMatrix.GetColorMatrixAsync();
+			ColorMatrix colorMatrix = await this.LedMatrix.GetColorMatrixAsync();
 			ColorMatrix oldColorMatrix = await colorMatrix.CloneAsync();
 
 			// ***
 			// *** Rotate the color matrix and apply it.
 			// ***
 			await colorMatrix.RotateClockwiseAsync();
-			await this.PixelMatrix.SetColorMatrixAsync(colorMatrix);
+			await colorMatrix.SetColorMatrixAsync(this.LedMatrix);
 
 			// ***
 			// *** Set up the undo task.
 			// ***
-			async Task undoAction() { await this.PixelMatrix.SetColorMatrixAsync(oldColorMatrix); }
-			async Task redoAction() { await this.PixelMatrix.SetColorMatrixAsync(colorMatrix); }
+			async Task undoAction() { await oldColorMatrix.SetColorMatrixAsync(this.LedMatrix); }
+			async Task redoAction() { await colorMatrix.SetColorMatrixAsync(this.LedMatrix); }
 			await this.UndoService.AddUndoTask(undoAction, redoAction, "Rotate Clockwise");
 		}
 
 		public bool OnEnableRotateClockwiseCommand()
 		{
-			return !this.PickColorIsChecked && this.PixelMatrix != null;
+			return !this.PickColorIsChecked;
 		}
 
 		public async void OnRotateCounterClockwiseCommand()
@@ -453,26 +517,26 @@ namespace LedMatrixIde.ViewModels
 			// ***
 			// *** Get a copy of the current color matrix.
 			// ***
-			ColorMatrix colorMatrix = await this.PixelMatrix.GetColorMatrixAsync();
+			ColorMatrix colorMatrix = await this.LedMatrix.GetColorMatrixAsync();
 			ColorMatrix oldColorMatrix = await colorMatrix.CloneAsync();
 
 			// ***
 			// *** Rotate the color matrix and apply it.
 			// ***
 			await colorMatrix.RotateCounterClockwiseAsync();
-			await this.PixelMatrix.SetColorMatrixAsync(colorMatrix);
+			await colorMatrix.SetColorMatrixAsync(this.LedMatrix);
 
 			// ***
 			// *** Set up the undo task.
 			// ***
-			async Task undoAction() { await this.PixelMatrix.SetColorMatrixAsync(oldColorMatrix); }
-			async Task redoAction() { await this.PixelMatrix.SetColorMatrixAsync(colorMatrix); }
+			async Task undoAction() { await oldColorMatrix.SetColorMatrixAsync(this.LedMatrix); }
+			async Task redoAction() { await colorMatrix.SetColorMatrixAsync(this.LedMatrix); }
 			await this.UndoService.AddUndoTask(undoAction, redoAction, "Rotate Counter-Clockwise");
 		}
 
 		public bool OnEnableRotateCounterClockwiseCommand()
 		{
-			return !this.PickColorIsChecked && this.PixelMatrix != null;
+			return !this.PickColorIsChecked;
 		}
 
 		public async void OnFlipHorizontalCommand()
@@ -480,26 +544,26 @@ namespace LedMatrixIde.ViewModels
 			// ***
 			// *** Get a copy of the current color matrix.
 			// ***
-			ColorMatrix colorMatrix = await this.PixelMatrix.GetColorMatrixAsync();
+			ColorMatrix colorMatrix = await this.LedMatrix.GetColorMatrixAsync();
 			ColorMatrix oldColorMatrix = await colorMatrix.CloneAsync();
 
 			// ***
 			// *** Flip the color matrix and apply it.
 			// ***
 			await colorMatrix.FlipHorizontalAsync();
-			await this.PixelMatrix.SetColorMatrixAsync(colorMatrix);
+			await colorMatrix.SetColorMatrixAsync(this.LedMatrix);
 
 			// ***
 			// *** Set up the undo task.
 			// ***
-			async Task undoAction() { await this.PixelMatrix.SetColorMatrixAsync(oldColorMatrix); }
-			async Task redoAction() { await this.PixelMatrix.SetColorMatrixAsync(colorMatrix); }
+			async Task undoAction() { await oldColorMatrix.SetColorMatrixAsync(this.LedMatrix); }
+			async Task redoAction() { await colorMatrix.SetColorMatrixAsync(this.LedMatrix); }
 			await this.UndoService.AddUndoTask(undoAction, redoAction, "Flip Horizontal");
 		}
 
 		public bool OnEnableFlipHorizontalCommand()
 		{
-			return !this.PickColorIsChecked && this.PixelMatrix != null;
+			return !this.PickColorIsChecked;
 		}
 
 		public async void OnFlipVerticalCommand()
@@ -507,26 +571,26 @@ namespace LedMatrixIde.ViewModels
 			// ***
 			// *** Get a copy of the current color matrix.
 			// ***
-			ColorMatrix colorMatrix = await this.PixelMatrix.GetColorMatrixAsync();
+			ColorMatrix colorMatrix = await this.LedMatrix.GetColorMatrixAsync();
 			ColorMatrix oldColorMatrix = await colorMatrix.CloneAsync();
 
 			// ***
 			// *** Flip the color matrix and apply it.
 			// ***
 			await colorMatrix.FlipVerticalAsync();
-			await this.PixelMatrix.SetColorMatrixAsync(colorMatrix);
+			await colorMatrix.SetColorMatrixAsync(this.LedMatrix);
 
 			// ***
 			// *** Set up the undo task.
 			// ***
-			async Task undoAction() { await this.PixelMatrix.SetColorMatrixAsync(oldColorMatrix); }
-			async Task redoAction() { await this.PixelMatrix.SetColorMatrixAsync(colorMatrix); }
+			async Task undoAction() { await oldColorMatrix.SetColorMatrixAsync(this.LedMatrix); }
+			async Task redoAction() { await colorMatrix.SetColorMatrixAsync(this.LedMatrix); }
 			await this.UndoService.AddUndoTask(undoAction, redoAction, "Flip Vertical");
 		}
 
 		public bool OnEnableFlipVerticalCommand()
 		{
-			return !this.PickColorIsChecked && this.PixelMatrix != null;
+			return !this.PickColorIsChecked;
 		}
 
 		public async void OnBuildCommand()
@@ -547,7 +611,7 @@ namespace LedMatrixIde.ViewModels
 				this.OutputItems.Clear();
 				this.ShowOutput = true;
 
-				ColorMatrix colorMatrix = await this.PixelMatrix.GetColorMatrixAsync();
+				ColorMatrix colorMatrix = await this.LedMatrix.GetColorMatrixAsync();
 
 				IBuilder codeBuilder = new Builder();
 				codeBuilder.BuildEvent += (s, e) =>
@@ -562,7 +626,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableBuildCommand()
 		{
-			return !String.IsNullOrWhiteSpace(this.ProjectName) && this.PixelMatrix != null;
+			return !String.IsNullOrWhiteSpace(this.ProjectName);
 		}
 
 		public async void OnRedoCommand()
@@ -572,7 +636,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableRedoCommand()
 		{
-			return this.UndoService.CanRedo && this.PixelMatrix != null;
+			return this.UndoService.CanRedo;
 		}
 
 		public async void OnUndoCommand()
@@ -582,7 +646,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableUndoCommand()
 		{
-			return this.UndoService.CanUndo && this.PixelMatrix != null;
+			return this.UndoService.CanUndo;
 		}
 
 		public void OnClearOutputCommand()
@@ -593,7 +657,7 @@ namespace LedMatrixIde.ViewModels
 
 		public bool OnEnableClearOutputCommand()
 		{
-			return (this.OutputItems.Count() > 0) && this.PixelMatrix != null;
+			return (this.OutputItems.Count() > 0);
 		}
 	}
 }

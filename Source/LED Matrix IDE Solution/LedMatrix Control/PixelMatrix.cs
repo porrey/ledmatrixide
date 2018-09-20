@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ImageConverter;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Input;
@@ -25,7 +24,7 @@ namespace LedMatrixControl
 			this.PointerPressed += this.UiElement_PointerPressed;
 			this.PointerReleased += this.UiElement_PointerReleased;
 
-			this.PixelBackground = new SolidColorBrush(this._backgroundColor);
+			this.PixelBackground = new SolidColorBrush(this.DefaultBackgroundColor);
 			this.PixelBorder = new SolidColorBrush(this.DefaultBorderColor);
 
 			this.SizeChanged += this.PixelMatrix_SizeChanged;
@@ -39,24 +38,11 @@ namespace LedMatrixControl
 		protected Border[,] Cells { get; set; }
 		protected bool PointerIsPressed = false;
 		protected Grid MainGrid { get; set; }
-		protected int PreviousRow { get; set; } = 0;
-		protected int PreviousColumn { get; set; } = 0;
+		protected uint PreviousRow { get; set; } = 0;
+		protected uint PreviousColumn { get; set; } = 0;
 		protected VirtualKeyModifiers PreviousKeyModifiers { get; set; } = VirtualKeyModifiers.None;
 
-		private Color _backgroundColor = Color.FromArgb(255, 0, 0, 0);
-		public Color BackgroundColor
-		{
-			get
-			{
-				return _backgroundColor;
-			}
-			set
-			{
-				_backgroundColor = value;
-				this.ApplyBackgroundColor(this.BackgroundColor);
-			}
-		}
-
+		public Color DefaultBackgroundColor => Color.FromArgb(255, 0, 0, 0);
 		public Color DefaultBorderColor => Color.FromArgb(255, 0, 0, 0);
 
 		public int RowCount
@@ -107,72 +93,35 @@ namespace LedMatrixControl
 			}
 		}
 
-		public Task<Color> GetPixelAsync(int row, int column)
+		public Task<Color> GetPixelAsync(uint row, uint column)
 		{
 			Color color = ((SolidColorBrush)this.Cells[row, column].Background).Color;
 			return Task.FromResult(color);
 		}
 
-		public Task SetPixelAsync(int row, int column, Color color)
+		public async Task SetPixelAsync(uint row, uint column, Color backgroundColor)
 		{
-			this.Cells[row, column].Background = new SolidColorBrush(color);
-			this.Cells[row, column].BorderBrush = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+			await this.SetPixelAsync(row, column, backgroundColor, this.DefaultBorderColor);
+		}
+
+		public Task SetPixelAsync(uint row, uint column, Color backgroundColor, Color borderColor)
+		{
+			this.Cells[row, column].Background = new SolidColorBrush(backgroundColor);
+			this.Cells[row, column].BorderBrush = new SolidColorBrush(borderColor);
+
 			return Task.FromResult(0);
 		}
 
-		public Task ResetPixelAsync(int row, int column)
+		public async Task ClearAsync()
 		{
-			this.Cells[row, column].Background = this.PixelBackground;
-			this.Cells[row, column].BorderBrush = this.PixelBorder;
-			return Task.FromResult(0);
-		}
-
-		public async Task ClearMatrixAsync()
-		{
-			for (int row = 0; row < this.RowCount; row++)
+			for (uint row = 0; row < this.RowCount; row++)
 			{
-				for (int column = 0; column < this.ColumnCount; column++)
+				for (uint column = 0; column < this.ColumnCount; column++)
 				{
 
-					await this.ResetPixelAsync(row, column);
+					await this.SetPixelAsync(row, column, this.DefaultBackgroundColor, this.DefaultBorderColor);
 				}
 			}
-		}
-
-		public async Task<ColorMatrix> GetColorMatrixAsync()
-		{
-			ColorMatrix returnValue = new ColorMatrix((uint)this.RowCount, (uint)this.ColumnCount);
-
-			for (int row = 0; row < this.RowCount; row++)
-			{
-				for (int column = 0; column < this.ColumnCount; column++)
-				{
-					returnValue.ColorItems[row, column] = await this.GetPixelAsync(row, column);
-				}
-			}
-
-			return returnValue;
-		}
-
-		public async Task SetColorMatrixAsync(ColorMatrix colorMatrix)
-		{
-			for (int row = 0; row < this.RowCount; row++)
-			{
-				for (int column = 0; column < this.ColumnCount; column++)
-				{
-					Color color = colorMatrix.ColorItems[row, column];
-
-					if (color.A > 0)
-					{
-						await this.SetPixelAsync(row, column, color);
-					}
-				}
-			}
-		}
-
-		public Task ApplyBackgroundColor(Color backgroundColor)
-		{
-			return Task.CompletedTask;
 		}
 
 		protected override void OnApplyTemplate()
@@ -232,12 +181,22 @@ namespace LedMatrixControl
 			}
 		}
 
-		protected void OnPixelChanged(PixelSelectedEventArgs e)
+		private Task<(uint Row, uint Column)> GetPixelCoordinates(Border border)
+		{
+			(uint Row, uint Column) returnValue = (0, 0);
+
+			returnValue.Row = Convert.ToUInt32(border.GetValue(Grid.RowProperty));
+			returnValue.Column = Convert.ToUInt32(border.GetValue(Grid.ColumnProperty));
+
+			return Task.FromResult(returnValue);
+		}
+
+		private void OnPixelChanged(PixelSelectedEventArgs e)
 		{
 			this.PixelSelected?.Invoke(this, e);
 		}
 
-		protected async Task ProcessPointer(PointerRoutedEventArgs e)
+		private async Task ProcessPointer(PointerRoutedEventArgs e)
 		{
 			PointerPoint point = e.GetCurrentPoint(null);
 			IEnumerable<UIElement> elements = VisualTreeHelper.FindElementsInHostCoordinates(point.Position, this.MainGrid);
@@ -249,7 +208,7 @@ namespace LedMatrixControl
 				// ***
 				if (elements.FirstOrDefault() is Border border)
 				{
-					(int row, int column) = await this.GetPixelCoordinates(border);
+					(uint row, uint column) = await this.GetPixelCoordinates(border);
 
 					if (this.PreviousRow != row ||
 						this.PreviousColumn != column ||
@@ -263,16 +222,6 @@ namespace LedMatrixControl
 					}
 				}
 			}
-		}
-
-		protected Task<(int Row, int Column)> GetPixelCoordinates(Border border)
-		{
-			(int Row, int Column) returnValue = (0, 0);
-
-			returnValue.Row = (int)border.GetValue(Grid.RowProperty);
-			returnValue.Column = (int)border.GetValue(Grid.ColumnProperty);
-
-			return Task.FromResult(returnValue);
 		}
 
 		private async void UiElement_PointerPressed(object sender, PointerRoutedEventArgs e)

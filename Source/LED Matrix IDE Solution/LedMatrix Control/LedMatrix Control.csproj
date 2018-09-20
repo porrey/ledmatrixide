@@ -123,12 +123,6 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ImageConverter\ImageConverter.csproj">
-      <Project>{63457CD0-EF72-493D-8BA9-DC2510CBCF3C}</Project>
-      <Name>ImageConverter</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

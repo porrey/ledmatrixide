@@ -48,10 +48,15 @@ namespace ImageConverter
 						for (int column = 0; column < width; column++)
 						{
 							Color color = await bytes.GetPixelAsync(row, column, width, height);
+							returnValue.ColorItems[row + startRow, column + startColumn] = color;
 
 							if (color.A > 0)
 							{
-								returnValue.ColorItems[row + startRow, column + startColumn] = color;
+								returnValue.ColorItems[row + startRow, column + startColumn].ItemType = ColorItem.ColorItemType.Pixel;
+							}
+							else
+							{
+								returnValue.ColorItems[row + startRow, column + startColumn].ItemType = ColorItem.ColorItemType.Background;
 							}
 						}
 					}
