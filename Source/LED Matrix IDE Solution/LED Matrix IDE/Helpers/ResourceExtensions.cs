@@ -1,11 +1,8 @@
-﻿using System;
-using System.Runtime.InteropServices;
-
-using Windows.ApplicationModel.Resources;
+﻿using Windows.ApplicationModel.Resources;
 
 namespace LedMatrixIde.Helpers
 {
-    internal static class ResourceExtensions
+	internal static class ResourceExtensions
     {
         private static ResourceLoader _resLoader = new ResourceLoader();
 

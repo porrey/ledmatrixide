@@ -129,53 +129,22 @@
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\ColorToSolidColorBrushConverter.cs" />
     <Compile Include="Converters\NotBooleanConverter.cs" />
-    <Compile Include="Helpers\DataRequestExtensions.cs" />
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
-    <Compile Include="Helpers\ShareOperationExtensions.cs" />
-    <Compile Include="Models\DragDropCompletedData.cs" />
-    <Compile Include="Models\DragDropData.cs" />
-    <Compile Include="Models\DragDropStartingData.cs" />
-    <Compile Include="Models\SampleImage.cs" />
-    <Compile Include="Models\SampleOrder.cs" />
-    <Compile Include="Models\ShareSourceData.cs" />
-    <Compile Include="Models\ShareSourceItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Constants\PageTokens.cs" />
-    <Compile Include="Services\DragAndDrop\DragDropService.cs" />
-    <Compile Include="Services\DragAndDrop\DropConfiguration.cs" />
-    <Compile Include="Services\DragAndDrop\ListViewDropConfiguration.cs" />
-    <Compile Include="Services\DragAndDrop\VisualDropConfiguration.cs" />
-    <Compile Include="Interfaces\ISampleDataService.cs" />
     <Compile Include="Interfaces\IUndoService.cs" />
-    <Compile Include="Services\SampleDataService.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\UndoService.cs" />
-    <Compile Include="TemplateSelectors\SharedContentTemplateSelector.cs" />
     <Compile Include="ViewModels\ImageEditorViewModel.cs" />
-    <Compile Include="ViewModels\ImageGalleryDetailViewModel.cs" />
-    <Compile Include="ViewModels\ImageGalleryViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\SharedDataStorageItemsViewModel.cs" />
-    <Compile Include="ViewModels\SharedDataViewModelBase.cs" />
-    <Compile Include="ViewModels\SharedDataWebLinkViewModel.cs" />
-    <Compile Include="ViewModels\ShareTargetViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Views\ImageEditorPage.xaml.cs">
       <DependentUpon>ImageEditorPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ImageGalleryDetailPage.xaml.cs">
-      <DependentUpon>ImageGalleryDetailPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ImageGalleryPage.xaml.cs">
-      <DependentUpon>ImageGalleryPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ShareTargetPage.xaml.cs">
-      <DependentUpon>ShareTargetPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShellPage.xaml.cs">
       <DependentUpon>ShellPage.xaml</DependentUpon>
@@ -210,19 +179,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\ImageGalleryDetailPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ImageGalleryPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\SettingsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ShareTargetPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

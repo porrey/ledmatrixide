@@ -1,14 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-
 using Windows.Storage;
 using Windows.Storage.Streams;
 
 namespace LedMatrixIde.Helpers
 {
-	// Use these extension methods to store and retrieve local and roaming app data
-	// More details regarding storing and retrieving app data at https://docs.microsoft.com/windows/uwp/app-settings/store-and-retrieve-app-data
 	public static class SettingsStorageExtensions
 	{
 		private const string FileExtension = ".json";
@@ -20,8 +17,8 @@ namespace LedMatrixIde.Helpers
 
 		public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
 		{
-			var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
-			var fileContent = await Json.StringifyAsync(content);
+			StorageFile file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
+			string fileContent = await Json.StringifyAsync(content);
 
 			await FileIO.WriteTextAsync(file, fileContent);
 		}
@@ -68,23 +65,23 @@ namespace LedMatrixIde.Helpers
 				throw new ArgumentNullException(nameof(content));
 			}
 
-			if (string.IsNullOrEmpty(fileName))
+			if (String.IsNullOrEmpty(fileName))
 			{
 				throw new ArgumentException("ExceptionSettingsStorageExtensionsFileNameIsNullOrEmpty".GetLocalized(), nameof(fileName));
 			}
 
-			var storageFile = await folder.CreateFileAsync(fileName, options);
+			StorageFile storageFile = await folder.CreateFileAsync(fileName, options);
 			await FileIO.WriteBytesAsync(storageFile, content);
 			return storageFile;
 		}
 
 		public static async Task<byte[]> ReadFileAsync(this StorageFolder folder, string fileName)
 		{
-			var item = await folder.TryGetItemAsync(fileName).AsTask().ConfigureAwait(false);
+			IStorageItem item = await folder.TryGetItemAsync(fileName).AsTask().ConfigureAwait(false);
 
 			if ((item != null) && item.IsOfType(StorageItemTypes.File))
 			{
-				var storageFile = await folder.GetFileAsync(fileName);
+				StorageFile storageFile = await folder.GetFileAsync(fileName);
 				byte[] content = await storageFile.ReadBytesAsync();
 				return content;
 			}
@@ -98,10 +95,10 @@ namespace LedMatrixIde.Helpers
 			{
 				using (IRandomAccessStream stream = await file.OpenReadAsync())
 				{
-					using (var reader = new DataReader(stream.GetInputStreamAt(0)))
+					using (DataReader reader = new DataReader(stream.GetInputStreamAt(0)))
 					{
 						await reader.LoadAsync((uint)stream.Size);
-						var bytes = new byte[stream.Size];
+						byte[] bytes = new byte[stream.Size];
 						reader.ReadBytes(bytes);
 						return bytes;
 					}
@@ -113,7 +110,7 @@ namespace LedMatrixIde.Helpers
 
 		private static string GetFileName(string name)
 		{
-			return string.Concat(name, FileExtension);
+			return String.Concat(name, FileExtension);
 		}
 	}
 }

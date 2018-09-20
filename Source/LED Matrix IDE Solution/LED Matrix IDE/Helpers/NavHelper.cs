@@ -1,11 +1,9 @@
-﻿using System;
-
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace LedMatrixIde.Helpers
 {
-    public class NavHelper
+	public class NavHelper
     {
         public static string GetNavigateTo(NavigationViewItem item)
         {

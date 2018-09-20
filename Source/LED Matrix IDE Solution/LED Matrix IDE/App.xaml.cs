@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using LedMatrixIde.Helpers;
 using LedMatrixIde.Interfaces;
 using LedMatrixIde.Services;
 using LedMatrixIde.Views;
@@ -31,7 +30,6 @@ namespace LedMatrixIde
             base.ConfigureContainer();
 
 			this.Container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
-			this.Container.RegisterType<ISampleDataService, SampleDataService>();
 			this.Container.RegisterType<IUndoService, UndoService>();
 		}
 
