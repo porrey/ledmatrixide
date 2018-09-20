@@ -107,10 +107,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ColorMatrix.cs" />
+    <Compile Include="BitmapDecoderDecorator.cs" />
     <Compile Include="ImageFile.cs" />
-    <Compile Include="ImageSize.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WriteableBitmapDecorator.cs" />
+    <Compile Include="DecodedBytesDecorator.cs" />
     <EmbeddedResource Include="Properties\ImageConverter.rd.xml" />
   </ItemGroup>
   <ItemGroup>
