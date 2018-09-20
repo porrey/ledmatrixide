@@ -23,7 +23,23 @@
 								helpers:NavHelper.NavigateTo="ImageEditor">
 				<NavigationViewItem.Icon>
 					<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-							  Glyph="&#xE193;" />
+							  Glyph="&#xE70F;" />
+				</NavigationViewItem.Icon>
+			</NavigationViewItem>
+
+			<NavigationViewItem x:Uid="Shell_ProjectWebView"
+								helpers:NavHelper.NavigateTo="ProjectWebView">
+				<NavigationViewItem.Icon>
+					<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+							  Glyph="&#xEBC6;" />
+				</NavigationViewItem.Icon>
+			</NavigationViewItem>
+
+			<NavigationViewItem x:Uid="Shell_GitHubWebView"
+								helpers:NavHelper.NavigateTo="GitHubWebView">
+				<NavigationViewItem.Icon>
+					<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+							  Glyph="&#xE943;" />
 				</NavigationViewItem.Icon>
 			</NavigationViewItem>
 		</NavigationView.MenuItems>

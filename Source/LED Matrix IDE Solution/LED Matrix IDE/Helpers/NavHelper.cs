@@ -17,5 +17,5 @@ namespace LedMatrixIde.Helpers
 
         public static readonly DependencyProperty NavigateToProperty =
             DependencyProperty.RegisterAttached("NavigateTo", typeof(string), typeof(NavHelper), new PropertyMetadata(null));
-    }
+	}
 }
