@@ -96,7 +96,7 @@
 							  ToolTipService.Placement="Bottom"
 							  Margin="0"
 							  BorderBrush="{Binding PixelColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
-							  BorderThickness="6"
+							  BorderThickness="5"
 							  IsEnabled="{Binding ColorPickerIsEnabled, Mode=OneWay}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
@@ -128,6 +128,32 @@
 								  Glyph="&#xEF3C;" />
 					</AppBarToggleButton.Icon>
 				</AppBarToggleButton>
+
+				<!-- Background Color -->
+				<AppBarButton ToolTipService.ToolTip="{x:Bind BackgroundColorButtonToolTip}"
+							  ToolTipService.Placement="Bottom"
+							  Margin="0"
+							  BorderBrush="{Binding BackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+							  BorderThickness="5"
+							  IsEnabled="{Binding BackgroundColorPickerIsEnabled, Mode=OneWay}">
+					<AppBarButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xE739;" />
+					</AppBarButton.Icon>
+					<AppBarButton.Flyout>
+						<Flyout>
+							<ColorPicker Color="{Binding BackgroundColor, Mode=TwoWay}"
+										 IsAlphaEnabled="True"
+										 IsAlphaSliderVisible="True"
+										 IsColorChannelTextInputVisible="True"
+										 IsColorPreviewVisible="True"
+										 IsColorSliderVisible="True"
+										 IsColorSpectrumVisible="True"
+										 ColorSpectrumShape="Ring"
+										 IsMoreButtonVisible="False" />
+						</Flyout>
+					</AppBarButton.Flyout>
+				</AppBarButton>
 
 				<AppBarSeparator />
 

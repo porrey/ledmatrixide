@@ -9,7 +9,7 @@ namespace LedMatrixControl
 	public interface IPixelMatrix
 	{
 		event EventHandler<PixelSelectedEventArgs> PixelSelected;
-		Color DefaultBackgroundColor { get; }
+		Color BackgroundColor { get; set; }
 		Color DefaultBorderColor { get; }
 		int ColumnCount { get; set; }
 		Brush PixelBackground { get; set; }

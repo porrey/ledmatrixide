@@ -25,7 +25,7 @@ namespace LedMatrixControl
 			this.PointerPressed += this.UiElement_PointerPressed;
 			this.PointerReleased += this.UiElement_PointerReleased;
 
-			this.PixelBackground = new SolidColorBrush(this.DefaultBackgroundColor);
+			this.PixelBackground = new SolidColorBrush(this._backgroundColor);
 			this.PixelBorder = new SolidColorBrush(this.DefaultBorderColor);
 
 			this.SizeChanged += this.PixelMatrix_SizeChanged;
@@ -43,7 +43,20 @@ namespace LedMatrixControl
 		protected int PreviousColumn { get; set; } = 0;
 		protected VirtualKeyModifiers PreviousKeyModifiers { get; set; } = VirtualKeyModifiers.None;
 
-		public Color DefaultBackgroundColor => Color.FromArgb(255, 0, 0, 0);
+		private Color _backgroundColor = Color.FromArgb(255, 0, 0, 0);
+		public Color BackgroundColor
+		{
+			get
+			{
+				return _backgroundColor;
+			}
+			set
+			{
+				_backgroundColor = value;
+				this.ApplyBackgroundColor(this.BackgroundColor);
+			}
+		}
+
 		public Color DefaultBorderColor => Color.FromArgb(255, 0, 0, 0);
 
 		public int RowCount
@@ -157,6 +170,11 @@ namespace LedMatrixControl
 			}
 		}
 
+		public Task ApplyBackgroundColor(Color backgroundColor)
+		{
+			return Task.CompletedTask;
+		}
+
 		protected override void OnApplyTemplate()
 		{
 			if (this.GetTemplateChild("PART_Grid") is Grid grid)
@@ -219,27 +237,6 @@ namespace LedMatrixControl
 			this.PixelSelected?.Invoke(this, e);
 		}
 
-		private async void UiElement_PointerPressed(object sender, PointerRoutedEventArgs e)
-		{
-			this.CapturePointer(e.Pointer);
-			this.PointerIsPressed = true;
-			await this.ProcessPointer(e);
-		}
-
-		private void UiElement_PointerReleased(object sender, PointerRoutedEventArgs e)
-		{
-			this.PointerIsPressed = false;
-			this.ReleasePointerCapture(e.Pointer);
-		}
-
-		private async void UiElement_PointerMoved(object sender, PointerRoutedEventArgs e)
-		{
-			if (this.PointerIsPressed)
-			{
-				await this.ProcessPointer(e);
-			}
-		}
-
 		protected async Task ProcessPointer(PointerRoutedEventArgs e)
 		{
 			PointerPoint point = e.GetCurrentPoint(null);
@@ -276,6 +273,27 @@ namespace LedMatrixControl
 			returnValue.Column = (int)border.GetValue(Grid.ColumnProperty);
 
 			return Task.FromResult(returnValue);
+		}
+
+		private async void UiElement_PointerPressed(object sender, PointerRoutedEventArgs e)
+		{
+			this.CapturePointer(e.Pointer);
+			this.PointerIsPressed = true;
+			await this.ProcessPointer(e);
+		}
+
+		private void UiElement_PointerReleased(object sender, PointerRoutedEventArgs e)
+		{
+			this.PointerIsPressed = false;
+			this.ReleasePointerCapture(e.Pointer);
+		}
+
+		private async void UiElement_PointerMoved(object sender, PointerRoutedEventArgs e)
+		{
+			if (this.PointerIsPressed)
+			{
+				await this.ProcessPointer(e);
+			}
 		}
 
 		private void PixelMatrix_SizeChanged(object sender, SizeChangedEventArgs e)

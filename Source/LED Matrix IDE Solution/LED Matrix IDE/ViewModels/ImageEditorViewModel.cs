@@ -41,16 +41,13 @@ namespace LedMatrixIde.ViewModels
 		}
 
 		protected const string SelectedColorKey = "SelectedColorKey";
+		protected const string BackgroundColorKey = "BackgroundColorKey";
 		protected const string ColorMatrixKey = "ColorMatrix";
 		protected const string PixelColorKey = "PixelColorKey";
 		protected const string ProjectNameKey = "ProjectNameKey";
 
 		protected IUndoService UndoService { get; set; }
 		protected ColorMatrix CachedColorMatrix { get; set; }
-
-		public bool DrawIsEnabled => !this.PickColorIsChecked;
-		public bool EraseIsEnabled => !this.PickColorIsChecked;
-		public bool ColorPickerIsEnabled => !this.PickColorIsChecked;
 
 		private IPixelMatrix _pixelMatrix = null;
 		public IPixelMatrix PixelMatrix
@@ -109,6 +106,7 @@ namespace LedMatrixIde.ViewModels
 			// *** Restore pixel color.
 			// ***
 			this.PixelColor = await ApplicationData.Current.LocalSettings.ReadAsync<Color>(ImageEditorViewModel.SelectedColorKey, Colors.White);
+			this.BackgroundColor = await ApplicationData.Current.LocalSettings.ReadAsync<Color>(ImageEditorViewModel.BackgroundColorKey, Colors.Black);
 
 			this.UndoService.TaskAdded += this.UndoService_TaskAdded;
 		}
@@ -129,6 +127,7 @@ namespace LedMatrixIde.ViewModels
 			// *** Save pixel color.
 			// ***
 			await ApplicationData.Current.LocalSettings.SaveAsync<Color>(ImageEditorViewModel.SelectedColorKey, this.PixelColor);
+			await ApplicationData.Current.LocalSettings.SaveAsync<Color>(ImageEditorViewModel.BackgroundColorKey, this.BackgroundColor);
 
 			this.UndoService.TaskAdded -= this.UndoService_TaskAdded;
 			base.OnNavigatingFrom(e, viewModelState, suspending);
@@ -161,7 +160,7 @@ namespace LedMatrixIde.ViewModels
 					e.KeyModifiers == VirtualKeyModifiers.Shift ||
 					e.KeyModifiers == VirtualKeyModifiers.Menu)
 				{
-					if (oldColor != this.PixelMatrix.DefaultBackgroundColor)
+					if (oldColor != this.PixelMatrix.BackgroundColor)
 					{
 						// ***
 						// *** Update the pixel.
@@ -209,6 +208,11 @@ namespace LedMatrixIde.ViewModels
 		public DelegateCommand UndoCommand { get; set; }
 		public DelegateCommand ClearOutputCommand { get; set; }
 
+		public bool DrawIsEnabled => !this.PickColorIsChecked;
+		public bool EraseIsEnabled => !this.PickColorIsChecked;
+		public bool ColorPickerIsEnabled => !this.PickColorIsChecked;
+		public bool BackgroundColorPickerIsEnabled => !this.PickColorIsChecked;
+
 		private bool _pickColorIsChecked = false;
 		public bool PickColorIsChecked
 		{
@@ -219,6 +223,11 @@ namespace LedMatrixIde.ViewModels
 			set
 			{
 				this.SetProperty(ref _pickColorIsChecked, value);
+
+				this.RaisePropertyChanged(nameof(this.DrawIsEnabled));
+				this.RaisePropertyChanged(nameof(this.EraseIsEnabled));
+				this.RaisePropertyChanged(nameof(this.ColorPickerIsEnabled));
+				this.RaisePropertyChanged(nameof(this.BackgroundColorPickerIsEnabled));
 
 				this.LoadCommand.RaiseCanExecuteChanged();
 				this.SaveCommand.RaiseCanExecuteChanged();
@@ -256,6 +265,20 @@ namespace LedMatrixIde.ViewModels
 			set
 			{
 				this.SetProperty(ref _pixelColor, value);
+			}
+		}
+
+		private Color _backgroundColor = Colors.Black;
+		public Color BackgroundColor
+		{
+			get
+			{
+				return _backgroundColor;
+			}
+			set
+			{
+				this.SetProperty(ref _backgroundColor, value);
+				this.PixelMatrix.BackgroundColor = this.BackgroundColor;
 			}
 		}
 

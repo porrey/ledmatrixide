@@ -256,4 +256,7 @@
   <data name="Shell_GitHubWebView.Content" xml:space="preserve">
     <value>GitHub Repository</value>
   </data>
+  <data name="ImageEditor_ToolTip_BackgroundColorButtonToolTip" xml:space="preserve">
+    <value>Select the background color.</value>
+  </data>
 </root>

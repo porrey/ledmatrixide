@@ -32,6 +32,6 @@ namespace LedMatrixIde.Views
 		public string ClearButtonToolTip => "ImageEditor_ToolTip_ClearButton".GetLocalized();
 		public string BuildButtonToolTip => "ImageEditor_ToolTip_BuildButton".GetLocalized();
 		public string OutputButtonToolTip => "ImageEditor_ToolTip_OutputButton".GetLocalized();
-		
+		public string BackgroundColorButtonToolTip => "ImageEditor_ToolTip_BackgroundColorButtonToolTip";
 	}
 }
