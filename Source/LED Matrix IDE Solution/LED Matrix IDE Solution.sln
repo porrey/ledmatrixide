@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LED Matrix IDE", "LED Matri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LedMatrix Control", "LedMatrix Control\LedMatrix Control.csproj", "{056C4A22-9C10-4749-8B77-5E5DA70499CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageConverter", "ImageConverter\ImageConverter.csproj", "{63457CD0-EF72-493D-8BA9-DC2510CBCF3C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageManager", "ImageManager\ImageManager.csproj", "{63457CD0-EF72-493D-8BA9-DC2510CBCF3C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeBuilder", "CodeBuilder\CodeBuilder.csproj", "{917C7E79-959C-41B5-B12A-173AE4C9D435}"
 EndProject

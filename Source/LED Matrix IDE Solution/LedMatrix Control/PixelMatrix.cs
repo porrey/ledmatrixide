@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Media;
 
 namespace LedMatrixControl
 {
-	public class PixelMatrix : Control, IPixelMatrix
+	public class PixelMatrix : Control
 	{
 		public event EventHandler<PixelSelectedEventArgs> PixelSelected = null;
 
@@ -30,8 +30,8 @@ namespace LedMatrixControl
 			this.SizeChanged += this.PixelMatrix_SizeChanged;
 		}
 
-		public static readonly DependencyProperty RowCountProperty = DependencyProperty.Register("RowCount", typeof(int), typeof(PixelMatrix), null);
-		public static readonly DependencyProperty ColumnCountProperty = DependencyProperty.Register("ColumnCount", typeof(int), typeof(PixelMatrix), null);
+		public static readonly DependencyProperty RowCountProperty = DependencyProperty.Register("RowCount", typeof(uint), typeof(PixelMatrix), null);
+		public static readonly DependencyProperty ColumnCountProperty = DependencyProperty.Register("ColumnCount", typeof(uint), typeof(PixelMatrix), null);
 		public static readonly DependencyProperty PixelBackgroundProperty = DependencyProperty.Register("PixelBackground", typeof(Brush), typeof(PixelMatrix), null);
 		public static readonly DependencyProperty PixelBorderProperty = DependencyProperty.Register("PixelBorder", typeof(Brush), typeof(PixelMatrix), null);
 
@@ -45,11 +45,11 @@ namespace LedMatrixControl
 		public Color DefaultBackgroundColor => Color.FromArgb(255, 0, 0, 0);
 		public Color DefaultBorderColor => Color.FromArgb(255, 0, 0, 0);
 
-		public int RowCount
+		public uint RowCount
 		{
 			get
 			{
-				return (int)this.GetValue(RowCountProperty);
+				return (uint)this.GetValue(RowCountProperty);
 			}
 			set
 			{
@@ -57,11 +57,11 @@ namespace LedMatrixControl
 			}
 		}
 
-		public int ColumnCount
+		public uint ColumnCount
 		{
 			get
 			{
-				return (int)this.GetValue(ColumnCountProperty);
+				return (uint)this.GetValue(ColumnCountProperty);
 			}
 			set
 			{
@@ -134,7 +134,7 @@ namespace LedMatrixControl
 				// ***
 				// *** Add the pixel rows.
 				// ***
-				for (int i = 0; i < this.RowCount; i++)
+				for (uint i = 0; i < this.RowCount; i++)
 				{
 					RowDefinition row = new RowDefinition
 					{
@@ -147,7 +147,7 @@ namespace LedMatrixControl
 				// ***
 				// *** Add the pixel columns.
 				// ***
-				for (int i = 0; i < this.ColumnCount; i++)
+				for (uint i = 0; i < this.ColumnCount; i++)
 				{
 					ColumnDefinition column = new ColumnDefinition
 					{
@@ -160,9 +160,9 @@ namespace LedMatrixControl
 				// ***
 				// *** Create the controls for each pixel.
 				// ***
-				for (int row = 0; row < this.RowCount; row++)
+				for (uint row = 0; row < this.RowCount; row++)
 				{
-					for (int column = 0; column < this.ColumnCount; column++)
+					for (uint column = 0; column < this.ColumnCount; column++)
 					{
 						this.Cells[row, column] = new Border()
 						{

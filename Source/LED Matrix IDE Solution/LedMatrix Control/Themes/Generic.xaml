@@ -9,10 +9,6 @@
 				Value="Stretch" />
 		<Setter Property="HorizontalAlignment"
 				Value="Stretch" />
-		<Setter Property="RowCount"
-				Value="64" />
-		<Setter Property="ColumnCount"
-				Value="64" />
 		<Setter Property="BorderThickness"
 				Value="1" />
 		<Setter Property="BorderBrush"

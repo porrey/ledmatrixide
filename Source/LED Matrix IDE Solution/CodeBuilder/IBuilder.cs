@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ImageConverter;
+using ImageManager;
 using Windows.Storage;
 
 namespace CodeBuilder

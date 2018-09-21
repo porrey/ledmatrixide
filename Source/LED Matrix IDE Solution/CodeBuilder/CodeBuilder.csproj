@@ -121,9 +121,9 @@
     <PRIResource Include="String\en-us\Code.resw" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ImageConverter\ImageConverter.csproj">
-      <Project>{63457CD0-EF72-493D-8BA9-DC2510CBCF3C}</Project>
-      <Name>ImageConverter</Name>
+    <ProjectReference Include="..\ImageManager\ImageManager.csproj">
+      <Project>{63457cd0-ef72-493d-8ba9-dc2510cbcf3c}</Project>
+      <Name>ImageManager</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

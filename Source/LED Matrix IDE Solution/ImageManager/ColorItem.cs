@@ -1,9 +1,8 @@
-﻿using System;
-using Windows.UI;
+﻿using Windows.UI;
 
-namespace ImageConverter
+namespace ImageManager
 {
-	public struct ColorItem 
+	public struct ColorItem
 	{
 		public enum ColorItemType
 		{
@@ -17,23 +16,25 @@ namespace ImageConverter
 		public byte G { get; set; }
 		public byte R { get; set; }
 
-		public ColorItemType ItemType { get; set; }// = ColorItemType.Pixel;
+		public ColorItemType ItemType { get; set; }
 
 		public static implicit operator Color(ColorItem c)
 		{
-			Color returnValue = Color.FromArgb(0, 0, 0, 0);
-
-			//if (c != null)
-			//{
-				returnValue = Color.FromArgb(c.A, c.R, c.G, c.B);
-			//}
-
-			return returnValue;
+			return Color.FromArgb(c.A, c.R, c.G, c.B);
 		}
 
 		public static implicit operator ColorItem(Color c)
 		{
 			return new ColorItem() { A = c.A, R = c.R, B = c.B, G = c.G };
+		}
+
+		public static ColorItem FromColor(Color color, ColorItemType itemType)
+		{
+			ColorItem returnValue = color;
+
+			returnValue.ItemType = itemType;
+
+			return returnValue;
 		}
 	}
 }

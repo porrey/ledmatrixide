@@ -5,13 +5,13 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI;
 
-namespace ImageConverter
+namespace ImageManager
 {
 	public static class DecodedBytesDecorator
 	{
-		public static Task<Color> GetPixelAsync(this byte[] decodedBytes, int row, int column, uint width, uint height)
+		public static Task<Color> GetPixelAsync(this byte[] decodedBytes, uint row, uint column, uint width, uint height)
 		{
-			int index = (row * (int)width + column) * 4;
+			uint index = (row * (uint)width + column) * 4;
 
 			byte b = decodedBytes[index + 0];
 			byte g = decodedBytes[index + 1];

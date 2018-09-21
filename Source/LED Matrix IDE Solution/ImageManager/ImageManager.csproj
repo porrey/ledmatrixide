@@ -107,10 +107,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ColorItem.cs" />
+    <Compile Include="Decorators\GetPaletteDecorator.cs" />
+    <Compile Include="Decorators\SaveImageDecorator.cs" />
+    <Compile Include="Decorators\LoadImageDecorator.cs" />
+    <Compile Include="Decorators\RotateClockwiseDecorator.cs" />
+    <Compile Include="Decorators\RotateCounterClockwiseDecorator.cs" />
+    <Compile Include="Decorators\FlipVerticalDecorator.cs" />
+    <Compile Include="Decorators\FlipHorizontalDecorator.cs" />
+    <Compile Include="Decorators\CreateImageDataDecorator.cs" />
+    <Compile Include="Decorators\ClearDecorator.cs" />
+    <Compile Include="Decorators\CloneDecorator.cs" />
+    <Compile Include="Decorators\CopyFromDecorator.cs" />
+    <Compile Include="Decorators\CopyToDecorator.cs" />
     <Compile Include="PixelChangedEventArgs.cs" />
     <Compile Include="ColorMatrix.cs" />
     <Compile Include="BitmapDecoderDecorator.cs" />
-    <Compile Include="ImageFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DecodedBytesDecorator.cs" />
     <EmbeddedResource Include="Properties\ImageConverter.rd.xml" />

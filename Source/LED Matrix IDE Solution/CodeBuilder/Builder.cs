@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using ImageConverter;
+using ImageManager;
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Storage;
 using Windows.UI;

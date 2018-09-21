@@ -291,6 +291,8 @@
 								  Grid.Row="2"
 								  Margin="0,10,0,10"
 								  BorderThickness="4"
+								  RowCount="{Binding RowCount, Mode=OneTime}"
+								  ColumnCount="{Binding ColumnCount, Mode=OneTime}"
 								  extensions:Mouse.Cursor="Hand" />
 
 			<!-- Output Window -->

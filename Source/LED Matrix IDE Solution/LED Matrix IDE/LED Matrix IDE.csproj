@@ -222,9 +222,9 @@
       <Project>{917c7e79-959c-41b5-b12a-173ae4c9d435}</Project>
       <Name>CodeBuilder</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ImageConverter\ImageConverter.csproj">
-      <Project>{63457CD0-EF72-493D-8BA9-DC2510CBCF3C}</Project>
-      <Name>ImageConverter</Name>
+    <ProjectReference Include="..\ImageManager\ImageManager.csproj">
+      <Project>{63457cd0-ef72-493d-8ba9-dc2510cbcf3c}</Project>
+      <Name>ImageManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\LedMatrix Control\LedMatrix Control.csproj">
       <Project>{056c4a22-9c10-4749-8b77-5e5da70499cf}</Project>

@@ -1,4 +1,4 @@
-﻿using ImageConverter;
+﻿using ImageManager;
 using LedMatrixIde.Helpers;
 using LedMatrixIde.ViewModels;
 using Windows.UI;
@@ -22,9 +22,7 @@ namespace LedMatrixIde.Views
 			// *** Events.
 			// ***
 			this.LedMatrix.PixelSelected += this.ViewModel.PixelMatrix_PixelSelected;
-			this.ViewModel.Matrix.PixelChanged += this.Matrix_PixelChanged;
-			//this.Matrix.ApplyTemplate();
-			//this.ViewModel.PixelMatrix = this.Matrix;
+			this.ViewModel.ColorMatrix.PixelChanged += this.Matrix_PixelChanged;
 		}
 
 		private async void Matrix_PixelChanged(object sender, PixelChangedEventArgs e)

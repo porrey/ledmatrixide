@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ImageConverter
+namespace ImageManager
 {
 	public class PixelChangedEventArgs : EventArgs
 	{

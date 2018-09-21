@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 
-namespace ImageConverter
+namespace ImageManager
 {
 	public static class BitmapDecoderDecorator
 	{
