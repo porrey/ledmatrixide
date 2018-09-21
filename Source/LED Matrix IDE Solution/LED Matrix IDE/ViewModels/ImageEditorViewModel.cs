@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CodeBuilder;
 using ImageManager;
@@ -86,16 +85,17 @@ namespace LedMatrixIde.ViewModels
 			this.ClearOutputCommand = new DelegateCommand(this.OnClearOutputCommand, this.OnEnableClearOutputCommand);
 		}
 
-		private async void ColorMatrix_PixelChanged(object sender, PixelChangedEventArgs e)
-		{
-			await this.PixelEventService.PublishPixelChangedEvent(e);
-		}
-
+		/// <summary>
+		/// Defines the size of our LED matrix.
+		/// </summary>
 		public const uint DefaultRowCount = 64;
 		public uint RowCount => ImageEditorViewModel.DefaultRowCount;
 		public const uint DefaultColumnCount = 64;
 		public uint ColumnCount => ImageEditorViewModel.DefaultColumnCount;
 
+		/// <summary>
+		/// Keys used for session state and application settings.
+		/// </summary>
 		protected const string SelectedColorKey = "SelectedColorKey";
 		protected const string BackgroundColorKey = "BackgroundColorKey";
 		protected const string ColorMatrixKey = "ColorMatrix";
@@ -111,10 +111,27 @@ namespace LedMatrixIde.ViewModels
 		/// </summary>
 		public ColorMatrix ColorMatrix { get; } = new ColorMatrix(ImageEditorViewModel.DefaultRowCount, ImageEditorViewModel.DefaultColumnCount);
 
+		/// <summary>
+		/// Track changes as a list of Tasks that can be execute to Undo or Redo changes.
+		/// </summary>
 		protected IUndoService UndoService { get; set; }
+
+		/// <summary>
+		/// Provides the services to covert the image to C++ code
+		/// that can be compiled on the Raspberry Pi.
+		/// </summary>
 		protected IBuildService BuildService { get; set; }
+
+		/// <summary>
+		/// Provides decoupled (but direct, as opposed to using the Prims
+		/// pub.sub model) communication between the LedMatix (on the UI)
+		/// and the ColorMatrix used in the view model.
+		/// </summary>
 		protected IPixelEventService PixelEventService { get; set; }
 
+		/// <summary>
+		/// ICommand objects for button binding.
+		/// </summary>
 		public DelegateCommand LoadCommand { get; set; }
 		public DelegateCommand SaveCommand { get; set; }
 		public DelegateCommand ClearCommand { get; set; }
@@ -127,7 +144,19 @@ namespace LedMatrixIde.ViewModels
 		public DelegateCommand UndoCommand { get; set; }
 		public DelegateCommand ClearOutputCommand { get; set; }
 
+		/// <summary>
+		/// Groups properties so that at any given
+		/// time one and only one is true. This group is
+		/// used for all of the properties that the Command
+		/// Bar toggle buttons are bound to.
+		/// </summary>
 		protected BooleanPropertyGroup Group { get; set; }
+
+		/// <summary>
+		/// This group of properties controls command
+		/// bar app bar buttons that are not bound to
+		/// an ICommand.
+		/// </summary>
 		public bool DrawIsEnabled => !this.PickColorIsChecked;
 		public bool SandIsEnabled => !this.PickColorIsChecked;
 		public bool EraseIsEnabled => !this.PickColorIsChecked;
@@ -135,6 +164,10 @@ namespace LedMatrixIde.ViewModels
 		public bool ColorPickerIsEnabled => !this.PickColorIsChecked;
 		public bool BackgroundColorPickerIsEnabled => !this.PickColorIsChecked;
 
+		/// <summary>
+		/// This group of properties control Command Bar
+		/// toggle button states via binding.
+		/// </summary>
 		private bool _pickColorIsChecked = false;
 		public bool PickColorIsChecked
 		{
@@ -205,6 +238,10 @@ namespace LedMatrixIde.ViewModels
 			}
 		}
 
+		/// <summary>
+		/// These properties are used to display the colors
+		/// on the Command bar via binding.
+		/// </summary>
 		private Color _pixelColor = Colors.White;
 		public Color PixelColor
 		{
@@ -231,6 +268,9 @@ namespace LedMatrixIde.ViewModels
 			}
 		}
 
+		/// <summary>
+		/// Binds the current project name to the view.
+		/// </summary>
 		private string _projectName = String.Empty;
 		public string ProjectName
 		{
@@ -247,6 +287,9 @@ namespace LedMatrixIde.ViewModels
 			}
 		}
 
+		/// <summary>
+		/// Binds the visibility of the output window.
+		/// </summary>
 		private bool _showOutput = false;
 		public bool ShowOutput
 		{
@@ -260,6 +303,9 @@ namespace LedMatrixIde.ViewModels
 			}
 		}
 
+		/// <summary>
+		/// Contains the items displayed in the output window.
+		/// </summary>
 		public ObservableCollection<BuildEventArgs> OutputItems { get; } = new ObservableCollection<BuildEventArgs>();
 
 		public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
@@ -393,6 +439,12 @@ namespace LedMatrixIde.ViewModels
 			}
 		}
 
+		private async void ColorMatrix_PixelChanged(object sender, PixelChangedEventArgs e)
+		{
+			await this.PixelEventService.PublishPixelChangedEvent(e);
+		}
+
+		#region Command Handlers
 		public async void OnLoadCommand()
 		{
 			try
@@ -644,5 +696,6 @@ namespace LedMatrixIde.ViewModels
 		{
 			return (this.OutputItems.Count() > 0);
 		}
+		#endregion
 	}
 }
