@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Windows.UI.Xaml.Controls;
 
 namespace LedMatrixIde.Interfaces

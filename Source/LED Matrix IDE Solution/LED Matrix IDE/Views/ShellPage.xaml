@@ -20,7 +20,7 @@
 					Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
 		<NavigationView.MenuItems>
 			<NavigationViewItem x:Uid="Shell_ImageEditor"
-								helpers:NavHelper.NavigateTo="ImageEditor">
+								helpers:NavigationHelper.NavigateTo="ImageEditor">
 				<NavigationViewItem.Icon>
 					<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 							  Glyph="&#xE70F;" />
@@ -28,7 +28,7 @@
 			</NavigationViewItem>
 
 			<NavigationViewItem x:Uid="Shell_ProjectWebView"
-								helpers:NavHelper.NavigateTo="ProjectWebView">
+								helpers:NavigationHelper.NavigateTo="ProjectWebView">
 				<NavigationViewItem.Icon>
 					<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 							  Glyph="&#xEBC6;" />
@@ -36,7 +36,7 @@
 			</NavigationViewItem>
 
 			<NavigationViewItem x:Uid="Shell_GitHubWebView"
-								helpers:NavHelper.NavigateTo="GitHubWebView">
+								helpers:NavigationHelper.NavigateTo="GitHubWebView">
 				<NavigationViewItem.Icon>
 					<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 							  Glyph="&#xE943;" />

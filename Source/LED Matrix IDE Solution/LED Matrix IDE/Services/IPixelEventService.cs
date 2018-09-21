@@ -17,28 +17,36 @@
 // see http://www.gnu.org/licenses/.
 //
 using System;
-using CodeBuilder;
-using Windows.UI.Xaml.Data;
+using System.Threading.Tasks;
+using ImageManager;
+using LedMatrixControl;
+using LedMatrixIde.Interfaces;
 
-namespace LedMatrixIde.Converters
+namespace LedMatrixIde.Services
 {
-	public sealed class EventTypeToBracketedTextConverter : IValueConverter
+	public class PixelEventService : IPixelEventService
 	{
-		public object Convert(object value, Type targetType, object parameter, string language)
-		{
-			string returnValue = String.Empty;
+		public event EventHandler<PixelSelectedEventArgs> PixelSelected = null;
+		public event EventHandler<PixelChangedEventArgs> PixelChanged = null;
 
-			if (value is BuildEventArgs.BuildEventType eventType)
+		public Task PublishPixelSelectedEvent(PixelSelectedEventArgs e)
+		{
+			if (this.PixelSelected != null)
 			{
-				return $"[{value.ToString()}]";
+				this.PixelSelected.Invoke(this, e);
 			}
 
-			return returnValue;
+			return Task.FromResult(0);
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, string language)
+		public Task PublishPixelChangedEvent(PixelChangedEventArgs e)
 		{
-			throw new NotSupportedException();
+			if (this.PixelChanged != null)
+			{
+				this.PixelChanged.Invoke(this, e);
+			}
+
+			return Task.FromResult(0);
 		}
 	}
 }

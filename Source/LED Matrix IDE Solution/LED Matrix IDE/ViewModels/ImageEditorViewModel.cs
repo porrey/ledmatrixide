@@ -1,7 +1,26 @@
-﻿using System;
+﻿// Copyright © 2018 Daniel Porrey. All Rights Reserved.
+//
+// This file is part of the LED Matrix IDE Solution project.
+// 
+// The LED Matrix IDE Solution is free software: you can redistribute it
+// and/or modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+// 
+// The LED Matrix IDE Solution is distributed in the hope that it will
+// be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with the LED Matrix IDE Solution. If not, 
+// see http://www.gnu.org/licenses/.
+//
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CodeBuilder;
 using ImageManager;
@@ -9,6 +28,7 @@ using LedMatrixControl;
 using LedMatrixIde.Decorators;
 using LedMatrixIde.Helpers;
 using LedMatrixIde.Interfaces;
+using LedMatrixIde.Models;
 using Prism.Commands;
 using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
@@ -24,10 +44,34 @@ namespace LedMatrixIde.ViewModels
 {
 	public class ImageEditorViewModel : ViewModelBase
 	{
-		public ImageEditorViewModel(IUndoService undoService, IBuildService buildService)
+		public ImageEditorViewModel(IUndoService undoService, IBuildService buildService, IPixelEventService pixelEventService)
 		{
 			this.UndoService = undoService;
 			this.BuildService = buildService;
+			this.PixelEventService = pixelEventService;
+
+			// ***
+			// *** Group these property so that only one of them
+			// *** can be true at any given time.
+			// ***
+			this.Group = new BooleanPropertyGroup
+			(
+				(nameof(this.DrawIsChecked), (b) => { this.DrawIsChecked = b; }),
+				(nameof(this.SandIsChecked), (b) => { this.SandIsChecked = b; }),
+				(nameof(this.EraseIsChecked), (b) => { this.EraseIsChecked = b; }),
+				(nameof(this.EraseColorIsChecked), (b) => { this.EraseColorIsChecked = b; }),
+				(nameof(this.PickColorIsChecked), (b) => { this.PickColorIsChecked = b; })
+			);
+
+			// ***
+			// *** Wire up events for when the user interacts with the LED Matrix.
+			// ***
+			this.PixelEventService.PixelSelected += this.PixelMatrix_PixelSelected;
+
+			// ***
+			// *** Wire up the event to capture changes to the ColorMatrix.
+			// ***
+			this.ColorMatrix.PixelChanged += this.ColorMatrix_PixelChanged;
 
 			this.LoadCommand = new DelegateCommand(this.OnLoadCommand, this.OnEnableLoadCommand);
 			this.SaveCommand = new DelegateCommand(this.OnSaveCommand, this.OnEnableSaveCommand);
@@ -40,6 +84,11 @@ namespace LedMatrixIde.ViewModels
 			this.RedoCommand = new DelegateCommand(this.OnRedoCommand, this.OnEnableRedoCommand);
 			this.UndoCommand = new DelegateCommand(this.OnUndoCommand, this.OnEnableUndoCommand);
 			this.ClearOutputCommand = new DelegateCommand(this.OnClearOutputCommand, this.OnEnableClearOutputCommand);
+		}
+
+		private async void ColorMatrix_PixelChanged(object sender, PixelChangedEventArgs e)
+		{
+			await this.PixelEventService.PublishPixelChangedEvent(e);
 		}
 
 		public const uint DefaultRowCount = 64;
@@ -64,6 +113,154 @@ namespace LedMatrixIde.ViewModels
 
 		protected IUndoService UndoService { get; set; }
 		protected IBuildService BuildService { get; set; }
+		protected IPixelEventService PixelEventService { get; set; }
+
+		public DelegateCommand LoadCommand { get; set; }
+		public DelegateCommand SaveCommand { get; set; }
+		public DelegateCommand ClearCommand { get; set; }
+		public DelegateCommand RotateClockwiseCommand { get; set; }
+		public DelegateCommand RotateCounterClockwiseCommand { get; set; }
+		public DelegateCommand FlipHorizontalCommand { get; set; }
+		public DelegateCommand FlipVerticalCommand { get; set; }
+		public DelegateCommand BuildCommand { get; set; }
+		public DelegateCommand RedoCommand { get; set; }
+		public DelegateCommand UndoCommand { get; set; }
+		public DelegateCommand ClearOutputCommand { get; set; }
+
+		protected BooleanPropertyGroup Group { get; set; }
+		public bool DrawIsEnabled => !this.PickColorIsChecked;
+		public bool SandIsEnabled => !this.PickColorIsChecked;
+		public bool EraseIsEnabled => !this.PickColorIsChecked;
+		public bool EraseColorIsEnabled => !this.PickColorIsChecked;
+		public bool ColorPickerIsEnabled => !this.PickColorIsChecked;
+		public bool BackgroundColorPickerIsEnabled => !this.PickColorIsChecked;
+
+		private bool _pickColorIsChecked = false;
+		public bool PickColorIsChecked
+		{
+			get
+			{
+				return _pickColorIsChecked;
+			}
+			set
+			{
+				this.SetProperty(ref _pickColorIsChecked, value);
+				this.Group.SetItem(nameof(this.PickColorIsChecked), _pickColorIsChecked);
+			}
+		}
+
+		private bool _drawIsChecked = true;
+		public bool DrawIsChecked
+		{
+			get
+			{
+				return _drawIsChecked;
+			}
+			set
+			{
+				this.SetProperty(ref _drawIsChecked, value);
+				this.Group.SetItem(nameof(this.DrawIsChecked), _drawIsChecked);
+			}
+		}
+
+		private bool _sandIsChecked = false;
+		public bool SandIsChecked
+		{
+			get
+			{
+				return _sandIsChecked;
+			}
+			set
+			{
+				this.SetProperty(ref _sandIsChecked, value);
+				this.Group.SetItem(nameof(this.SandIsChecked), _sandIsChecked);
+			}
+		}
+
+		private bool _eraseIsChecked = false;
+		public bool EraseIsChecked
+		{
+			get
+			{
+				return _eraseIsChecked;
+			}
+			set
+			{
+				this.SetProperty(ref _eraseIsChecked, value);
+				this.Group.SetItem(nameof(this.EraseIsChecked), _eraseIsChecked);
+			}
+		}
+
+		private bool _eraseColorIsChecked = false;
+		public bool EraseColorIsChecked
+		{
+			get
+			{
+				return _eraseColorIsChecked;
+			}
+			set
+			{
+				this.SetProperty(ref _eraseColorIsChecked, value);
+				this.Group.SetItem(nameof(this.EraseColorIsChecked), _eraseColorIsChecked);
+			}
+		}
+
+		private Color _pixelColor = Colors.White;
+		public Color PixelColor
+		{
+			get
+			{
+				return _pixelColor;
+			}
+			set
+			{
+				this.SetProperty(ref _pixelColor, value);
+			}
+		}
+
+		private Color _backgroundColor = Colors.Black;
+		public Color BackgroundColor
+		{
+			get
+			{
+				return _backgroundColor;
+			}
+			set
+			{
+				this.SetProperty(ref _backgroundColor, value);
+			}
+		}
+
+		private string _projectName = String.Empty;
+		public string ProjectName
+		{
+			get
+			{
+				return _projectName;
+			}
+			set
+			{
+				this.SetProperty(ref _projectName, value);
+
+				this.SaveCommand.RaiseCanExecuteChanged();
+				this.BuildCommand.RaiseCanExecuteChanged();
+			}
+		}
+
+		private bool _showOutput = false;
+		public bool ShowOutput
+		{
+			get
+			{
+				return _showOutput;
+			}
+			set
+			{
+				this.SetProperty(ref _showOutput, value);
+			}
+		}
+
+		public ObservableCollection<BuildEventArgs> OutputItems { get; } = new ObservableCollection<BuildEventArgs>();
 
 		public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
 		{
@@ -120,7 +317,7 @@ namespace LedMatrixIde.ViewModels
 			this.RedoCommand.RaiseCanExecuteChanged();
 		}
 
-		public async void PixelMatrix_PixelSelected(object sender, PixelSelectedEventArgs e)
+		private async void PixelMatrix_PixelSelected(object sender, PixelSelectedEventArgs e)
 		{
 			if (this.PickColorIsChecked)
 			{
@@ -195,168 +392,6 @@ namespace LedMatrixIde.ViewModels
 				}
 			}
 		}
-
-		public DelegateCommand LoadCommand { get; set; }
-		public DelegateCommand SaveCommand { get; set; }
-		public DelegateCommand ClearCommand { get; set; }
-		public DelegateCommand RotateClockwiseCommand { get; set; }
-		public DelegateCommand RotateCounterClockwiseCommand { get; set; }
-		public DelegateCommand FlipHorizontalCommand { get; set; }
-		public DelegateCommand FlipVerticalCommand { get; set; }
-		public DelegateCommand BuildCommand { get; set; }
-		public DelegateCommand RedoCommand { get; set; }
-		public DelegateCommand UndoCommand { get; set; }
-		public DelegateCommand ClearOutputCommand { get; set; }
-
-		public bool DrawIsEnabled => !this.PickColorIsChecked;
-		public bool SandIsEnabled => !this.PickColorIsChecked;
-		public bool EraseIsEnabled => !this.PickColorIsChecked;
-		public bool ColorPickerIsEnabled => !this.PickColorIsChecked;
-		public bool BackgroundColorPickerIsEnabled => !this.PickColorIsChecked;
-
-		private bool _pickColorIsChecked = false;
-		public bool PickColorIsChecked
-		{
-			get
-			{
-				return _pickColorIsChecked;
-			}
-			set
-			{
-				this.SetProperty(ref _pickColorIsChecked, value);
-
-				this.RaisePropertyChanged(nameof(this.DrawIsEnabled));
-				this.RaisePropertyChanged(nameof(this.SandIsEnabled));
-				this.RaisePropertyChanged(nameof(this.EraseIsEnabled));
-				this.RaisePropertyChanged(nameof(this.ColorPickerIsEnabled));
-				this.RaisePropertyChanged(nameof(this.BackgroundColorPickerIsEnabled));
-
-				this.LoadCommand.RaiseCanExecuteChanged();
-				this.SaveCommand.RaiseCanExecuteChanged();
-				this.ClearCommand.RaiseCanExecuteChanged();
-				this.RotateClockwiseCommand.RaiseCanExecuteChanged();
-				this.RotateCounterClockwiseCommand.RaiseCanExecuteChanged();
-				this.FlipHorizontalCommand.RaiseCanExecuteChanged();
-				this.FlipVerticalCommand.RaiseCanExecuteChanged();
-				this.BuildCommand.RaiseCanExecuteChanged();
-				this.RedoCommand.RaiseCanExecuteChanged();
-				this.UndoCommand.RaiseCanExecuteChanged();
-			}
-		}
-
-		private bool _drawIsChecked = true;
-		public bool DrawIsChecked
-		{
-			get
-			{
-				return _drawIsChecked;
-			}
-			set
-			{
-				this.SetProperty(ref _drawIsChecked, value);
-
-				if (this.DrawIsChecked)
-				{
-					this.SandIsChecked = false;
-					this.EraseIsChecked = false;
-				}
-			}
-		}
-
-		private bool _sandIsChecked = false;
-		public bool SandIsChecked
-		{
-			get
-			{
-				return _sandIsChecked;
-			}
-			set
-			{
-				this.SetProperty(ref _sandIsChecked, value);
-
-				if (this.SandIsChecked)
-				{
-					this.DrawIsChecked = false;
-					this.EraseIsChecked = false;
-				}
-			}
-		}
-
-		private bool _eraseIsChecked = false;
-		public bool EraseIsChecked
-		{
-			get
-			{
-				return _eraseIsChecked;
-			}
-			set
-			{
-				this.SetProperty(ref _eraseIsChecked, value);
-
-				if (this.EraseIsChecked)
-				{
-					this.DrawIsChecked = false;
-					this.SandIsChecked = false;
-				}
-			}
-		}
-
-		private Color _pixelColor = Colors.White;
-		public Color PixelColor
-		{
-			get
-			{
-				return _pixelColor;
-			}
-			set
-			{
-				this.SetProperty(ref _pixelColor, value);
-			}
-		}
-
-		private Color _backgroundColor = Colors.Black;
-		public Color BackgroundColor
-		{
-			get
-			{
-				return _backgroundColor;
-			}
-			set
-			{
-				this.SetProperty(ref _backgroundColor, value);
-			}
-		}
-
-		private string _projectName = String.Empty;
-		public string ProjectName
-		{
-			get
-			{
-				return _projectName;
-			}
-			set
-			{
-				this.SetProperty(ref _projectName, value);
-
-				this.SaveCommand.RaiseCanExecuteChanged();
-				this.BuildCommand.RaiseCanExecuteChanged();
-			}
-		}
-
-		private bool _showOutput = false;
-		public bool ShowOutput
-		{
-			get
-			{
-				return _showOutput;
-			}
-			set
-			{
-				this.SetProperty(ref _showOutput, value);
-			}
-		}
-
-		public ObservableCollection<BuildEventArgs> OutputItems { get; } = new ObservableCollection<BuildEventArgs>();
 
 		public async void OnLoadCommand()
 		{

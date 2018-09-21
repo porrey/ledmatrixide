@@ -106,8 +106,8 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="PixelChangeEventArgs.cs" />
-    <Compile Include="PixelMatrix.cs" />
+    <Compile Include="Models\PixelChangeEventArgs.cs" />
+    <Compile Include="Models\PixelMatrix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\LedMatrix_Control.rd.xml" />
   </ItemGroup>

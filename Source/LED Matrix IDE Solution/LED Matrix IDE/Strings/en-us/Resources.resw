@@ -262,4 +262,7 @@
   <data name="ImageEditor_ToolTip_SandButton" xml:space="preserve">
     <value>Set to sand mode.</value>
   </data>
+  <data name="ImageEditor_ToolTip_EraseColorButton" xml:space="preserve">
+    <value>Select a pixel to earse all pixels of that same color.</value>
+  </data>
 </root>

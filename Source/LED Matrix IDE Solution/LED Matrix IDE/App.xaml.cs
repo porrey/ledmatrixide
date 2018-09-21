@@ -15,10 +15,11 @@ using Windows.ApplicationModel.Resources;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 
 namespace LedMatrixIde
 {
-	[Windows.UI.Xaml.Data.Bindable]
+	[Bindable]
     public sealed partial class App : PrismUnityApplication
     {
         public App()
@@ -31,8 +32,9 @@ namespace LedMatrixIde
             base.ConfigureContainer();
 
 			this.Container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
-			this.Container.RegisterType<IUndoService, UndoService>();
-			this.Container.RegisterType<IBuildService, BuildService>();
+			this.Container.RegisterType<IUndoService, UndoService>(new ContainerControlledLifetimeManager());
+			this.Container.RegisterType<IBuildService, BuildService>(new ContainerControlledLifetimeManager());
+			this.Container.RegisterType<IPixelEventService, PixelEventService>(new ContainerControlledLifetimeManager());
 		}
 
         protected override async Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
@@ -44,8 +46,10 @@ namespace LedMatrixIde
         {
             ThemeSelectorService.SetRequestedTheme();
 
+			// ***
+			// *** Register Color for session state saving.
+			// ***
 			this.SessionStateService.RegisterKnownType(typeof(Color));
-
 
 			this.NavigationService.Navigate(page, launchParam);
             Window.Current.Activate();

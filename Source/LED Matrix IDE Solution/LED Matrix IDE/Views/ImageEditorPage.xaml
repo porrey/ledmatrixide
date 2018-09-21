@@ -102,6 +102,19 @@
 					</AppBarToggleButton.Icon>
 				</AppBarToggleButton>
 
+				<!-- Erase Color -->
+				<AppBarToggleButton BorderBrush="Transparent"
+									BorderThickness="0,0,0,0"
+									ToolTipService.ToolTip="{x:Bind EraseColorButtonToolTip}"
+									ToolTipService.Placement="Bottom"
+									IsChecked="{Binding EraseColorIsChecked, Mode=TwoWay}"
+									IsEnabled="{Binding EraseColorIsEnabled, Mode=OneWay}">
+					<AppBarToggleButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xED61;" />
+					</AppBarToggleButton.Icon>
+				</AppBarToggleButton>
+
 				<AppBarSeparator />
 
 				<!-- Color -->
@@ -181,7 +194,7 @@
 								  Glyph="&#xE7AD;"
 								  RenderTransformOrigin=".5,.5">
 							<FontIcon.RenderTransform>
-								<ScaleTransform ScaleX="-1" />
+								<CompositeTransform ScaleX="-1" Rotation="90" />
 							</FontIcon.RenderTransform>
 						</FontIcon>
 					</AppBarButton.Icon>
@@ -195,7 +208,12 @@
 							  Command="{Binding RotateClockwiseCommand}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-								  Glyph="&#xE7AD;" />
+								  Glyph="&#xE7AD;"
+								  RenderTransformOrigin=".5,.5">
+							<FontIcon.RenderTransform>
+								<RotateTransform Angle="-90" />
+							</FontIcon.RenderTransform>
+						</FontIcon>
 					</AppBarButton.Icon>
 				</AppBarButton>
 

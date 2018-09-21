@@ -16,29 +16,22 @@
 // along with the LED Matrix IDE Solution. If not, 
 // see http://www.gnu.org/licenses/.
 //
-using System;
-using CodeBuilder;
-using Windows.UI.Xaml.Data;
+using Windows.System;
+using Windows.UI.Xaml;
 
-namespace LedMatrixIde.Converters
+namespace LedMatrixControl
 {
-	public sealed class EventTypeToBracketedTextConverter : IValueConverter
+	public class PixelSelectedEventArgs : RoutedEventArgs
 	{
-		public object Convert(object value, Type targetType, object parameter, string language)
+		public PixelSelectedEventArgs(uint row, uint column, VirtualKeyModifiers modifiers)
 		{
-			string returnValue = String.Empty;
-
-			if (value is BuildEventArgs.BuildEventType eventType)
-			{
-				return $"[{value.ToString()}]";
-			}
-
-			return returnValue;
+			this.Row = row;
+			this.Column = column;
+			this.KeyModifiers = modifiers;
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, string language)
-		{
-			throw new NotSupportedException();
-		}
+		public uint Row { get; protected set; }
+		public uint Column { get; protected set; }
+		public VirtualKeyModifiers KeyModifiers { get; protected set; }
 	}
 }
