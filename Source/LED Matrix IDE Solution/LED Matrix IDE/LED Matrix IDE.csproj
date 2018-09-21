@@ -132,7 +132,7 @@
     <Compile Include="Decorators\ColorMatrixDecorator.cs" />
     <Compile Include="Decorators\DictionaryDecorartor.cs" />
     <Compile Include="Helpers\Json.cs" />
-    <Compile Include="Helpers\NavHelper.cs" />
+    <Compile Include="Helpers\NavigationHelper.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Interfaces\IWebViewService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

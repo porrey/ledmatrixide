@@ -68,7 +68,7 @@ namespace LedMatrixIde.ViewModels
                             .OfType<NavigationViewItem>()
                             .First(menuItem => (string)menuItem.Content == (string)args.InvokedItem);
 
-            string pageKey = item.GetValue(NavHelper.NavigateToProperty) as string;
+            string pageKey = item.GetValue(NavigationHelper.NavigateToProperty) as string;
 
             _navigationService.Navigate(pageKey, null);
         }
@@ -90,7 +90,7 @@ namespace LedMatrixIde.ViewModels
         {
             string sourcePageKey = sourcePageType.Name;
             sourcePageKey = sourcePageKey.Substring(0, sourcePageKey.Length - 4);
-            string pageKey = menuItem.GetValue(NavHelper.NavigateToProperty) as string;
+            string pageKey = menuItem.GetValue(NavigationHelper.NavigateToProperty) as string;
             return pageKey == sourcePageKey;
         }
     }
