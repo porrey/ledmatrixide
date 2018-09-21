@@ -1,13 +1,12 @@
 ﻿<Page x:Class="LedMatrixIde.Views.ImageEditorPage"
-	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	  xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
-	  xmlns:prismMvvm="using:Prism.Windows.Mvvm"
-	  xmlns:controls="using:LedMatrixControl"
-	  xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-	  prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:controls="using:LedMatrixControl"
+      xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+      xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+      prismMvvm:ViewModelLocator.AutoWireViewModel="True"
 	  Style="{StaticResource PageStyle}"
 	  mc:Ignorable="d">
 
@@ -143,18 +142,6 @@
 					</AppBarButton.Flyout>
 				</AppBarButton>
 
-				<!-- Pick Color -->
-				<AppBarToggleButton BorderBrush="Transparent"
-									BorderThickness="0,0,0,0"
-									ToolTipService.ToolTip="{x:Bind PickColorButtonToolTip}"
-									ToolTipService.Placement="Bottom"
-									IsChecked="{Binding PickColorIsChecked, Mode=TwoWay}">
-					<AppBarToggleButton.Icon>
-						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-								  Glyph="&#xEF3C;" />
-					</AppBarToggleButton.Icon>
-				</AppBarToggleButton>
-
 				<!-- Background Color -->
 				<AppBarButton ToolTipService.ToolTip="{x:Bind BackgroundColorButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
@@ -180,6 +167,18 @@
 						</Flyout>
 					</AppBarButton.Flyout>
 				</AppBarButton>
+
+				<!-- Pick Color -->
+				<AppBarToggleButton BorderBrush="Transparent"
+									BorderThickness="0,0,0,0"
+									ToolTipService.ToolTip="{x:Bind PickColorButtonToolTip}"
+									ToolTipService.Placement="Bottom"
+									IsChecked="{Binding PickColorIsChecked, Mode=TwoWay}">
+					<AppBarToggleButton.Icon>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xEF3C;" />
+					</AppBarToggleButton.Icon>
+				</AppBarToggleButton>
 
 				<AppBarSeparator />
 

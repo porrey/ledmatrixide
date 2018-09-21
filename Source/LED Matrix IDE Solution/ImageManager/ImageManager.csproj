@@ -7,8 +7,8 @@
     <ProjectGuid>{63457CD0-EF72-493D-8BA9-DC2510CBCF3C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ImageConverter</RootNamespace>
-    <AssemblyName>ImageConverter</AssemblyName>
+    <RootNamespace>ImageManager</RootNamespace>
+    <AssemblyName>ImageManager</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
@@ -106,6 +106,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Decorators\ReplacePixelTypeColorDecorator.cs" />
+    <Compile Include="Decorators\ReplaceColorDecorator.cs" />
+    <Compile Include="Decorators\SomeDecorator.cs" />
     <Compile Include="Models\ColorItem.cs" />
     <Compile Include="Decorators\GetPaletteDecorator.cs" />
     <Compile Include="Decorators\SaveImageDecorator.cs" />

@@ -17,20 +17,30 @@
 // see http://www.gnu.org/licenses/.
 //
 using System.Threading.Tasks;
+using Windows.UI;
 
 namespace ImageManager
 {
-	public static class FlipHorizontalDecorator
+	public static class ReplacePixelTypeColorDecorator
 	{
-		public static async Task FlipHorizontalAsync(this ColorMatrix sourceColorMatrix)
+		public static async Task ReplacePixelTypeColorAsync(this ColorMatrix sourceColorMatrix, ColorItem.ColorItemType itemType, Color newColor)
 		{
-			ColorMatrix me = await sourceColorMatrix.CloneAsync();
-
 			for (uint row = 0; row < sourceColorMatrix.Height; row++)
 			{
 				for (uint column = 0; column < sourceColorMatrix.Width; column++)
 				{
-					await sourceColorMatrix.SetItem(row, column, me.ColorItems[row, (sourceColorMatrix.Width - 1) - column]);
+					if (sourceColorMatrix.ColorItems[row, column].ItemType == itemType)
+					{
+						ColorItem newItem = new ColorItem()
+						{
+							A = newColor.A,
+							R = newColor.R,
+							G = newColor.G,
+							B = newColor.B
+						};
+
+						await sourceColorMatrix.SetItem(row, column, newItem);
+					}
 				}
 			}
 		}

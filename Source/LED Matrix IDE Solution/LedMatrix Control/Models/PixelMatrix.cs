@@ -37,6 +37,7 @@ namespace LedMatrixControl
 		public PixelMatrix()
 		{
 			this.DefaultStyleKey = typeof(PixelMatrix);
+			this.ApplyTemplate();
 
 			this.PointerMoved += this.UiElement_PointerMoved;
 			this.PointerPressed += this.UiElement_PointerPressed;
@@ -118,8 +119,11 @@ namespace LedMatrixControl
 
 		public Task SetPixelAsync(uint row, uint column, Color backgroundColor, Color borderColor)
 		{
-			this.Cells[row, column].Background = new SolidColorBrush(backgroundColor);
-			this.Cells[row, column].BorderBrush = new SolidColorBrush(borderColor);
+			if (this.Cells != null)
+			{
+				this.Cells[row, column].Background = new SolidColorBrush(backgroundColor);
+				this.Cells[row, column].BorderBrush = new SolidColorBrush(borderColor);
+			}
 
 			return Task.FromResult(0);
 		}

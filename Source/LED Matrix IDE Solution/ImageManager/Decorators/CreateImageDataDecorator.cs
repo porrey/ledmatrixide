@@ -1,4 +1,23 @@
-﻿using System.Threading.Tasks;
+﻿// Copyright © 2018 Daniel Porrey. All Rights Reserved.
+//
+// This file is part of the LED Matrix IDE Solution project.
+// 
+// The LED Matrix IDE Solution is free software: you can redistribute it
+// and/or modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+// 
+// The LED Matrix IDE Solution is distributed in the hope that it will
+// be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with the LED Matrix IDE Solution. If not, 
+// see http://www.gnu.org/licenses/.
+//
+using System.Threading.Tasks;
+using Windows.UI;
 
 namespace ImageManager
 {
@@ -19,10 +38,25 @@ namespace ImageManager
 			{
 				for (int column = 0; column < width; column++)
 				{
-					returnValue[index + 0] = sourceColorMatrix.ColorItems[row, column].B;
-					returnValue[index + 1] = sourceColorMatrix.ColorItems[row, column].G;
-					returnValue[index + 2] = sourceColorMatrix.ColorItems[row, column].R;
-					returnValue[index + 3] = sourceColorMatrix.ColorItems[row, column].A;
+					Color color = sourceColorMatrix.ColorItems[row, column];
+
+					// ***
+					// *** Remove background and sand pixels.
+					// ***
+					if (sourceColorMatrix.ColorItems[row, column].ItemType == ColorItem.ColorItemType.Background ||
+						sourceColorMatrix.ColorItems[row, column].ItemType == ColorItem.ColorItemType.Sand)
+					{
+						color.R = 0;
+						color.G = 0;
+						color.B = 0;
+						color.A = 0;
+					}
+
+					returnValue[index + 0] = color.B;
+					returnValue[index + 1] = color.G;
+					returnValue[index + 2] = color.R;
+					returnValue[index + 3] = color.A;
+
 					index += 4;
 				}
 			}

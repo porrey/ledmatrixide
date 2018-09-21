@@ -41,6 +41,16 @@ using Windows.UI.Xaml.Navigation;
 
 namespace LedMatrixIde.ViewModels
 {
+	public enum DrawMode
+	{
+		None,
+		Draw,
+		Sand,
+		Erase,
+		PickColor,
+		EraseColor
+	}
+
 	public class ImageEditorViewModel : ViewModelBase
 	{
 		public ImageEditorViewModel(IUndoService undoService, IBuildService buildService, IPixelEventService pixelEventService)
@@ -55,11 +65,16 @@ namespace LedMatrixIde.ViewModels
 			// ***
 			this.Group = new BooleanPropertyGroup
 			(
-				(nameof(this.DrawIsChecked), (b) => { this.DrawIsChecked = b; }),
-				(nameof(this.SandIsChecked), (b) => { this.SandIsChecked = b; }),
-				(nameof(this.EraseIsChecked), (b) => { this.EraseIsChecked = b; }),
-				(nameof(this.EraseColorIsChecked), (b) => { this.EraseColorIsChecked = b; }),
-				(nameof(this.PickColorIsChecked), (b) => { this.PickColorIsChecked = b; })
+				(nameof(this.DrawIsChecked), (b) => { this.DrawIsChecked = b; }
+			),
+				(nameof(this.SandIsChecked), (b) => { this.SandIsChecked = b; }
+			),
+				(nameof(this.EraseIsChecked), (b) => { this.EraseIsChecked = b; }
+			),
+				(nameof(this.EraseColorIsChecked), (b) => { this.EraseColorIsChecked = b; }
+			),
+				(nameof(this.PickColorIsChecked), (b) => { this.PickColorIsChecked = b; }
+			)
 			);
 
 			// ***
@@ -154,8 +169,8 @@ namespace LedMatrixIde.ViewModels
 
 		/// <summary>
 		/// This group of properties controls command
-		/// bar app bar buttons that are not bound to
-		/// an ICommand.
+		/// bar application bar buttons that are not
+		/// bound to an ICommand.
 		/// </summary>
 		public bool DrawIsEnabled => !this.PickColorIsChecked;
 		public bool SandIsEnabled => !this.PickColorIsChecked;
@@ -265,6 +280,7 @@ namespace LedMatrixIde.ViewModels
 			set
 			{
 				this.SetProperty(ref _backgroundColor, value);
+				this.ColorMatrix.ReplacePixelTypeColorAsync(ColorItem.ColorItemType.Background, this.BackgroundColor).Wait();
 			}
 		}
 
@@ -365,43 +381,27 @@ namespace LedMatrixIde.ViewModels
 
 		private async void PixelMatrix_PixelSelected(object sender, PixelSelectedEventArgs e)
 		{
-			if (this.PickColorIsChecked)
-			{
-				ColorItem colorItem = await this.ColorMatrix.GetItem(e.Row, e.Column);
-				this.PixelColor = colorItem;
-				this.PickColorIsChecked = false;
-				this.DrawIsChecked = true;
-			}
-			else
-			{
-				// ***
-				// *** Cache the old color of this pixel.
-				// ***
-				ColorItem oldColorItem = await this.ColorMatrix.GetItem(e.Row, e.Column);
+			// ***
+			// *** Get the current mode.
+			// ***
+			DrawMode mode = await this.GetDrawMode(e.KeyModifiers);
 
-				if (this.EraseIsChecked ||
-					e.KeyModifiers == VirtualKeyModifiers.Control ||
-					e.KeyModifiers == VirtualKeyModifiers.Shift ||
-					e.KeyModifiers == VirtualKeyModifiers.Menu)
-				{
-					if (oldColorItem != this.BackgroundColor || oldColorItem.ItemType != ColorItem.ColorItemType.Background)
+			// ***
+			// *** Cache the old color of this pixel.
+			// ***
+			ColorItem oldColorItem = await this.ColorMatrix.GetItem(e.Row, e.Column);
+
+			switch (mode)
+			{
+				case DrawMode.PickColor:
 					{
-						// ***
-						// *** Update the pixel.
-						// ***
-						await this.ColorMatrix.SetItem(e.Row, e.Column, this.BackgroundColor, ColorItem.ColorItemType.Background);
-
-						// ***
-						// *** Set up the undo task.
-						// ***
-						async Task undoAction() { await this.ColorMatrix.SetItem(e.Row, e.Column, oldColorItem); }
-						async Task redoAction() { await this.ColorMatrix.SetItem(e.Row, e.Column, this.BackgroundColor, ColorItem.ColorItemType.Background); }
-						await this.UndoService.AddUndoTask(undoAction, redoAction, $"Reset Pixel [{e.Column}, {e.Row}]");
+						ColorItem colorItem = await this.ColorMatrix.GetItem(e.Row, e.Column);
+						this.PixelColor = colorItem;
+						this.PickColorIsChecked = false;
+						this.DrawIsChecked = true;
 					}
-				}
-				else
-				{
-					if (this.DrawIsChecked)
+					break;
+				case DrawMode.Draw:
 					{
 						if (oldColorItem != this.PixelColor || oldColorItem.ItemType != ColorItem.ColorItemType.Pixel)
 						{
@@ -418,7 +418,47 @@ namespace LedMatrixIde.ViewModels
 							await this.UndoService.AddUndoTask(undoAction, redoAction, $"Set Pixel [{e.Column}, {e.Row}, {this.PixelColor.ToString()}]");
 						}
 					}
-					else
+					break;
+				case DrawMode.Erase:
+					{
+						if (oldColorItem != this.BackgroundColor || oldColorItem.ItemType != ColorItem.ColorItemType.Background)
+						{
+							// ***
+							// *** Update the pixel.
+							// ***
+							await this.ColorMatrix.SetItem(e.Row, e.Column, this.BackgroundColor, ColorItem.ColorItemType.Background);
+
+							// ***
+							// *** Set up the undo task.
+							// ***
+							async Task undoAction() { await this.ColorMatrix.SetItem(e.Row, e.Column, oldColorItem); }
+							async Task redoAction() { await this.ColorMatrix.SetItem(e.Row, e.Column, this.BackgroundColor, ColorItem.ColorItemType.Background); }
+							await this.UndoService.AddUndoTask(undoAction, redoAction, $"Clear Pixel [{e.Column}, {e.Row}]");
+						}
+					}
+					break;
+				case DrawMode.EraseColor:
+					{
+						// ***
+						// *** Get the item clicked.
+						// ***
+						ColorItem colorItem = await this.ColorMatrix.GetItem(e.Row, e.Column);
+
+						// ***
+						// *** Clone the current matrix for the undo.
+						// ***
+						ColorMatrix oldColorMatrix = await this.ColorMatrix.CloneAsync();
+						await this.ColorMatrix.ReplaceColorAsync(colorItem, this.BackgroundColor, true);
+
+						// ***
+						// *** Set up the undo task.
+						// ***
+						async Task undoAction() { await this.ColorMatrix.CopyFrom(oldColorMatrix); }
+						async Task redoAction() { await this.ColorMatrix.ReplaceColorAsync(colorItem, this.BackgroundColor, true); }
+						await this.UndoService.AddUndoTask(undoAction, redoAction, $"Clear Pixels [{e.Column}, {e.Row}]");
+					}
+					break;
+				case DrawMode.Sand:
 					{
 						if (oldColorItem != this.PixelColor || oldColorItem.ItemType != ColorItem.ColorItemType.Sand)
 						{
@@ -432,16 +472,52 @@ namespace LedMatrixIde.ViewModels
 							// ***
 							async Task undoAction() { await this.ColorMatrix.SetItem(e.Row, e.Column, oldColorItem); }
 							async Task redoAction() { await this.ColorMatrix.SetItem(e.Row, e.Column, this.PixelColor, ColorItem.ColorItemType.Sand); }
-							await this.UndoService.AddUndoTask(undoAction, redoAction, $"Set Pixel [{e.Column}, {e.Row}, {this.PixelColor.ToString()}]");
+							await this.UndoService.AddUndoTask(undoAction, redoAction, $"Set Sand Pixel [{e.Column}, {e.Row}, {this.PixelColor.ToString()}]");
 						}
 					}
-				}
+					break;
 			}
 		}
 
 		private async void ColorMatrix_PixelChanged(object sender, PixelChangedEventArgs e)
 		{
 			await this.PixelEventService.PublishPixelChangedEvent(e);
+		}
+
+		/// <summary>
+		/// Determines the current mode based on the user's selection
+		/// of certain items in the tool bar.
+		/// </summary>
+		/// <returns></returns>
+		private Task<DrawMode> GetDrawMode(VirtualKeyModifiers keyModifiers = VirtualKeyModifiers.None)
+		{
+			DrawMode returnValue = DrawMode.None;
+
+			if (this.EraseIsChecked ||
+					keyModifiers == VirtualKeyModifiers.Control ||
+					keyModifiers == VirtualKeyModifiers.Shift ||
+					keyModifiers == VirtualKeyModifiers.Menu)
+			{
+				returnValue = DrawMode.Erase;
+			}
+			else if (this.DrawIsChecked)
+			{
+				returnValue = DrawMode.Draw;
+			}
+			else if (this.EraseColorIsChecked)
+			{
+				returnValue = DrawMode.EraseColor;
+			}
+			else if (this.PickColorIsChecked)
+			{
+				returnValue = DrawMode.PickColor;
+			}
+			else if (this.SandIsChecked)
+			{
+				returnValue = DrawMode.Sand;
+			}
+
+			return Task.FromResult(returnValue);
 		}
 
 		#region Command Handlers

@@ -67,17 +67,21 @@ namespace LedMatrixIde.Views
 				// *** Any color with a Alpha of 0 is considered a "clear" pixel. Having
 				// *** an alpha channel of 0 with cause the mouse events not to fire.
 				// ***
-				color = this.LedMatrix.DefaultBackgroundColor;
+				color = e.NewItem;
 				borderColor = this.LedMatrix.DefaultBorderColor;
 			}
 			else if (e.NewItem.ItemType == ColorItem.ColorItemType.Sand)
 			{
 				color = e.NewItem;
-				borderColor = Colors.Yellow;
+				borderColor = Colors.LightPink;
 			}
 			else if (e.NewItem.ItemType == ColorItem.ColorItemType.Pixel)
 			{
+				// ***
+				// *** Blend the pixel on the background
+				// ***
 				color = e.NewItem;
+				//((Color)e.NewItem).NormalBlendColor( );
 				borderColor = this.LedMatrix.DefaultBorderColor;
 			}
 
