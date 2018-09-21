@@ -106,9 +106,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Builder.cs" />
-    <Compile Include="BuildEventArgs.cs" />
-    <Compile Include="IBuilder.cs" />
+    <Compile Include="Repositories\BuildService.cs" />
+    <Compile Include="Models\BuildEventArgs.cs" />
+    <Compile Include="Interfcaes\IBuildService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\CodeBuilder.rd.xml" />
   </ItemGroup>

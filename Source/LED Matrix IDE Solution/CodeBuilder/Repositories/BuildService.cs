@@ -8,7 +8,7 @@ using Windows.UI;
 
 namespace CodeBuilder
 {
-	public class Builder : IBuilder
+	public class BuildService : IBuildService
 	{
 		public event EventHandler<BuildEventArgs> BuildEvent = null;
 

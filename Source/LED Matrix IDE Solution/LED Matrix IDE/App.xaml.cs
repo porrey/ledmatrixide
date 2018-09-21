@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using CodeBuilder;
 using LedMatrixIde.Interfaces;
 using LedMatrixIde.Services;
 using LedMatrixIde.Views;
@@ -31,6 +32,7 @@ namespace LedMatrixIde
 
 			this.Container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
 			this.Container.RegisterType<IUndoService, UndoService>();
+			this.Container.RegisterType<IBuildService, BuildService>();
 		}
 
         protected override async Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)

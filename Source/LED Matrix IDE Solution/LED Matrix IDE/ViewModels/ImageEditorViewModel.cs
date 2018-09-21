@@ -24,9 +24,10 @@ namespace LedMatrixIde.ViewModels
 {
 	public class ImageEditorViewModel : ViewModelBase
 	{
-		public ImageEditorViewModel(IUndoService undoService)
+		public ImageEditorViewModel(IUndoService undoService, IBuildService buildService)
 		{
 			this.UndoService = undoService;
+			this.BuildService = buildService;
 
 			this.LoadCommand = new DelegateCommand(this.OnLoadCommand, this.OnEnableLoadCommand);
 			this.SaveCommand = new DelegateCommand(this.OnSaveCommand, this.OnEnableSaveCommand);
@@ -62,6 +63,7 @@ namespace LedMatrixIde.ViewModels
 		public ColorMatrix ColorMatrix { get; } = new ColorMatrix(ImageEditorViewModel.DefaultRowCount, ImageEditorViewModel.DefaultColumnCount);
 
 		protected IUndoService UndoService { get; set; }
+		protected IBuildService BuildService { get; set; }
 
 		public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
 		{
@@ -562,14 +564,13 @@ namespace LedMatrixIde.ViewModels
 				this.OutputItems.Clear();
 				this.ShowOutput = true;
 
-				IBuilder codeBuilder = new Builder();
-				codeBuilder.BuildEvent += (s, e) =>
+				this.BuildService.BuildEvent += (s, e) =>
 				{
 					this.OutputItems.Add(e);
 					this.ClearOutputCommand.RaiseCanExecuteChanged();
 				};
 
-				bool result = await codeBuilder.Build(folder, this.ProjectName, this.ColorMatrix, null);
+				bool result = await this.BuildService.Build(folder, this.ProjectName, this.ColorMatrix, null);
 			}
 		}
 
