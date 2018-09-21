@@ -93,12 +93,6 @@ namespace LedMatrixControl
 			}
 		}
 
-		public Task<Color> GetPixelAsync(uint row, uint column)
-		{
-			Color color = ((SolidColorBrush)this.Cells[row, column].Background).Color;
-			return Task.FromResult(color);
-		}
-
 		public async Task SetPixelAsync(uint row, uint column, Color backgroundColor)
 		{
 			await this.SetPixelAsync(row, column, backgroundColor, this.DefaultBorderColor);
@@ -110,18 +104,6 @@ namespace LedMatrixControl
 			this.Cells[row, column].BorderBrush = new SolidColorBrush(borderColor);
 
 			return Task.FromResult(0);
-		}
-
-		public async Task ClearAsync()
-		{
-			for (uint row = 0; row < this.RowCount; row++)
-			{
-				for (uint column = 0; column < this.ColumnCount; column++)
-				{
-
-					await this.SetPixelAsync(row, column, this.DefaultBackgroundColor, this.DefaultBorderColor);
-				}
-			}
 		}
 
 		protected override void OnApplyTemplate()
