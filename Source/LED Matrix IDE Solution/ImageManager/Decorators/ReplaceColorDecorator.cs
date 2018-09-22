@@ -23,13 +23,16 @@ namespace ImageManager
 {
 	public static class ReplaceColorDecorator
 	{
-		public static async Task ReplaceColorAsync(this ColorMatrix sourceColorMatrix, Color oldColor, Color newColor, bool convertToBackground = false)
+		public static async Task ReplaceColorAsync(this ColorMatrix sourceColorMatrix, ColorItem oldColorItem, Color newColor, bool convertToBackground = false)
 		{
+			Color oldColor = oldColorItem;
+
 			for (uint row = 0; row < sourceColorMatrix.Height; row++)
 			{
 				for (uint column = 0; column < sourceColorMatrix.Width; column++)
 				{
-					if (sourceColorMatrix.ColorItems[row, column] == oldColor)
+					if (sourceColorMatrix.ColorItems[row, column] == oldColor &&
+						sourceColorMatrix.ColorItems[row, column].ItemType == oldColorItem.ItemType)
 					{
 						ColorItem newItem = new ColorItem()
 						{
