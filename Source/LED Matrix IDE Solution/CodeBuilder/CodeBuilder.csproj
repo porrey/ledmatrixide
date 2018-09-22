@@ -106,9 +106,22 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Repositories\BuildService.cs" />
+    <Compile Include="Decorators\ActivePixelCountDecorator.cs" />
+    <Compile Include="Decorators\CreateHeaderFileDecorator.cs" />
+    <Compile Include="Decorators\HexColorDecorator.cs" />
+    <Compile Include="Decorators\ImageCodeDecorator.cs" />
+    <Compile Include="Decorators\MaskCodeDecorator.cs" />
+    <Compile Include="Decorators\ProjectDecorator.cs" />
+    <Compile Include="Decorators\SandGrainCodeDecorator.cs" />
+    <Compile Include="Decorators\WriteHeaderFileDecorator.cs" />
+    <Compile Include="Decorators\WriteInstructionsFileDecorator.cs" />
+    <Compile Include="Decorators\WriteMakeFileDecorator.cs" />
+    <Compile Include="Decorators\WriteCodeFileDecorator.cs" />
+    <Compile Include="Interfaces\IBuildProject.cs" />
+    <Compile Include="Models\BuildProject.cs" />
+    <Compile Include="Services\BuildService.cs" />
     <Compile Include="Models\BuildEventArgs.cs" />
-    <Compile Include="Interfcaes\IBuildService.cs" />
+    <Compile Include="Interfaces\IBuildService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\CodeBuilder.rd.xml" />
   </ItemGroup>

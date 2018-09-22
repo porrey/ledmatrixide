@@ -58,7 +58,8 @@ namespace ImageManager
 
 		/// <summary>
 		/// Converts a color with an alpha channel value to the corresponding color (this
-		/// would be the color applied to an RGB LED).
+		/// would be the color applied to an RGB LED). This is the same as blending against
+		/// a black background.
 		/// </summary>
 		/// <param name="color"></param>
 		/// <returns></returns>

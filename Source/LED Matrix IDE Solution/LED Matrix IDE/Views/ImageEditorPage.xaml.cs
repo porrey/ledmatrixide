@@ -64,10 +64,10 @@ namespace LedMatrixIde.Views
 			if (e.NewItem.ItemType == ColorItem.ColorItemType.Background || e.NewItem.A == 0)
 			{
 				// ***
-				// *** Any color with a Alpha of 0 is considered a "clear" pixel. Having
+				// *** Any color with a alpha of 0 is considered a "clear" pixel. Having
 				// *** an alpha channel of 0 with cause the mouse events not to fire.
 				// ***
-				color = e.NewItem;
+				color = e.Background;
 				borderColor = this.LedMatrix.DefaultBorderColor;
 			}
 			else if (e.NewItem.ItemType == ColorItem.ColorItemType.Sand)
@@ -110,6 +110,6 @@ namespace LedMatrixIde.Views
 		public string ClearButtonToolTip => "ImageEditor_ToolTip_ClearButton".GetLocalized();
 		public string BuildButtonToolTip => "ImageEditor_ToolTip_BuildButton".GetLocalized();
 		public string OutputButtonToolTip => "ImageEditor_ToolTip_OutputButton".GetLocalized();
-		public string BackgroundColorButtonToolTip => "ImageEditor_ToolTip_BackgroundColorButtonToolTip";
+		public string BackgroundColorButtonToolTip => "ImageEditor_ToolTip_BackgroundColorButton".GetLocalized();
 	}
 }

@@ -26,6 +26,7 @@ namespace CodeBuilder
 	public interface IBuildService
 	{
 		event EventHandler<BuildEventArgs> BuildEvent;
-		Task<bool> Build(StorageFolder folder, string projectName, ColorMatrix colorMatrix, ColorMatrix grainMatrix);
+		Task<bool> Build(IBuildProject project, StorageFolder folder);
+		void FireBuildEvent(BuildEventArgs.BuildEventType eventType, string message);
 	}
 }

@@ -62,11 +62,11 @@ namespace ImageManager
 
 		public Task SetItem(uint row, uint column, Color color, ColorItem.ColorItemType itemType)
 		{
-			ColorItem item = color;
-			item.ItemType = itemType;
+			ColorItem colorItem = color;
+			colorItem.ItemType = itemType;
 
-			this.ColorItems[row, column] = item;
-			this.OnPixelChanged(new PixelChangedEventArgs(row, column, item, this.BackgroundColor));
+			this.ColorItems[row, column] = colorItem;
+			this.OnPixelChanged(new PixelChangedEventArgs(row, column, colorItem, this.BackgroundColor));
 			return Task.FromResult(0);
 		}
 

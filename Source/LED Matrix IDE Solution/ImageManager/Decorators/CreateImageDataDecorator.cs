@@ -43,12 +43,21 @@ namespace ImageManager
 					// ***
 					// *** Remove background and sand pixels.
 					// ***
-					if (sourceColorMatrix.ColorItems[row, column].ItemType == ColorItem.ColorItemType.Background ||
-						sourceColorMatrix.ColorItems[row, column].ItemType == ColorItem.ColorItemType.Sand)
+					if (sourceColorMatrix.ColorItems[row, column].ItemType == ColorItem.ColorItemType.Background)
 					{
+						// ***
+						// *** Clear the color for transparent pixels.
+						// ***
+						color.A = 0;
 						color.R = 0;
 						color.G = 0;
 						color.B = 0;
+					}
+					else if(sourceColorMatrix.ColorItems[row, column].ItemType == ColorItem.ColorItemType.Sand)
+					{
+						// ***
+						// *** Leave the and color in place
+						// ***
 						color.A = 0;
 					}
 

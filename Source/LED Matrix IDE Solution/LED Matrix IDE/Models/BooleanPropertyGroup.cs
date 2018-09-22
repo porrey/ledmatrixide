@@ -16,6 +16,8 @@
 // along with the LED Matrix IDE Solution. If not, 
 // see http://www.gnu.org/licenses/.
 //
+using System;
+
 namespace LedMatrixIde.Models
 {
 	public delegate void SetPropertyAction(bool value);

@@ -156,8 +156,8 @@
 					<AppBarButton.Flyout>
 						<Flyout>
 							<ColorPicker Color="{Binding BackgroundColor, Mode=TwoWay}"
-										 IsAlphaEnabled="True"
-										 IsAlphaSliderVisible="True"
+										 IsAlphaEnabled="False"
+										 IsAlphaSliderVisible="False"
 										 IsColorChannelTextInputVisible="True"
 										 IsColorPreviewVisible="True"
 										 IsColorSliderVisible="True"

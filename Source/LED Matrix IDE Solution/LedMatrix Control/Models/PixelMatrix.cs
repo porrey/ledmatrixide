@@ -37,8 +37,6 @@ namespace LedMatrixControl
 		public PixelMatrix()
 		{
 			this.DefaultStyleKey = typeof(PixelMatrix);
-			this.ApplyTemplate();
-
 			this.PointerMoved += this.UiElement_PointerMoved;
 			this.PointerPressed += this.UiElement_PointerPressed;
 			this.PointerReleased += this.UiElement_PointerReleased;
@@ -60,6 +58,7 @@ namespace LedMatrixControl
 		protected uint PreviousRow { get; set; } = 0;
 		protected uint PreviousColumn { get; set; } = 0;
 		protected VirtualKeyModifiers PreviousKeyModifiers { get; set; } = VirtualKeyModifiers.None;
+		protected IList<Action> ActionQueue { get; } = new List<Action>();
 
 		public Color DefaultBackgroundColor => Color.FromArgb(255, 0, 0, 0);
 		public Color DefaultBorderColor => Color.FromArgb(255, 0, 0, 0);
@@ -124,6 +123,10 @@ namespace LedMatrixControl
 				this.Cells[row, column].Background = new SolidColorBrush(backgroundColor);
 				this.Cells[row, column].BorderBrush = new SolidColorBrush(borderColor);
 			}
+			else
+			{
+				this.ActionQueue.Add(async () => await this.SetPixelAsync(row, column, backgroundColor, borderColor));
+			}
 
 			return Task.FromResult(0);
 		}
@@ -182,6 +185,15 @@ namespace LedMatrixControl
 						this.MainGrid.Children.Add(this.Cells[row, column]);
 					}
 				}
+
+				// ***
+				// *** Run the queued up actions.
+				// ***
+				foreach (Action action in this.ActionQueue)
+				{
+					action.Invoke();
+				}
+				this.ActionQueue.Clear();
 			}
 		}
 

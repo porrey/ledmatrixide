@@ -155,9 +155,9 @@ int nGrains = NUM_GRAINS;
 // ***
 // *** Background color (r,g,b)
 // ***
-#define BG_RED    0
-#define BG_GREEN  0
-#define BG_BLUE   0
+#define BG_RED    {1}
+#define BG_GREEN  {2}
+#define BG_BLUE   {3}
 
 // ***
 // *** Signal handler allows matrix to be properly deinitialized.

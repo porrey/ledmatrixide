@@ -52,8 +52,35 @@ namespace ImageManager
 					{
 						for (uint column = 0; column < width; column++)
 						{
+							// ***
+							// *** Get the color from the image data.
+							// ***
 							Color color = await bytes.GetPixelAsync(row, column, width, height);
-							await sourceColorMatrix.SetItem(row + startRow, column + startColumn, color, color.A > 0 ? ColorItem.ColorItemType.Pixel : ColorItem.ColorItemType.Background);
+
+							// ***
+							// *** The default color item type is pixel.
+							// ***
+							ColorItem.ColorItemType itemType = ColorItem.ColorItemType.Pixel;
+
+							if (color.A == 0 && (color.R != 0 || color.G != 0 || color.B != 0))
+							{
+								// ***
+								// *** An item with color and an alpha of 0 is a 
+								// *** sand pixel.
+								// ***
+								itemType = ColorItem.ColorItemType.Sand;
+								color.A = 255;
+							}
+							else if (color.A == 0)
+							{
+								// ***
+								// *** An item without color (black) and an alpha
+								// *** of 0 is a sand pixel.
+								// ***
+								itemType = ColorItem.ColorItemType.Background;
+							}
+
+							await sourceColorMatrix.SetItem(row + startRow, column + startColumn, color, itemType);
 						}
 					}
 				}

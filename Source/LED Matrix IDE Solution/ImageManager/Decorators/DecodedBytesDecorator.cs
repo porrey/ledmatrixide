@@ -44,7 +44,7 @@ namespace ImageManager
 			using (IRandomAccessStream stream = await storageFile.OpenAsync(FileAccessMode.ReadWrite))
 			{
 				BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
-				encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, width, height, 96, 96, decodedBytes);
+				encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Straight, width, height, 96, 96, decodedBytes);
 				await encoder.FlushAsync();
 			}
 		}
