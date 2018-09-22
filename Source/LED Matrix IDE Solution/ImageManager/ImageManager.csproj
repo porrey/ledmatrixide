@@ -108,7 +108,7 @@
   <ItemGroup>
     <Compile Include="Decorators\ReplacePixelTypeColorDecorator.cs" />
     <Compile Include="Decorators\ReplaceColorDecorator.cs" />
-    <Compile Include="Decorators\SomeDecorator.cs" />
+    <Compile Include="Decorators\ColorDecorator.cs" />
     <Compile Include="Models\ColorItem.cs" />
     <Compile Include="Decorators\GetPaletteDecorator.cs" />
     <Compile Include="Decorators\SaveImageDecorator.cs" />

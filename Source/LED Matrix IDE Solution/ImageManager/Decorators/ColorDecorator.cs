@@ -2,7 +2,7 @@
 
 namespace ImageManager
 {
-	public static class SomeDecorator
+	public static class ColorDecorator
 	{
 		/// <summary>
 		/// Blends a single color channel with a back ground color.
