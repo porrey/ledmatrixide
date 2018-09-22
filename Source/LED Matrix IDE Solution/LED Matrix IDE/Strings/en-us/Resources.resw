@@ -244,9 +244,6 @@
   <data name="ImageEditor_ProjectName" xml:space="preserve">
     <value>Project Name</value>
   </data>
-  <data name="ImageEditor_ToolTip_OutputButton" xml:space="preserve">
-    <value>Show/hide output window.</value>
-  </data>
   <data name="Exception" xml:space="preserve">
     <value>Exception</value>
   </data>
@@ -264,5 +261,80 @@
   </data>
   <data name="ImageEditor_ToolTip_EraseColorButton" xml:space="preserve">
     <value>Select a pixel to earse all pixels of that same color.</value>
+  </data>
+  <data name="Browser_Button_Label_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Browser_Button_Label_Forward" xml:space="preserve">
+    <value>Forward</value>
+  </data>
+  <data name="Browser_Button_Label_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Browser_Button_Label_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Browser_Button_ToolTip_Back" xml:space="preserve">
+    <value>Go back to previous page.</value>
+  </data>
+  <data name="Browser_Button_ToolTip_Forward" xml:space="preserve">
+    <value>Go forward to the next page.</value>
+  </data>
+  <data name="Browser_Button_ToolTip_Open" xml:space="preserve">
+    <value>Open this page in an external browser.</value>
+  </data>
+  <data name="Browser_Button_ToolTip_Refresh" xml:space="preserve">
+    <value>Refresh this page.</value>
+  </data>
+  <data name="ImageEditor_Label_BackgroundColorButton" xml:space="preserve">
+    <value>Background</value>
+  </data>
+  <data name="ImageEditor_Label_BuildButton" xml:space="preserve">
+    <value>Build</value>
+  </data>
+  <data name="ImageEditor_Label_ClearButton" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ImageEditor_Label_ColorButton" xml:space="preserve">
+    <value>Foreground</value>
+  </data>
+  <data name="ImageEditor_Label_DrawButton" xml:space="preserve">
+    <value>Draw</value>
+  </data>
+  <data name="ImageEditor_Label_EraseButton" xml:space="preserve">
+    <value>Erase</value>
+  </data>
+  <data name="ImageEditor_Label_EraseColorButton" xml:space="preserve">
+    <value>Erase Color</value>
+  </data>
+  <data name="ImageEditor_Label_FlipHorizontalButton" xml:space="preserve">
+    <value>Flip Horizontal</value>
+  </data>
+  <data name="ImageEditor_Label_FlipVerticalButton" xml:space="preserve">
+    <value>Flip Vertical</value>
+  </data>
+  <data name="ImageEditor_Label_LoadButton" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="ImageEditor_Label_PickColorButton" xml:space="preserve">
+    <value>Pick Color</value>
+  </data>
+  <data name="ImageEditor_Label_RedoButton" xml:space="preserve">
+    <value>Redo</value>
+  </data>
+  <data name="ImageEditor_Label_RotateClockwiseButton" xml:space="preserve">
+    <value>Clockwise.</value>
+  </data>
+  <data name="ImageEditor_Label_RotateCounterClockwiseButton" xml:space="preserve">
+    <value>Counter-clockwise.</value>
+  </data>
+  <data name="ImageEditor_Label_SandButton" xml:space="preserve">
+    <value>Sand</value>
+  </data>
+  <data name="ImageEditor_Label_SaveButton" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ImageEditor_Label_UndoButton" xml:space="preserve">
+    <value>Undo</value>
   </data>
 </root>

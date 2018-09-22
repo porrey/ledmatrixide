@@ -7,6 +7,7 @@
 	  Style="{StaticResource PageStyle}"
 	  prismMvvm:ViewModelLocator.AutoWireViewModel="True"
 	  mc:Ignorable="d">
+
 	<Page.Resources>
 		<Style x:Key="BrowserButtonStyle"
 			   TargetType="Button">
@@ -115,16 +116,17 @@
 
 		<!-- Tool Bar -->
 		<CommandBar Grid.Row="0"
-					DefaultLabelPosition="Collapsed"
-					HorizontalAlignment="Left"
+					DefaultLabelPosition="Bottom"
+					HorizontalAlignment="Stretch"
 					HorizontalContentAlignment="Left">
 
 			<!-- Browser Back Button -->
 			<AppBarButton BorderBrush="Transparent"
 						  BorderThickness="0,0,0,0"
-						  ToolTipService.ToolTip=""
+						  ToolTipService.ToolTip="{x:Bind BackToolTip, Mode=OneTime}"
 						  ToolTipService.Placement="Bottom"
-						  Command="{Binding BrowserBackCommand}">
+						  Command="{Binding BrowserBackCommand}"
+						  Label="{x:Bind BackLabel, Mode=OneTime}">
 				<AppBarButton.Icon>
 					<FontIcon FontFamily="Segoe MDL2 Assets"
 							  Glyph="&#xE72B;" />
@@ -134,9 +136,10 @@
 			<!-- Browser Forward Button -->
 			<AppBarButton BorderBrush="Transparent"
 						  BorderThickness="0,0,0,0"
-						  ToolTipService.ToolTip=""
+						  ToolTipService.ToolTip="{x:Bind ForwardToolTip, Mode=OneTime}"
 						  ToolTipService.Placement="Bottom"
-						  Command="{Binding BrowserForwardCommand}">
+						  Command="{Binding BrowserForwardCommand}"
+						  Label="{x:Bind ForwardLabel, Mode=OneTime}">
 				<AppBarButton.Icon>
 					<FontIcon FontFamily="Segoe MDL2 Assets"
 							  Glyph="&#xE72A;" />
@@ -148,9 +151,10 @@
 			<!-- Browser Refresh Button -->
 			<AppBarButton BorderBrush="Transparent"
 						  BorderThickness="0,0,0,0"
-						  ToolTipService.ToolTip=""
+						  ToolTipService.ToolTip="{x:Bind RefreshToolTip, Mode=OneTime}"
 						  ToolTipService.Placement="Bottom"
-						  Command="{Binding RefreshCommand}">
+						  Command="{Binding RefreshCommand}"
+						  Label="{x:Bind RefreshLabel, Mode=OneTime}">
 				<AppBarButton.Icon>
 					<FontIcon FontFamily="Segoe MDL2 Assets"
 							  Glyph="&#xE72C;" />
@@ -160,9 +164,10 @@
 			<!-- Open in Browser Button -->
 			<AppBarButton BorderBrush="Transparent"
 						  BorderThickness="0,0,0,0"
-						  ToolTipService.ToolTip=""
+						  ToolTipService.ToolTip="{x:Bind OpenToolTip, Mode=OneTime}"
 						  ToolTipService.Placement="Bottom"
-						  Command="{Binding OpenInBrowserCommand}">
+						  Command="{Binding OpenInBrowserCommand}"
+						  Label="{x:Bind OpenLabel, Mode=OneTime}">
 				<AppBarButton.Icon>
 					<FontIcon FontFamily="Segoe MDL2 Assets"
 							  Glyph="&#xE774;" />

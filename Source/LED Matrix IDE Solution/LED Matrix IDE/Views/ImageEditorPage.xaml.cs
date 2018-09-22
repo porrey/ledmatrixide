@@ -93,23 +93,56 @@ namespace LedMatrixIde.Views
 		}
 
 		public string ProjectName => "ImageEditor_ProjectName".GetLocalized();
+
 		public string LoadButtonToolTip => "ImageEditor_ToolTip_LoadButton".GetLocalized();
+		public string LoadButtonLabel => "ImageEditor_Label_LoadButton".GetLocalized();
+
 		public string SaveButtonToolTip => "ImageEditor_ToolTip_SaveButton".GetLocalized();
+		public string SaveButtonLabel => "ImageEditor_Label_SaveButton".GetLocalized();
+
 		public string UndoButtonToolTip => "ImageEditor_ToolTip_UndoButton".GetLocalized();
+		public string UndoButtonLabel => "ImageEditor_Label_UndoButton".GetLocalized();
+
 		public string RedoButtonToolTip => "ImageEditor_ToolTip_RedoButton".GetLocalized();
+		public string RedoButtonLabel => "ImageEditor_Label_RedoButton".GetLocalized();
+
 		public string DrawButtonToolTip => "ImageEditor_ToolTip_DrawButton".GetLocalized();
+		public string DrawButtonLabel => "ImageEditor_Label_DrawButton".GetLocalized();
+
 		public string SandButtonToolTip => "ImageEditor_ToolTip_SandButton".GetLocalized();
+		public string SandButtonLabel => "ImageEditor_Label_SandButton".GetLocalized();
+
 		public string EraseButtonToolTip => "ImageEditor_ToolTip_EraseButton".GetLocalized();
+		public string EraseButtonLabel => "ImageEditor_Label_EraseButton".GetLocalized();
+
 		public string EraseColorButtonToolTip => "ImageEditor_ToolTip_EraseColorButton".GetLocalized();
+		public string EraseColorButtonLabel => "ImageEditor_Label_EraseColorButton".GetLocalized();
+
 		public string ColorButtonToolTip => "ImageEditor_ToolTip_ColorButton".GetLocalized();
-		public string PickColorButtonToolTip => "ImageEditor_ToolTip_PickColorButton".GetLocalized();
-		public string RotateCounterClockwiseButtonToolTip => "ImageEditor_ToolTip_RotateCounterClockwiseButton".GetLocalized();
-		public string RotateClockwiseButtonToolTip => "ImageEditor_ToolTip_RotateClockwiseButton".GetLocalized();
-		public string FlipHorizontalButtonToolTip => "ImageEditor_ToolTip_FlipHorizontalButton".GetLocalized();
-		public string FlipVerticalButtonToolTip => "ImageEditor_ToolTip_FlipVerticalButton".GetLocalized();
-		public string ClearButtonToolTip => "ImageEditor_ToolTip_ClearButton".GetLocalized();
-		public string BuildButtonToolTip => "ImageEditor_ToolTip_BuildButton".GetLocalized();
-		public string OutputButtonToolTip => "ImageEditor_ToolTip_OutputButton".GetLocalized();
+		public string ColorButtonLabel => "ImageEditor_Label_ColorButton".GetLocalized();
+
 		public string BackgroundColorButtonToolTip => "ImageEditor_ToolTip_BackgroundColorButton".GetLocalized();
+		public string BackgroundColorButtonLabel => "ImageEditor_Label_BackgroundColorButton".GetLocalized();
+
+		public string PickColorButtonToolTip => "ImageEditor_ToolTip_PickColorButton".GetLocalized();
+		public string PickColorButtonLabel => "ImageEditor_Label_PickColorButton".GetLocalized();
+
+		public string RotateCounterClockwiseButtonToolTip => "ImageEditor_ToolTip_RotateCounterClockwiseButton".GetLocalized();
+		public string RotateCounterClockwiseButtonLabel => "ImageEditor_Label_RotateCounterClockwiseButton".GetLocalized();
+
+		public string RotateClockwiseButtonToolTip => "ImageEditor_ToolTip_RotateClockwiseButton".GetLocalized();
+		public string RotateClockwiseButtonLabel => "ImageEditor_Label_RotateClockwiseButton".GetLocalized();
+
+		public string FlipHorizontalButtonToolTip => "ImageEditor_ToolTip_FlipHorizontalButton".GetLocalized();
+		public string FlipHorizontalButtonLabel => "ImageEditor_Label_FlipHorizontalButton".GetLocalized();
+
+		public string FlipVerticalButtonToolTip => "ImageEditor_ToolTip_FlipVerticalButton".GetLocalized();
+		public string FlipVerticalButtonLabel => "ImageEditor_Label_FlipVerticalButton".GetLocalized();
+
+		public string ClearButtonToolTip => "ImageEditor_ToolTip_ClearButton".GetLocalized();
+		public string ClearButtonLabel => "ImageEditor_Label_ClearButton".GetLocalized();
+
+		public string BuildButtonToolTip => "ImageEditor_ToolTip_BuildButton".GetLocalized();
+		public string BuildButtonLabel => "ImageEditor_Label_BuildButton".GetLocalized();
 	}
 }

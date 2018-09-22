@@ -1,12 +1,12 @@
 ﻿<Page x:Class="LedMatrixIde.Views.ImageEditorPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:controls="using:LedMatrixControl"
-      xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
-      xmlns:prismMvvm="using:Prism.Windows.Mvvm"
-      prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	  xmlns:controls="using:LedMatrixControl"
+	  xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+	  xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+	  prismMvvm:ViewModelLocator.AutoWireViewModel="True"
 	  Style="{StaticResource PageStyle}"
 	  mc:Ignorable="d">
 
@@ -22,8 +22,8 @@
 
 			<!-- Tool Bar -->
 			<CommandBar Grid.Row="0"
-						DefaultLabelPosition="Collapsed"
-						HorizontalAlignment="Left"
+						DefaultLabelPosition="Bottom"
+						HorizontalAlignment="Stretch"
 						HorizontalContentAlignment="Left">
 
 				<!-- Load Image -->
@@ -32,7 +32,8 @@
 							  Icon="OpenFile"
 							  ToolTipService.ToolTip="{x:Bind LoadButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
-							  Command="{Binding LoadCommand}" />
+							  Command="{Binding LoadCommand}"
+							  Label="{x:Bind LoadButtonLabel}"/>
 
 				<!-- Save Image -->
 				<AppBarButton BorderBrush="Transparent"
@@ -40,7 +41,8 @@
 							  Icon="Save"
 							  ToolTipService.ToolTip="{x:Bind SaveButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
-							  Command="{Binding SaveCommand}" />
+							  Command="{Binding SaveCommand}"
+							  Label="{x:Bind SaveButtonLabel}"/>
 
 				<AppBarSeparator />
 
@@ -50,7 +52,8 @@
 							  Icon="Undo"
 							  ToolTipService.ToolTip="{x:Bind UndoButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
-							  Command="{Binding UndoCommand}" />
+							  Command="{Binding UndoCommand}"
+							  Label="{x:Bind UndoButtonLabel}" />
 
 				<!-- Redo -->
 				<AppBarButton BorderBrush="Transparent"
@@ -58,7 +61,8 @@
 							  Icon="Redo"
 							  ToolTipService.ToolTip="{x:Bind RedoButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
-							  Command="{Binding RedoCommand}" />
+							  Command="{Binding RedoCommand}"
+							  Label="{x:Bind RedoButtonLabel}"/>
 
 				<AppBarSeparator />
 
@@ -68,7 +72,8 @@
 									ToolTipService.ToolTip="{x:Bind DrawButtonToolTip}"
 									ToolTipService.Placement="Bottom"
 									IsChecked="{Binding DrawIsChecked, Mode=TwoWay}"
-									IsEnabled="{Binding DrawIsEnabled, Mode=OneWay}">
+									IsEnabled="{Binding DrawIsEnabled, Mode=OneWay}"
+									Label="{x:Bind DrawButtonLabel}">
 					<AppBarToggleButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE70F;" />
@@ -81,7 +86,8 @@
 									ToolTipService.ToolTip="{x:Bind SandButtonToolTip}"
 									ToolTipService.Placement="Bottom"
 									IsChecked="{Binding SandIsChecked, Mode=TwoWay}"
-									IsEnabled="{Binding SandIsEnabled, Mode=OneWay}">
+									IsEnabled="{Binding SandIsEnabled, Mode=OneWay}"
+									Label="{x:Bind SandButtonLabel}">
 					<AppBarToggleButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xED67;" />
@@ -94,7 +100,8 @@
 									ToolTipService.ToolTip="{x:Bind EraseButtonToolTip}"
 									ToolTipService.Placement="Bottom"
 									IsChecked="{Binding EraseIsChecked, Mode=TwoWay}"
-									IsEnabled="{Binding EraseIsEnabled, Mode=OneWay}">
+									IsEnabled="{Binding EraseIsEnabled, Mode=OneWay}"
+									Label="{x:Bind EraseButtonLabel}">
 					<AppBarToggleButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE75C;" />
@@ -107,10 +114,11 @@
 									ToolTipService.ToolTip="{x:Bind EraseColorButtonToolTip}"
 									ToolTipService.Placement="Bottom"
 									IsChecked="{Binding EraseColorIsChecked, Mode=TwoWay}"
-									IsEnabled="{Binding EraseColorIsEnabled, Mode=OneWay}">
+									IsEnabled="{Binding EraseColorIsEnabled, Mode=OneWay}"
+									Label="{x:Bind EraseColorButtonLabel}">
 					<AppBarToggleButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-								  Glyph="&#xED61;" />
+								  Glyph="&#xED62;" />
 					</AppBarToggleButton.Icon>
 				</AppBarToggleButton>
 
@@ -122,7 +130,8 @@
 							  Margin="0"
 							  BorderBrush="{Binding PixelColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
 							  BorderThickness="5"
-							  IsEnabled="{Binding ColorPickerIsEnabled, Mode=OneWay}">
+							  IsEnabled="{Binding ColorPickerIsEnabled, Mode=OneWay}"
+							  Label="{x:Bind ColorButtonLabel}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE790;" />
@@ -148,22 +157,22 @@
 							  Margin="0"
 							  BorderBrush="{Binding BackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
 							  BorderThickness="5"
-							  IsEnabled="{Binding BackgroundColorPickerIsEnabled, Mode=OneWay}">
+							  IsEnabled="{Binding BackgroundColorPickerIsEnabled, Mode=OneWay}"
+							  Label="{x:Bind BackgroundColorButtonLabel}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE739;" />
 					</AppBarButton.Icon>
 					<AppBarButton.Flyout>
 						<Flyout>
-							<ColorPicker Color="{Binding BackgroundColor, Mode=TwoWay}"
+							<ColorPicker Color="{Binding BackgroundColor, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
 										 IsAlphaEnabled="False"
 										 IsAlphaSliderVisible="False"
 										 IsColorChannelTextInputVisible="True"
 										 IsColorPreviewVisible="True"
 										 IsColorSliderVisible="True"
 										 IsColorSpectrumVisible="True"
-										 ColorSpectrumShape="Ring"
-										 IsMoreButtonVisible="False" />
+										 ColorSpectrumShape="Ring" />
 						</Flyout>
 					</AppBarButton.Flyout>
 				</AppBarButton>
@@ -173,7 +182,8 @@
 									BorderThickness="0,0,0,0"
 									ToolTipService.ToolTip="{x:Bind PickColorButtonToolTip}"
 									ToolTipService.Placement="Bottom"
-									IsChecked="{Binding PickColorIsChecked, Mode=TwoWay}">
+									IsChecked="{Binding PickColorIsChecked, Mode=TwoWay}"
+									Label="{x:Bind PickColorButtonLabel}">
 					<AppBarToggleButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xEF3C;" />
@@ -187,13 +197,15 @@
 							  BorderThickness="0,0,0,0"
 							  ToolTipService.ToolTip="{x:Bind RotateCounterClockwiseButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
-							  Command="{Binding RotateCounterClockwiseCommand}">
+							  Command="{Binding RotateCounterClockwiseCommand}"
+							  Label="{x:Bind RotateCounterClockwiseButtonLabel}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE7AD;"
 								  RenderTransformOrigin=".5,.5">
 							<FontIcon.RenderTransform>
-								<CompositeTransform ScaleX="-1" Rotation="90" />
+								<CompositeTransform ScaleX="-1"
+													Rotation="90" />
 							</FontIcon.RenderTransform>
 						</FontIcon>
 					</AppBarButton.Icon>
@@ -204,7 +216,8 @@
 							  BorderThickness="0,0,0,0"
 							  ToolTipService.ToolTip="{x:Bind RotateClockwiseButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
-							  Command="{Binding RotateClockwiseCommand}">
+							  Command="{Binding RotateClockwiseCommand}"
+							  Label="{x:Bind RotateClockwiseButtonLabel}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE7AD;"
@@ -221,18 +234,21 @@
 							  BorderThickness="0,0,0,0"
 							  ToolTipService.ToolTip="{x:Bind FlipHorizontalButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
-							  Command="{Binding FlipHorizontalCommand}">
+							  Command="{Binding FlipHorizontalCommand}"
+							  Label="{x:Bind FlipHorizontalButtonLabel}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE7FD;" />
 					</AppBarButton.Icon>
 				</AppBarButton>
 
+				<!-- Flip Vertical -->
 				<AppBarButton BorderBrush="Transparent"
 							  BorderThickness="0,0,0,0"
 							  ToolTipService.ToolTip="{x:Bind FlipVerticalButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
-							  Command="{Binding FlipVerticalCommand}">
+							  Command="{Binding FlipVerticalCommand}"
+							  Label="{x:Bind FlipVerticalButtonLabel}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xE7FD;"
@@ -251,10 +267,11 @@
 							  BorderThickness="0,0,0,0"
 							  ToolTipService.ToolTip="{x:Bind ClearButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
-							  Command="{Binding ClearCommand}">
+							  Command="{Binding ClearCommand}"
+							  Label="{x:Bind ClearButtonLabel}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-								  Glyph="&#xED62;" />
+								  Glyph="&#xE74D;" />
 					</AppBarButton.Icon>
 				</AppBarButton>
 
@@ -265,23 +282,13 @@
 							  BorderThickness="0,0,0,0"
 							  ToolTipService.ToolTip="{x:Bind BuildButtonToolTip}"
 							  ToolTipService.Placement="Bottom"
-							  Command="{Binding BuildCommand}">
+							  Command="{Binding BuildCommand}"
+							  Label="{x:Bind BuildButtonLabel}">
 					<AppBarButton.Icon>
 						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
 								  Glyph="&#xEC58;" />
 					</AppBarButton.Icon>
 				</AppBarButton>
-
-				<AppBarToggleButton BorderBrush="Transparent"
-									BorderThickness="0,0,0,0"
-									ToolTipService.ToolTip="{x:Bind OutputButtonToolTip}"
-									ToolTipService.Placement="Bottom"
-									IsChecked="{Binding ShowOutput, Mode=TwoWay}">
-					<AppBarToggleButton.Icon>
-						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-								  Glyph="&#xE756;" />
-					</AppBarToggleButton.Icon>
-				</AppBarToggleButton>
 			</CommandBar>
 
 			<!-- Project Name -->
@@ -311,102 +318,101 @@
 								  RowCount="{Binding RowCount, Mode=OneTime}"
 								  ColumnCount="{Binding ColumnCount, Mode=OneTime}"
 								  extensions:Mouse.Cursor="Hand" />
+		</Grid>
 
-			<!-- Output Window -->
-			<Grid Grid.Row="3"
-				  BorderBrush="{ThemeResource ContentDialogBorderThemeBrush}"
-				  BorderThickness="3"
-				  Background="{ThemeResource ContentDialogBackgroundThemeBrush}"
-				  Height="250"
-				  Visibility="{Binding ShowOutput, Converter={StaticResource BooleanToVisibilityConverter}}">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="40" />
-					<RowDefinition Height="*" />
-				</Grid.RowDefinitions>
-				<Grid Grid.Row="0">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="*" />
-						<ColumnDefinition Width="Auto" />
-					</Grid.ColumnDefinitions>
+		<!-- Output Window -->
+		<Grid Grid.Row="3"
+			  BorderBrush="{ThemeResource ContentDialogBorderThemeBrush}"
+			  BorderThickness="10"
+			  Background="{ThemeResource ContentDialogBackgroundThemeBrush}"
+			  Visibility="{Binding ShowOutput, Converter={StaticResource BooleanToVisibilityConverter}}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="60" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
 
-					<TextBlock Grid.Column="0"
-							   Text="Output Window"
-							   VerticalAlignment="Center"
-							   HorizontalAlignment="Left"
-							   Foreground="{ThemeResource ContentDialogContentForegroundBrush}"
-							   Margin="5,0,0,0" />
+			<Grid Grid.Row="0"
+				  Margin="10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
 
-					<Button Grid.Column="1"
-							VerticalAlignment="Center"
-							HorizontalAlignment="Right"
-							Margin="0,0,3,3"
-							Command="{Binding ClearOutputCommand}"
-							Foreground="{ThemeResource ContentDialogContentForegroundBrush}">
-						<Button.Content>
-							<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-									  Glyph="&#xE8E6;"
-									  Foreground="{ThemeResource ContentDialogContentForegroundBrush}">
-							</FontIcon>
-						</Button.Content>
-					</Button>
-				</Grid>
+				<TextBlock Grid.Column="0"
+						   Text="Output Window"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Left"
+						   Foreground="{ThemeResource ContentDialogContentForegroundBrush}"
+						   Margin="5,0,0,0" />
 
-				<ListView Grid.Row="1"
-						  BorderThickness="0"
-						  IsItemClickEnabled="False"
-						  IsSwipeEnabled="False"
-						  CanDragItems="False"
-						  SelectionMode="None"
-						  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-						  ItemsSource="{Binding OutputItems}">
-					<ListView.ItemTemplate>
-						<DataTemplate>
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="Auto" />
-									<ColumnDefinition Width="110" />
-									<ColumnDefinition Width="*" />
-								</Grid.ColumnDefinitions>
-
-								<Border Grid.Column="0"
-										BorderBrush="{Binding EventType, Converter={StaticResource EventTypeToBackgroundBrushConverter}}"
-										BorderThickness="2"
-										Width="28"
-										Height="28"
-										VerticalAlignment="Center"
-										HorizontalAlignment="Left">
-									<Image Margin="1,1,1,1"
-										   Source="{Binding EventType, Converter={StaticResource EventTypeToImageSourceConverter}}" />
-								</Border>
-
-
-								<TextBlock Grid.Column="1"
-										   Text="{Binding EventType, Converter={StaticResource EventTypeToBracketedTextConverter}}"
-										   FontFamily="Consolas"
-										   FontSize="14"
-										   VerticalAlignment="Center"
-										   Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
-										   Margin="5,0,0,0" />
-
-								<TextBlock Grid.Column="2"
-										   Text="{Binding Message}"
-										   FontFamily="Consolas"
-										   FontSize="14"
-										   Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
-										   VerticalAlignment="Center"
-										   Margin="3,0,0,0" />
-							</Grid>
-						</DataTemplate>
-					</ListView.ItemTemplate>
-					<ListView.ItemContainerStyle>
-						<Style TargetType="ListViewItem">
-							<Setter Property="HorizontalContentAlignment"
-									Value="Stretch" />
-						</Style>
-					</ListView.ItemContainerStyle>
-				</ListView>
-
+				<Button Grid.Column="1"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Right"
+						Command="{Binding CloseOutputCommand}"
+						Foreground="{ThemeResource ContentDialogContentForegroundBrush}">
+					<Button.Content>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xE8BB;"
+								  Foreground="{ThemeResource ContentDialogContentForegroundBrush}">
+						</FontIcon>
+					</Button.Content>
+				</Button>
 			</Grid>
+
+			<ListView Grid.Row="1"
+					  BorderThickness="0"
+					  IsItemClickEnabled="False"
+					  IsSwipeEnabled="False"
+					  CanDragItems="False"
+					  SelectionMode="None"
+					  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+					  ItemsSource="{Binding OutputItems}">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="110" />
+								<ColumnDefinition Width="*" />
+							</Grid.ColumnDefinitions>
+
+							<Border Grid.Column="0"
+									BorderBrush="{Binding EventType, Converter={StaticResource EventTypeToBackgroundBrushConverter}}"
+									BorderThickness="2"
+									Width="28"
+									Height="28"
+									VerticalAlignment="Center"
+									HorizontalAlignment="Left">
+								<Image Margin="1,1,1,1"
+									   Source="{Binding EventType, Converter={StaticResource EventTypeToImageSourceConverter}}" />
+							</Border>
+
+
+							<TextBlock Grid.Column="1"
+									   Text="{Binding EventType, Converter={StaticResource EventTypeToBracketedTextConverter}}"
+									   FontFamily="Consolas"
+									   FontSize="14"
+									   VerticalAlignment="Center"
+									   Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+									   Margin="5,0,0,0" />
+
+							<TextBlock Grid.Column="2"
+									   Text="{Binding Message}"
+									   FontFamily="Consolas"
+									   FontSize="14"
+									   Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+									   VerticalAlignment="Center"
+									   Margin="3,0,0,0" />
+						</Grid>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+				<ListView.ItemContainerStyle>
+					<Style TargetType="ListViewItem">
+						<Setter Property="HorizontalContentAlignment"
+								Value="Stretch" />
+					</Style>
+				</ListView.ItemContainerStyle>
+			</ListView>
 		</Grid>
 	</Grid>
 </Page>
