@@ -98,7 +98,7 @@ namespace LedMatrixIde.ViewModels
 			this.BuildCommand = new DelegateCommand(this.OnBuildCommand, this.OnEnableBuildCommand);
 			this.RedoCommand = new DelegateCommand(this.OnRedoCommand, this.OnEnableRedoCommand);
 			this.UndoCommand = new DelegateCommand(this.OnUndoCommand, this.OnEnableUndoCommand);
-			this.ClearOutputCommand = new DelegateCommand(this.OnClearOutputCommand, this.OnEnableClearOutputCommand);
+			this.CloseOutputCommand = new DelegateCommand(this.OnCloseOutputCommand, this.OnEnableCloseOutputCommand);
 		}
 
 		/// <summary>
@@ -158,7 +158,7 @@ namespace LedMatrixIde.ViewModels
 		public DelegateCommand BuildCommand { get; set; }
 		public DelegateCommand RedoCommand { get; set; }
 		public DelegateCommand UndoCommand { get; set; }
-		public DelegateCommand ClearOutputCommand { get; set; }
+		public DelegateCommand CloseOutputCommand { get; set; }
 
 		/// <summary>
 		/// Groups properties so that at any given
@@ -221,6 +221,7 @@ namespace LedMatrixIde.ViewModels
 			}
 			set
 			{
+				_sandWasChecked = _sandIsChecked;
 				this.SetProperty(ref _sandIsChecked, value);
 				this.Group.SetItem(nameof(this.SandIsChecked), _sandIsChecked);
 			}
@@ -321,6 +322,25 @@ namespace LedMatrixIde.ViewModels
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		private bool _buildIsActive = false;
+		protected bool BuildIsActive
+		{
+			get
+			{
+				return _buildIsActive;
+			}
+			set
+			{
+				_buildIsActive = value;
+				this.CloseOutputCommand.RaiseCanExecuteChanged();
+			}
+		}
+
+		private bool _sandWasChecked = false;
+
+		/// <summary>
 		/// Contains the items displayed in the output window.
 		/// </summary>
 		public ObservableCollection<BuildEventArgs> OutputItems { get; } = new ObservableCollection<BuildEventArgs>();
@@ -399,7 +419,15 @@ namespace LedMatrixIde.ViewModels
 						ColorItem colorItem = await this.ColorMatrix.GetItem(e.Row, e.Column);
 						this.PixelColor = colorItem;
 						this.PickColorIsChecked = false;
-						this.DrawIsChecked = true;
+
+						if (_sandWasChecked)
+						{
+							this.SandIsChecked = true;
+						}
+						else
+						{
+							this.DrawIsChecked = true;
+						}
 					}
 					break;
 				case DrawMode.Draw:
@@ -619,10 +647,16 @@ namespace LedMatrixIde.ViewModels
 			await this.ColorMatrix.Clear(this.BackgroundColor);
 
 			// ***
+			// *** Clear the project name.
+			// ***
+			string projectName = this.ProjectName;
+			this.ProjectName = String.Empty;
+
+			// ***
 			// *** Set up the undo task.
 			// ***
-			async Task undoAction() { await this.ColorMatrix.CopyFrom(oldColorMatrix); }
-			async Task redoAction() { await this.ColorMatrix.Clear(this.BackgroundColor); }
+			async Task undoAction() { await this.ColorMatrix.CopyFrom(oldColorMatrix); this.ProjectName = projectName; }
+			async Task redoAction() { await this.ColorMatrix.Clear(this.BackgroundColor); this.ProjectName = String.Empty; }
 			await this.UndoService.AddUndoTask(undoAction, redoAction, "Clear");
 		}
 
@@ -713,6 +747,7 @@ namespace LedMatrixIde.ViewModels
 
 		public async void OnBuildCommand()
 		{
+
 			FolderPicker folderPicker = new FolderPicker()
 			{
 				SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
@@ -726,24 +761,35 @@ namespace LedMatrixIde.ViewModels
 
 			if (folder != null)
 			{
-				this.OutputItems.Clear();
-				this.ShowOutput = true;
-
-				this.BuildService.BuildEvent += (s, e) =>
+				try
 				{
-					this.OutputItems.Add(e);
-					this.ClearOutputCommand.RaiseCanExecuteChanged();
-				};
+					this.BuildIsActive = true;
+					this.OutputItems.Clear();
+					this.ShowOutput = true;
 
-				IBuildProject project = new BuildProject()
+					this.BuildService.BuildEvent += (s, e) =>
+					{
+						this.OutputItems.Add(e);
+						this.CloseOutputCommand.RaiseCanExecuteChanged();
+					};
+
+					IBuildProject project = new BuildProject()
+					{
+						Name = this.ProjectName,
+						ColorMatrix = this.ColorMatrix,
+						PixelColumns = 12,
+						MaskColumns = 24
+					};
+
+					bool result = await this.BuildService.Build(project, folder);
+				}
+				catch
 				{
-					Name = this.ProjectName,
-					ColorMatrix = this.ColorMatrix,
-					PixelColumns = 12,
-					MaskColumns = 24
-				};
-
-				bool result = await this.BuildService.Build(project, folder);
+				}
+				finally
+				{
+					this.BuildIsActive = false;
+				}
 			}
 		}
 
@@ -772,15 +818,14 @@ namespace LedMatrixIde.ViewModels
 			return this.UndoService.CanUndo;
 		}
 
-		public void OnClearOutputCommand()
+		public void OnCloseOutputCommand()
 		{
-			this.OutputItems.Clear();
-			this.ClearOutputCommand.RaiseCanExecuteChanged();
+			this.ShowOutput = false;
 		}
 
-		public bool OnEnableClearOutputCommand()
+		public bool OnEnableCloseOutputCommand()
 		{
-			return (this.OutputItems.Count() > 0);
+			return !_buildIsActive;
 		}
 		#endregion
 	}
