@@ -17,22 +17,23 @@
 // see http://www.gnu.org/licenses/.
 //
 using System;
+using Windows.UI;
 
 namespace ImageManager
 {
 	public class PixelChangedEventArgs : EventArgs
 	{
-		public PixelChangedEventArgs(uint row, uint column, ColorItem oldItem, ColorItem newItem)
+		public PixelChangedEventArgs(uint row, uint column, ColorItem newItem, Color background)
 		{
 			this.Row = row;
 			this.Column = column;
-			this.OldItem = oldItem;
 			this.NewItem = newItem;
+			this.Background = background;
 		}
 
 		public uint Row { get; protected set; }
 		public uint Column { get; protected set; }
-		public ColorItem OldItem { get; protected set; }
 		public ColorItem NewItem { get; protected set; }
+		public Color Background { get; set; }
 	}
 }

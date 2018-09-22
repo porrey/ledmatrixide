@@ -17,7 +17,6 @@
 // see http://www.gnu.org/licenses/.
 //
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Windows.UI;
@@ -47,22 +46,34 @@ namespace ImageManager
 		public uint Width { get; protected set; }
 		public ColorItem[,] ColorItems { get; protected set; }
 
+		private Color _backgroundColor = Colors.Black;
+		public Color BackgroundColor
+		{
+			get
+			{
+				return _backgroundColor;
+			}
+			set
+			{
+				_backgroundColor = value;
+				this.ReplacePixelTypeColorAsync(ColorItem.ColorItemType.Background, _backgroundColor).Wait();
+			}
+		}
+
 		public Task SetItem(uint row, uint column, Color color, ColorItem.ColorItemType itemType)
 		{
-			ColorItem oldItem = this.ColorItems[row, column];
-			ColorItem newItem = color;
-			newItem.ItemType = itemType;
+			ColorItem item = color;
+			item.ItemType = itemType;
 
-			this.ColorItems[row, column] = newItem;
-			this.OnPixelChanged(new PixelChangedEventArgs(row, column, oldItem, newItem));
+			this.ColorItems[row, column] = item;
+			this.OnPixelChanged(new PixelChangedEventArgs(row, column, item, this.BackgroundColor));
 			return Task.FromResult(0);
 		}
 
 		public Task SetItem(uint row, uint column, ColorItem color)
 		{
-			ColorItem oldItem = this.ColorItems[row, column];
 			this.ColorItems[row, column] = color;
-			this.OnPixelChanged(new PixelChangedEventArgs(row, column, oldItem, color));
+			this.OnPixelChanged(new PixelChangedEventArgs(row, column, color, this.BackgroundColor));
 			return Task.FromResult(0);
 		}
 

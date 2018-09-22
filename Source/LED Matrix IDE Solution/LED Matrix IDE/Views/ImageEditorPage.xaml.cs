@@ -80,8 +80,7 @@ namespace LedMatrixIde.Views
 				// ***
 				// *** Blend the pixel on the background
 				// ***
-				color = e.NewItem;
-				//((Color)e.NewItem).NormalBlendColor( );
+				color = ((Color)e.NewItem).NormalBlendColor(e.Background);
 				borderColor = this.LedMatrix.DefaultBorderColor;
 			}
 

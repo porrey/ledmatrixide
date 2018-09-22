@@ -65,16 +65,11 @@ namespace LedMatrixIde.ViewModels
 			// ***
 			this.Group = new BooleanPropertyGroup
 			(
-				(nameof(this.DrawIsChecked), (b) => { this.DrawIsChecked = b; }
-			),
-				(nameof(this.SandIsChecked), (b) => { this.SandIsChecked = b; }
-			),
-				(nameof(this.EraseIsChecked), (b) => { this.EraseIsChecked = b; }
-			),
-				(nameof(this.EraseColorIsChecked), (b) => { this.EraseColorIsChecked = b; }
-			),
-				(nameof(this.PickColorIsChecked), (b) => { this.PickColorIsChecked = b; }
-			)
+				(nameof(this.DrawIsChecked), (b) => { this.DrawIsChecked = b; } ),
+				(nameof(this.SandIsChecked), (b) => { this.SandIsChecked = b; } ),
+				(nameof(this.EraseIsChecked), (b) => { this.EraseIsChecked = b; } ),
+				(nameof(this.EraseColorIsChecked), (b) => { this.EraseColorIsChecked = b; } ),
+				(nameof(this.PickColorIsChecked), (b) => { this.PickColorIsChecked = b; } )
 			);
 
 			// ***
@@ -280,7 +275,7 @@ namespace LedMatrixIde.ViewModels
 			set
 			{
 				this.SetProperty(ref _backgroundColor, value);
-				this.ColorMatrix.ReplacePixelTypeColorAsync(ColorItem.ColorItemType.Background, this.BackgroundColor).Wait();
+				this.ColorMatrix.BackgroundColor = this.BackgroundColor;
 			}
 		}
 
