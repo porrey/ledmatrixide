@@ -614,6 +614,12 @@ namespace LedMatrixIde.ViewModels
 					ColorMatrix newMatrix = await this.ColorMatrix.CloneAsync();
 
 					// ***
+					// *** Get count of sand pixels.
+					// ***
+					uint count = this.ColorMatrix.GetPixelCount(ColorItem.ColorItemType.Sand);
+					this.UseRandomSand = (count == 0);
+
+					// ***
 					// *** Set up the undo task.
 					// ***
 					async Task undoAction() { await this.ColorMatrix.CopyFrom(oldColorMatrix); }

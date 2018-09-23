@@ -14,8 +14,7 @@
 		  Margin="{StaticResource MediumLeftRightMargin}">
 
 		<!-- Output Window -->
-		<Grid Grid.Row="3"
-			  BorderBrush="{ThemeResource ContentDialogBorderThemeBrush}"
+		<Grid BorderBrush="{ThemeResource ContentDialogBorderThemeBrush}"
 			  BorderThickness="10"
 			  Background="{ThemeResource ContentDialogBackgroundThemeBrush}"
 			  Visibility="{Binding ShowOutput, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -432,7 +431,7 @@
 				<RadioButton Grid.Column="4"
 							 Content="{x:Bind DrawSandLabel}"
 							 GroupName="Sand"
-							 IsChecked="{Binding UseRandomSand, Converter={StaticResource NotBooleanConverter}}"
+							 IsChecked="{Binding UseRandomSand, Converter={StaticResource NotBooleanConverter}, Mode=TwoWay}"
 							 Margin="25,5,5,5" />
 			</Grid>
 
