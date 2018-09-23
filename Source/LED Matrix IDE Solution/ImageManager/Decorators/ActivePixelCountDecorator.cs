@@ -1,6 +1,6 @@
 ﻿using ImageManager;
 
-namespace CodeBuilder.Decorators
+namespace ImageManager
 {
 	public static class ActivePixelCountDecorator
 	{
