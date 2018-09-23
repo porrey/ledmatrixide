@@ -620,6 +620,11 @@ namespace LedMatrixIde.ViewModels
 					this.UseRandomSand = (count == 0);
 
 					// ***
+					// *** all loaded images will have a black background color.
+					// ***
+					this.BackgroundColor = Colors.Black;
+
+					// ***
 					// *** Set up the undo task.
 					// ***
 					async Task undoAction() { await this.ColorMatrix.CopyFrom(oldColorMatrix); }
