@@ -16,26 +16,26 @@
 // along with the LED Matrix IDE Solution. If not, 
 // see http://www.gnu.org/licenses/.
 //
-using System;
-using System.Text;
 using System.Threading.Tasks;
+using Matrix;
 using Project;
 using Windows.Storage;
 
-namespace CodeBuilder.Decorators
+namespace ImageManager
 {
-	public static class WriteMakeFileDecorator
+	public static class SaveImageDecorator
 	{
-		public static async Task WriteMakeFile(this IMatrixProject project, StorageFolder folder, IBuildService buildService)
+		public static async Task<bool> SaveAsync(this IMatrixProject project, StorageFile file)
 		{
-			StringBuilder contents = new StringBuilder();
-			contents.AppendLine($"{project.Name}: {project.CppFileName()} {project.HeaderFileName()} $(LIBS)");
-			contents.AppendLine($"\t$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@");
-			contents.AppendLine($"\tstrip $@");
+			bool returnValue = false;
 
-			buildService.FireBuildEvent(BuildEventArgs.BuildEventType.Information, $"Writing make file '{project.MakeFileName()}'.");
-			StorageFile file = await folder.CreateFileAsync(project.MakeFileName(), CreationCollisionOption.ReplaceExisting);
-			await FileIO.WriteTextAsync(file, contents.ToString(), Windows.Storage.Streams.UnicodeEncoding.Utf8);
+			byte[] data = await project.ColorMatrix.CreateImageDataAsync();
+			await data.CreateImageAsync(project.ColorMatrix.Height, project.ColorMatrix.Width, file);
+			await project.SaveProjectMetaData(file);
+
+			returnValue = true;
+
+			return returnValue;
 		}
 	}
 }

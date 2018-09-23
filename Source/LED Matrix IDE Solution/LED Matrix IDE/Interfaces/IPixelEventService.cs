@@ -20,6 +20,7 @@ using System;
 using System.Threading.Tasks;
 using ImageManager;
 using LedMatrixControl;
+using Matrix;
 
 namespace LedMatrixIde.Interfaces
 {

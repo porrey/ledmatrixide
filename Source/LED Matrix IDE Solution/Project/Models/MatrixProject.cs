@@ -16,38 +16,17 @@
 // along with the LED Matrix IDE Solution. If not, 
 // see http://www.gnu.org/licenses/.
 //
-using System;
-using System.Threading.Tasks;
-using ImageManager;
-using LedMatrixControl;
-using LedMatrixIde.Interfaces;
 using Matrix;
 
-namespace LedMatrixIde.Services
+namespace Project
 {
-	public class PixelEventService : IPixelEventService
+	public class MatrixProject : IMatrixProject
 	{
-		public event EventHandler<PixelSelectedEventArgs> PixelSelected = null;
-		public event EventHandler<PixelChangedEventArgs> PixelChanged = null;
-
-		public Task PublishPixelSelectedEvent(PixelSelectedEventArgs e)
-		{
-			if (this.PixelSelected != null)
-			{
-				this.PixelSelected.Invoke(this, e);
-			}
-
-			return Task.FromResult(0);
-		}
-
-		public Task PublishPixelChangedEvent(PixelChangedEventArgs e)
-		{
-			if (this.PixelChanged != null)
-			{
-				this.PixelChanged.Invoke(this, e);
-			}
-
-			return Task.FromResult(0);
-		}
+		public string Name { get; set; }
+		public IColorMatrix ColorMatrix { get; set; }
+		public uint PixelColumns { get; set; }
+		public uint MaskColumns { get; set; }
+		public bool UseRandomSand { get; set; }
+		public uint RandomSandCount { get; set; }
 	}
 }

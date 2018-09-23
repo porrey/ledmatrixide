@@ -122,7 +122,7 @@
     <comment>Application display name</comment>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>LED Matrix IDE</value>
+    <value>LED Matrix IDE Solution - create images for the Adafruit 64x64 LED matrix and the LED Sand Toy.</value>
     <comment>Application description</comment>
   </data>
   <data name="Shell_ImageEditor.Content" xml:space="preserve">
@@ -157,7 +157,7 @@
     <comment>About this application title for Settings</comment>
   </data>
   <data name="Settings_AboutDescription.Text" xml:space="preserve">
-    <value>LED Matrix IDE Solution - create images for the Adafruit 64x64 LED matrix and the LED Sand Toy.</value>
+    <value>LED Matrix IDE Solution - create images for the Adafruit 64 x 64 LED matrix and the LED Sand Toy.</value>
     <comment>About this application description for Settings</comment>
   </data>
   <data name="Settings_PrivacyTermsLink.Content" xml:space="preserve">
@@ -241,7 +241,7 @@
   <data name="ImageEditor_BuildHere" xml:space="preserve">
     <value>Build Here</value>
   </data>
-  <data name="ImageEditor_ProjectNameLabel" xml:space="preserve">
+  <data name="ImageEditor_Label_ProjectName" xml:space="preserve">
     <value>Project Name</value>
   </data>
   <data name="Exception" xml:space="preserve">
@@ -337,10 +337,13 @@
   <data name="ImageEditor_Label_UndoButton" xml:space="preserve">
     <value>Undo</value>
   </data>
-  <data name="ImageEditor_DrawSandLabel" xml:space="preserve">
+  <data name="ImageEditor_Label_DrawSand" xml:space="preserve">
     <value>Draw sand</value>
   </data>
-  <data name="ImageEditor_RandomSandLabel" xml:space="preserve">
+  <data name="ImageEditor_Label_RandomSand" xml:space="preserve">
     <value>Random sand</value>
+  </data>
+  <data name="ImageEditor_Label_Grains" xml:space="preserve">
+    <value>grains</value>
   </data>
 </root>

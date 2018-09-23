@@ -242,6 +242,9 @@ namespace LedMatrixControl
 
 		private async void UiElement_PointerPressed(object sender, PointerRoutedEventArgs e)
 		{
+			this.PreviousRow = UInt32.MaxValue;
+			this.PreviousColumn = UInt32.MaxValue;
+
 			this.CapturePointer(e.Pointer);
 			this.PointerIsPressed = true;
 			await this.ProcessPointer(e);

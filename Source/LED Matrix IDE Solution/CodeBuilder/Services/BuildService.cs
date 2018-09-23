@@ -19,7 +19,7 @@
 using System;
 using System.Threading.Tasks;
 using CodeBuilder.Decorators;
-using ImageManager;
+using Project;
 using Windows.Storage;
 
 namespace CodeBuilder
@@ -28,7 +28,7 @@ namespace CodeBuilder
 	{
 		public event EventHandler<BuildEventArgs> BuildEvent = null;
 
-		public async Task<bool> Build(IBuildProject project, StorageFolder folder)
+		public async Task<bool> Build(IMatrixProject project, StorageFolder folder)
 		{
 			bool returnValue = true;
 

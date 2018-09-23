@@ -17,37 +17,23 @@
 // see http://www.gnu.org/licenses/.
 //
 using System;
-using System.Threading.Tasks;
-using ImageManager;
-using LedMatrixControl;
-using LedMatrixIde.Interfaces;
-using Matrix;
+using Windows.UI;
 
-namespace LedMatrixIde.Services
+namespace Matrix
 {
-	public class PixelEventService : IPixelEventService
+	public class PixelChangedEventArgs : EventArgs
 	{
-		public event EventHandler<PixelSelectedEventArgs> PixelSelected = null;
-		public event EventHandler<PixelChangedEventArgs> PixelChanged = null;
-
-		public Task PublishPixelSelectedEvent(PixelSelectedEventArgs e)
+		public PixelChangedEventArgs(uint row, uint column, ColorItem newItem, Color background)
 		{
-			if (this.PixelSelected != null)
-			{
-				this.PixelSelected.Invoke(this, e);
-			}
-
-			return Task.FromResult(0);
+			this.Row = row;
+			this.Column = column;
+			this.NewItem = newItem;
+			this.Background = background;
 		}
 
-		public Task PublishPixelChangedEvent(PixelChangedEventArgs e)
-		{
-			if (this.PixelChanged != null)
-			{
-				this.PixelChanged.Invoke(this, e);
-			}
-
-			return Task.FromResult(0);
-		}
+		public uint Row { get; protected set; }
+		public uint Column { get; protected set; }
+		public ColorItem NewItem { get; protected set; }
+		public Color Background { get; set; }
 	}
 }

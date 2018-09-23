@@ -16,38 +16,48 @@
 // along with the LED Matrix IDE Solution. If not, 
 // see http://www.gnu.org/licenses/.
 //
-using System;
-using System.Threading.Tasks;
-using ImageManager;
-using LedMatrixControl;
-using LedMatrixIde.Interfaces;
-using Matrix;
+using Windows.UI;
 
-namespace LedMatrixIde.Services
+namespace Matrix
 {
-	public class PixelEventService : IPixelEventService
+	public struct ColorItem
 	{
-		public event EventHandler<PixelSelectedEventArgs> PixelSelected = null;
-		public event EventHandler<PixelChangedEventArgs> PixelChanged = null;
-
-		public Task PublishPixelSelectedEvent(PixelSelectedEventArgs e)
+		public enum ColorItemType
 		{
-			if (this.PixelSelected != null)
-			{
-				this.PixelSelected.Invoke(this, e);
-			}
-
-			return Task.FromResult(0);
+			Background,
+			Pixel,
+			Sand
 		}
 
-		public Task PublishPixelChangedEvent(PixelChangedEventArgs e)
-		{
-			if (this.PixelChanged != null)
-			{
-				this.PixelChanged.Invoke(this, e);
-			}
+		public byte A { get; set; }
+		public byte B { get; set; }
+		public byte G { get; set; }
+		public byte R { get; set; }
 
-			return Task.FromResult(0);
+		public ColorItemType ItemType { get; set; }
+
+		public static implicit operator Color(ColorItem c)
+		{
+			return Color.FromArgb(c.A, c.R, c.G, c.B);
+		}
+
+		public static implicit operator ColorItem(Color c)
+		{
+			return new ColorItem() { A = c.A, R = c.R, B = c.B, G = c.G };
+		}
+
+		public static ColorItem FromColor(Color color, ColorItemType itemType)
+		{
+			ColorItem returnValue = color;
+
+			returnValue.ItemType = itemType;
+
+			return returnValue;
+		}
+
+		public override string ToString()
+		{
+			return $"A={this.A}, R={this.R}, G={this.G}, B={this.B}, {this.ItemType}";
 		}
 	}
 }

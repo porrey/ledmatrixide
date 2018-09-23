@@ -16,38 +16,34 @@
 // along with the LED Matrix IDE Solution. If not, 
 // see http://www.gnu.org/licenses/.
 //
-using System;
 using System.Threading.Tasks;
-using ImageManager;
-using LedMatrixControl;
-using LedMatrixIde.Interfaces;
 using Matrix;
+using Windows.UI;
 
-namespace LedMatrixIde.Services
+namespace ImageManager
 {
-	public class PixelEventService : IPixelEventService
+	public static class ReplacePixelTypeColorDecorator
 	{
-		public event EventHandler<PixelSelectedEventArgs> PixelSelected = null;
-		public event EventHandler<PixelChangedEventArgs> PixelChanged = null;
-
-		public Task PublishPixelSelectedEvent(PixelSelectedEventArgs e)
+		public static async Task ReplacePixelTypeColorAsync(this IColorMatrix sourceColorMatrix, ColorItem.ColorItemType itemType, Color newColor)
 		{
-			if (this.PixelSelected != null)
+			for (uint row = 0; row < sourceColorMatrix.Height; row++)
 			{
-				this.PixelSelected.Invoke(this, e);
+				for (uint column = 0; column < sourceColorMatrix.Width; column++)
+				{
+					if (sourceColorMatrix.ColorItems[row, column].ItemType == itemType)
+					{
+						ColorItem newItem = new ColorItem()
+						{
+							A = newColor.A,
+							R = newColor.R,
+							G = newColor.G,
+							B = newColor.B
+						};
+
+						await sourceColorMatrix.SetItem(row, column, newItem);
+					}
+				}
 			}
-
-			return Task.FromResult(0);
-		}
-
-		public Task PublishPixelChangedEvent(PixelChangedEventArgs e)
-		{
-			if (this.PixelChanged != null)
-			{
-				this.PixelChanged.Invoke(this, e);
-			}
-
-			return Task.FromResult(0);
 		}
 	}
 }

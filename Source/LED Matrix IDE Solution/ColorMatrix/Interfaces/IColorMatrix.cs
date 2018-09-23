@@ -18,36 +18,22 @@
 //
 using System;
 using System.Threading.Tasks;
-using ImageManager;
-using LedMatrixControl;
-using LedMatrixIde.Interfaces;
-using Matrix;
+using Windows.UI;
 
-namespace LedMatrixIde.Services
+namespace Matrix
 {
-	public class PixelEventService : IPixelEventService
+	public interface IColorMatrix
 	{
-		public event EventHandler<PixelSelectedEventArgs> PixelSelected = null;
-		public event EventHandler<PixelChangedEventArgs> PixelChanged = null;
+		Color BackgroundColor { get; set; }
+		ColorItem[,] ColorItems { get; }
+		uint Height { get; }
+		uint Width { get; }
 
-		public Task PublishPixelSelectedEvent(PixelSelectedEventArgs e)
-		{
-			if (this.PixelSelected != null)
-			{
-				this.PixelSelected.Invoke(this, e);
-			}
+		event EventHandler<PixelChangedEventArgs> PixelChanged;
+		event EventHandler BackgroundChanged;
 
-			return Task.FromResult(0);
-		}
-
-		public Task PublishPixelChangedEvent(PixelChangedEventArgs e)
-		{
-			if (this.PixelChanged != null)
-			{
-				this.PixelChanged.Invoke(this, e);
-			}
-
-			return Task.FromResult(0);
-		}
+		Task<ColorItem> GetItem(uint row, uint column);
+		Task SetItem(uint row, uint column, Color color, ColorItem.ColorItemType itemType);
+		Task SetItem(uint row, uint column, ColorItem color);
 	}
 }

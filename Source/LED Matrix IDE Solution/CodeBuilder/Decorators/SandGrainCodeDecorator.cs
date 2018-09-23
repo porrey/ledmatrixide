@@ -1,13 +1,33 @@
-﻿using System;
+﻿// Copyright © 2018 Daniel Porrey. All Rights Reserved.
+//
+// This file is part of the LED Matrix IDE Solution project.
+// 
+// The LED Matrix IDE Solution is free software: you can redistribute it
+// and/or modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+// 
+// The LED Matrix IDE Solution is distributed in the hope that it will
+// be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with the LED Matrix IDE Solution. If not, 
+// see http://www.gnu.org/licenses/.
+//
+using System;
 using System.Text;
 using ImageManager;
+using Matrix;
+using Project;
 using Windows.UI;
 
 namespace CodeBuilder.Decorators
 {
 	public static class SandGrainCodeDecorator
 	{
-		public static (bool, string) CreateGrainCode(this IBuildProject project)
+		public static (bool, string) CreateGrainCode(this IMatrixProject project)
 		{
 			(bool result, string text) = (false, String.Empty);
 
@@ -48,7 +68,7 @@ namespace CodeBuilder.Decorators
 						if (colorItem.ItemType == ColorItem.ColorItemType.Sand)
 						{
 							Color color = colorItem;
-							code.Append($"\t{column.ToString().PadLeft(2, ' ')}, {row.ToString().PadLeft(2, ' ')}, {color.ColorToHex()}");
+							code.Append($"\t{column.ToString().PadLeft(2, ' ')}, {row.ToString().PadLeft(2, ' ')}, {color.ToHexInt()}");
 							index++;
 
 							if (index < grainCount)

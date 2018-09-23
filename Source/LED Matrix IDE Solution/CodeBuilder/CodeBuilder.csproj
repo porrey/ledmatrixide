@@ -107,7 +107,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Decorators\CreateHeaderFileDecorator.cs" />
-    <Compile Include="Decorators\HexColorDecorator.cs" />
     <Compile Include="Decorators\ImageCodeDecorator.cs" />
     <Compile Include="Decorators\MaskCodeDecorator.cs" />
     <Compile Include="Decorators\ProjectDecorator.cs" />
@@ -116,8 +115,6 @@
     <Compile Include="Decorators\WriteInstructionsFileDecorator.cs" />
     <Compile Include="Decorators\WriteMakeFileDecorator.cs" />
     <Compile Include="Decorators\WriteCodeFileDecorator.cs" />
-    <Compile Include="Interfaces\IBuildProject.cs" />
-    <Compile Include="Models\BuildProject.cs" />
     <Compile Include="Services\BuildService.cs" />
     <Compile Include="Models\BuildEventArgs.cs" />
     <Compile Include="Interfaces\IBuildService.cs" />
@@ -133,9 +130,17 @@
     <PRIResource Include="String\en-us\Code.resw" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ColorMatrix\Matrix.csproj">
+      <Project>{EBF2BCE6-D93B-4490-8BFC-02B83C15F506}</Project>
+      <Name>Matrix</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ImageManager\ImageManager.csproj">
       <Project>{63457cd0-ef72-493d-8ba9-dc2510cbcf3c}</Project>
       <Name>ImageManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Project\Project.csproj">
+      <Project>{b1ebf372-4ed1-4fb0-a269-16050a68c6a9}</Project>
+      <Name>Project</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

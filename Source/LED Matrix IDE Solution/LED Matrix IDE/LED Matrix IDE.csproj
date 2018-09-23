@@ -225,6 +225,10 @@
       <Project>{917c7e79-959c-41b5-b12a-173ae4c9d435}</Project>
       <Name>CodeBuilder</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ColorMatrix\Matrix.csproj">
+      <Project>{EBF2BCE6-D93B-4490-8BFC-02B83C15F506}</Project>
+      <Name>Matrix</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ImageManager\ImageManager.csproj">
       <Project>{63457cd0-ef72-493d-8ba9-dc2510cbcf3c}</Project>
       <Name>ImageManager</Name>
@@ -232,6 +236,10 @@
     <ProjectReference Include="..\LedMatrix Control\LedMatrix Control.csproj">
       <Project>{056c4a22-9c10-4749-8b77-5e5da70499cf}</Project>
       <Name>LedMatrix Control</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Project\Project.csproj">
+      <Project>{B1EBF372-4ED1-4FB0-A269-16050A68C6A9}</Project>
+      <Name>Project</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

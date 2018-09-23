@@ -16,38 +16,22 @@
 // along with the LED Matrix IDE Solution. If not, 
 // see http://www.gnu.org/licenses/.
 //
-using System;
 using System.Threading.Tasks;
-using ImageManager;
-using LedMatrixControl;
-using LedMatrixIde.Interfaces;
 using Matrix;
 
-namespace LedMatrixIde.Services
+namespace ImageManager
 {
-	public class PixelEventService : IPixelEventService
+	public static class CopyFromDecorator
 	{
-		public event EventHandler<PixelSelectedEventArgs> PixelSelected = null;
-		public event EventHandler<PixelChangedEventArgs> PixelChanged = null;
-
-		public Task PublishPixelSelectedEvent(PixelSelectedEventArgs e)
+		public static async Task CopyFrom(this IColorMatrix targetColorMatrix, IColorMatrix sourceColorMatrix)
 		{
-			if (this.PixelSelected != null)
+			for (uint row = 0; row < targetColorMatrix.Height; row++)
 			{
-				this.PixelSelected.Invoke(this, e);
+				for (uint column = 0; column < targetColorMatrix.Width; column++)
+				{
+					await targetColorMatrix.SetItem(row, column, sourceColorMatrix.ColorItems[row, column]);
+				}
 			}
-
-			return Task.FromResult(0);
-		}
-
-		public Task PublishPixelChangedEvent(PixelChangedEventArgs e)
-		{
-			if (this.PixelChanged != null)
-			{
-				this.PixelChanged.Invoke(this, e);
-			}
-
-			return Task.FromResult(0);
 		}
 	}
 }

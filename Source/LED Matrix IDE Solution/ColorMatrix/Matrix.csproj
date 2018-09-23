@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{63457CD0-EF72-493D-8BA9-DC2510CBCF3C}</ProjectGuid>
+    <ProjectGuid>{EBF2BCE6-D93B-4490-8BFC-02B83C15F506}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ImageManager</RootNamespace>
-    <AssemblyName>ImageManager</AssemblyName>
+    <RootNamespace>Matrix</RootNamespace>
+    <AssemblyName>Matrix</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
@@ -106,28 +106,12 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Decorators\IColorMatrix\ActivePixelCountDecorator.cs" />
-    <Compile Include="Decorators\Color\HexColorDecorator.cs" />
-    <Compile Include="Decorators\Project\ImageMetadataDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\ReplacePixelTypeColorDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\ReplaceColorDecorator.cs" />
-    <Compile Include="Decorators\Color\ColorBlendDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\GetPaletteDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\SaveImageDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\LoadImageDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\RotateClockwiseDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\RotateCounterClockwiseDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\FlipVerticalDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\FlipHorizontalDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\CreateImageDataDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\ClearDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\CloneDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\CopyFromDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\CopyToDecorator.cs" />
-    <Compile Include="Decorators\Image Bytes\BitmapDecoderDecorator.cs" />
+    <Compile Include="Models\ColorItem.cs" />
+    <Compile Include="Models\ColorMatrix.cs" />
+    <Compile Include="Interfaces\IColorMatrix.cs" />
+    <Compile Include="Models\PixelChangedEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Decorators\Image Bytes\DecodedBytesDecorator.cs" />
-    <EmbeddedResource Include="Properties\ImageConverter.rd.xml" />
+    <EmbeddedResource Include="Properties\ColorMatrix.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
@@ -136,16 +120,6 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ColorMatrix\Matrix.csproj">
-      <Project>{EBF2BCE6-D93B-4490-8BFC-02B83C15F506}</Project>
-      <Name>Matrix</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Project\Project.csproj">
-      <Project>{B1EBF372-4ED1-4FB0-A269-16050A68C6A9}</Project>
-      <Name>Project</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

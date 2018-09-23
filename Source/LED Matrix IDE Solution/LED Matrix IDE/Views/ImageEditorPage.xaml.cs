@@ -21,6 +21,7 @@ using LedMatrixControl;
 using LedMatrixIde.Helpers;
 using LedMatrixIde.Interfaces;
 using LedMatrixIde.ViewModels;
+using Matrix;
 using Microsoft.Practices.ServiceLocation;
 using Windows.UI;
 using Windows.UI.Xaml.Controls;
@@ -92,9 +93,10 @@ namespace LedMatrixIde.Views
 			await this.PixelEventService.PublishPixelSelectedEvent(e);
 		}
 
-		public string ProjectNameLabel => "ImageEditor_ProjectNameLabel".GetLocalized();
-		public string RandomSandLabel => "ImageEditor_RandomSandLabel".GetLocalized();
-		public string DrawSandLabel => "ImageEditor_DrawSandLabel".GetLocalized();
+		public string ProjectNameLabel => "ImageEditor_Label_ProjectName".GetLocalized();
+		public string RandomSandLabel => "ImageEditor_Label_RandomSand".GetLocalized();
+		public string DrawSandLabel => "ImageEditor_Label_DrawSand".GetLocalized();
+		public string GrainsLabel => "ImageEditor_Label_Grains".GetLocalized();
 
 		public string LoadButtonToolTip => "ImageEditor_ToolTip_LoadButton".GetLocalized();
 		public string LoadButtonLabel => "ImageEditor_Label_LoadButton".GetLocalized();

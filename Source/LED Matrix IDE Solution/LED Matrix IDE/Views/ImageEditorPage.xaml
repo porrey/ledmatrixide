@@ -393,6 +393,7 @@
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
 
@@ -413,26 +414,33 @@
 
 				<!-- Random sand -->
 				<RadioButton Grid.Column="2"
+							 Content="{x:Bind DrawSandLabel}"
+							 GroupName="Sand"
+							 IsChecked="{Binding UseRandomSand, Converter={StaticResource NotBooleanConverter}, Mode=TwoWay}"
+							 Margin="25,5,5,5" />
+
+				<RadioButton Grid.Column="3"
 							 VerticalAlignment="Center"
-							 Margin="25,5,5,5"
+							 Margin="5,5,5,5"
 							 GroupName="Sand"
 							 IsChecked="{Binding UseRandomSand, Mode=TwoWay}"
 							 Content="{x:Bind RandomSandLabel}" />
 
-				<TextBox Grid.Column="3"
+				<TextBox Grid.Column="4"
 						 Margin="5"
 						 VerticalAlignment="Center"
 						 HorizontalAlignment="Stretch"
 						 VerticalContentAlignment="Center"
 						 HorizontalContentAlignment="Left"
 						 Text="{Binding RandomSandCount, Mode=TwoWay}"
-						 IsEnabled="{Binding UseRandomSand}" />
+						 Visibility="{Binding UseRandomSand, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-				<RadioButton Grid.Column="4"
-							 Content="{x:Bind DrawSandLabel}"
-							 GroupName="Sand"
-							 IsChecked="{Binding UseRandomSand, Converter={StaticResource NotBooleanConverter}, Mode=TwoWay}"
-							 Margin="25,5,5,5" />
+				<TextBlock Grid.Column="5"
+						   Text="{x:Bind GrainsLabel}"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Right"
+						   Visibility="{Binding UseRandomSand, Converter={StaticResource BooleanToVisibilityConverter}}"
+						   Margin="1,5,5,5" />
 			</Grid>
 
 			<!-- Matrix -->

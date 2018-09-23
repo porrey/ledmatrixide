@@ -18,7 +18,7 @@
 //
 using System;
 using System.Threading.Tasks;
-using ImageManager;
+using Project;
 using Windows.Storage;
 
 namespace CodeBuilder
@@ -26,7 +26,7 @@ namespace CodeBuilder
 	public interface IBuildService
 	{
 		event EventHandler<BuildEventArgs> BuildEvent;
-		Task<bool> Build(IBuildProject project, StorageFolder folder);
+		Task<bool> Build(IMatrixProject project, StorageFolder folder);
 		void FireBuildEvent(BuildEventArgs.BuildEventType eventType, string message);
 	}
 }
