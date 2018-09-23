@@ -16,7 +16,7 @@ Open, build and deploy the application. start the application either from your S
 
 The first step in creating an image for the LED Sand Toy is to import an image. The application will re-size any image you import but I recommend prepping the image in a good editor. Remember to leave room for the sand. An image 40 pixels by 40 pixels works well.
 
-When ready, click the Open File toolbar button and select your image.
+When ready, click the **Open File** toolbar button and select your image.
 
 ![](https://github.com/porrey/ledmatrixide/raw/master/Images/Screenshots/ScreenShot02.png)
 
