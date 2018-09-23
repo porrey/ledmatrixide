@@ -266,13 +266,13 @@ namespace LedMatrixControl
 
 		private void PixelMatrix_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
-			if (this.Parent is Grid grid)
+			if (this.Parent is FrameworkElement parent)
 			{
 				if (e.NewSize.Width != e.NewSize.Height)
 				{
 					if (e.NewSize.Width > e.NewSize.Height)
 					{
-						if (e.NewSize.Width > grid.ActualHeight)
+						if (e.NewSize.Width > parent.ActualHeight)
 						{
 							this.Width = e.NewSize.Height - this.Margin.Left - this.Margin.Right;
 						}
@@ -283,7 +283,7 @@ namespace LedMatrixControl
 					}
 					else
 					{
-						if (e.NewSize.Height > grid.ActualWidth)
+						if (e.NewSize.Height > parent.ActualWidth)
 						{
 							this.Height = e.NewSize.Width - this.Margin.Top - this.Margin.Bottom;
 						}
