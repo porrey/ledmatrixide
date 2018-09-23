@@ -112,7 +112,7 @@
 			  Visibility="{Binding ShowOutput, Converter={StaticResource NotBooleanToVisibilityConverter}}">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
-				<RowDefinition Height="65" />
+				<RowDefinition Height="55" />
 				<RowDefinition Height="*" />
 				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
@@ -446,7 +446,7 @@
 			<!-- Matrix -->
 			<controls:PixelMatrix x:Name="LedMatrix"
 								  Grid.Row="2"
-								  Margin="0,10,0,10"
+								  Margin="0,0,0,0"
 								  BorderThickness="4"
 								  RowCount="{Binding RowCount, Mode=OneTime}"
 								  ColumnCount="{Binding ColumnCount, Mode=OneTime}"
