@@ -12,7 +12,105 @@
 
 	<Grid x:Name="ContentArea"
 		  Margin="{StaticResource MediumLeftRightMargin}">
-		<Grid Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
+
+		<!-- Output Window -->
+		<Grid Grid.Row="3"
+			  BorderBrush="{ThemeResource ContentDialogBorderThemeBrush}"
+			  BorderThickness="10"
+			  Background="{ThemeResource ContentDialogBackgroundThemeBrush}"
+			  Visibility="{Binding ShowOutput, Converter={StaticResource BooleanToVisibilityConverter}}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="60" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+
+			<Grid Grid.Row="0"
+				  Margin="10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Grid.Column="0"
+						   Text="Output Window"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Left"
+						   Foreground="{ThemeResource ContentDialogContentForegroundBrush}"
+						   Margin="5,0,0,0" />
+
+				<Button Grid.Column="1"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Right"
+						Command="{Binding CloseOutputCommand}"
+						Foreground="{ThemeResource ContentDialogContentForegroundBrush}">
+					<Button.Content>
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								  Glyph="&#xE8BB;"
+								  Foreground="{ThemeResource ContentDialogContentForegroundBrush}">
+						</FontIcon>
+					</Button.Content>
+				</Button>
+			</Grid>
+
+			<ListView Grid.Row="1"
+					  BorderThickness="0"
+					  IsItemClickEnabled="False"
+					  IsSwipeEnabled="False"
+					  CanDragItems="False"
+					  SelectionMode="None"
+					  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+					  ItemsSource="{Binding OutputItems}">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="110" />
+								<ColumnDefinition Width="*" />
+							</Grid.ColumnDefinitions>
+
+							<Border Grid.Column="0"
+									BorderBrush="{Binding EventType, Converter={StaticResource EventTypeToBackgroundBrushConverter}}"
+									BorderThickness="2"
+									Width="28"
+									Height="28"
+									VerticalAlignment="Center"
+									HorizontalAlignment="Left">
+								<Image Margin="1,1,1,1"
+									   Source="{Binding EventType, Converter={StaticResource EventTypeToImageSourceConverter}}" />
+							</Border>
+
+
+							<TextBlock Grid.Column="1"
+									   Text="{Binding EventType, Converter={StaticResource EventTypeToBracketedTextConverter}}"
+									   FontFamily="Consolas"
+									   FontSize="14"
+									   VerticalAlignment="Center"
+									   Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+									   Margin="5,0,0,0" />
+
+							<TextBlock Grid.Column="2"
+									   Text="{Binding Message}"
+									   FontFamily="Consolas"
+									   FontSize="14"
+									   Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+									   VerticalAlignment="Center"
+									   Margin="3,0,0,0" />
+						</Grid>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+				<ListView.ItemContainerStyle>
+					<Style TargetType="ListViewItem">
+						<Setter Property="HorizontalContentAlignment"
+								Value="Stretch" />
+					</Style>
+				</ListView.ItemContainerStyle>
+			</ListView>
+		</Grid>
+
+		<Grid x:Name="Background"
+			  Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+			  Visibility="{Binding ShowOutput, Converter={StaticResource NotBooleanToVisibilityConverter}}">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="65" />
@@ -294,12 +392,14 @@
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="250" />
 					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
 
 				<!-- Project Name -->
 				<TextBlock Grid.Column="0"
-						   Text="{x:Bind ProjectName}"
+						   Text="{x:Bind ProjectNameLabel}"
 						   VerticalAlignment="Center"
 						   HorizontalAlignment="Right"
 						   Margin="5,5,5,5" />
@@ -313,33 +413,27 @@
 						 Text="{Binding ProjectName, Mode=TwoWay}" />
 
 				<!-- Random sand -->
-				<CheckBox Grid.Column="2"
-						  MinWidth="0"
-						  Margin="25,5,5,5"
-						  IsChecked="{Binding UseRandomSand, Mode=TwoWay}">
-					<Grid VerticalAlignment="Center"
-						  HorizontalAlignment="Stretch">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="250" />
-						</Grid.ColumnDefinitions>
+				<RadioButton Grid.Column="2"
+							 VerticalAlignment="Center"
+							 Margin="25,5,5,5"
+							 GroupName="Sand"
+							 IsChecked="{Binding UseRandomSand, Mode=TwoWay}"
+							 Content="{x:Bind RandomSandLabel}" />
 
-						<TextBlock Grid.Column="0"
-								   Margin="5"
-								   VerticalAlignment="Center"
-								   HorizontalAlignment="Right"
-								   Text="Random number of grains:" />
+				<TextBox Grid.Column="3"
+						 Margin="5"
+						 VerticalAlignment="Center"
+						 HorizontalAlignment="Stretch"
+						 VerticalContentAlignment="Center"
+						 HorizontalContentAlignment="Left"
+						 Text="{Binding RandomSandCount, Mode=TwoWay}"
+						 IsEnabled="{Binding UseRandomSand}" />
 
-						<TextBox Grid.Column="1"
-								 Margin="5"
-								 VerticalAlignment="Stretch"
-								 HorizontalAlignment="Left"
-								 VerticalContentAlignment="Center"
-								 HorizontalContentAlignment="Left"
-								 Text="{Binding RandomSandCount, Mode=TwoWay}"
-								 IsEnabled="{Binding UseRandomSand}" />
-					</Grid>
-				</CheckBox>
+				<RadioButton Grid.Column="4"
+							 Content="{x:Bind DrawSandLabel}"
+							 GroupName="Sand"
+							 IsChecked="{Binding UseRandomSand, Converter={StaticResource NotBooleanConverter}}"
+							 Margin="25,5,5,5" />
 			</Grid>
 
 			<!-- Matrix -->
@@ -350,101 +444,6 @@
 								  RowCount="{Binding RowCount, Mode=OneTime}"
 								  ColumnCount="{Binding ColumnCount, Mode=OneTime}"
 								  extensions:Mouse.Cursor="Hand" />
-		</Grid>
-
-		<!-- Output Window -->
-		<Grid Grid.Row="3"
-			  BorderBrush="{ThemeResource ContentDialogBorderThemeBrush}"
-			  BorderThickness="10"
-			  Background="{ThemeResource ContentDialogBackgroundThemeBrush}"
-			  Visibility="{Binding ShowOutput, Converter={StaticResource BooleanToVisibilityConverter}}">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="60" />
-				<RowDefinition Height="*" />
-			</Grid.RowDefinitions>
-
-			<Grid Grid.Row="0"
-				  Margin="10">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
-
-				<TextBlock Grid.Column="0"
-						   Text="Output Window"
-						   VerticalAlignment="Center"
-						   HorizontalAlignment="Left"
-						   Foreground="{ThemeResource ContentDialogContentForegroundBrush}"
-						   Margin="5,0,0,0" />
-
-				<Button Grid.Column="1"
-						VerticalAlignment="Center"
-						HorizontalAlignment="Right"
-						Command="{Binding CloseOutputCommand}"
-						Foreground="{ThemeResource ContentDialogContentForegroundBrush}">
-					<Button.Content>
-						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
-								  Glyph="&#xE8BB;"
-								  Foreground="{ThemeResource ContentDialogContentForegroundBrush}">
-						</FontIcon>
-					</Button.Content>
-				</Button>
-			</Grid>
-
-			<ListView Grid.Row="1"
-					  BorderThickness="0"
-					  IsItemClickEnabled="False"
-					  IsSwipeEnabled="False"
-					  CanDragItems="False"
-					  SelectionMode="None"
-					  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-					  ItemsSource="{Binding OutputItems}">
-				<ListView.ItemTemplate>
-					<DataTemplate>
-						<Grid>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="Auto" />
-								<ColumnDefinition Width="110" />
-								<ColumnDefinition Width="*" />
-							</Grid.ColumnDefinitions>
-
-							<Border Grid.Column="0"
-									BorderBrush="{Binding EventType, Converter={StaticResource EventTypeToBackgroundBrushConverter}}"
-									BorderThickness="2"
-									Width="28"
-									Height="28"
-									VerticalAlignment="Center"
-									HorizontalAlignment="Left">
-								<Image Margin="1,1,1,1"
-									   Source="{Binding EventType, Converter={StaticResource EventTypeToImageSourceConverter}}" />
-							</Border>
-
-
-							<TextBlock Grid.Column="1"
-									   Text="{Binding EventType, Converter={StaticResource EventTypeToBracketedTextConverter}}"
-									   FontFamily="Consolas"
-									   FontSize="14"
-									   VerticalAlignment="Center"
-									   Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
-									   Margin="5,0,0,0" />
-
-							<TextBlock Grid.Column="2"
-									   Text="{Binding Message}"
-									   FontFamily="Consolas"
-									   FontSize="14"
-									   Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
-									   VerticalAlignment="Center"
-									   Margin="3,0,0,0" />
-						</Grid>
-					</DataTemplate>
-				</ListView.ItemTemplate>
-				<ListView.ItemContainerStyle>
-					<Style TargetType="ListViewItem">
-						<Setter Property="HorizontalContentAlignment"
-								Value="Stretch" />
-					</Style>
-				</ListView.ItemContainerStyle>
-			</ListView>
 		</Grid>
 	</Grid>
 </Page>

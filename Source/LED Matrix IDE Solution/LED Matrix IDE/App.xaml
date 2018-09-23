@@ -22,6 +22,7 @@
 			<converters:NotBooleanConverter x:Key="NotBooleanConverter" />
 			<converters:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter" />
 			<converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+			<converters:NotBooleanToVisibilityConverter x:Key="NotBooleanToVisibilityConverter" />
 			<converters:EventTypeToImageSourceConverter x:Key="EventTypeToImageSourceConverter" />
 			<converters:EventTypeToBackgroundBrushConverter x:Key="EventTypeToBackgroundBrushConverter" />
 			<converters:EventTypeToBracketedTextConverter x:Key="EventTypeToBracketedTextConverter" />

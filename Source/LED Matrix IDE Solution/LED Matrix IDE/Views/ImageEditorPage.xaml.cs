@@ -45,7 +45,7 @@ namespace LedMatrixIde.Views
 			this.PixelEventService.PixelChanged += this.Matrix_PixelChanged;
 
 			// ***
-			// *** Get events from the LedMatrix when the use interacts with it.
+			// *** Get events from the LedMatrix when the user interacts with it.
 			// ***
 			this.LedMatrix.PixelSelected += this.LedMatrix_PixelSelected;
 		}
@@ -92,7 +92,9 @@ namespace LedMatrixIde.Views
 			await this.PixelEventService.PublishPixelSelectedEvent(e);
 		}
 
-		public string ProjectName => "ImageEditor_ProjectName".GetLocalized();
+		public string ProjectNameLabel => "ImageEditor_ProjectNameLabel".GetLocalized();
+		public string RandomSandLabel => "ImageEditor_RandomSandLabel".GetLocalized();
+		public string DrawSandLabel => "ImageEditor_DrawSandLabel".GetLocalized();
 
 		public string LoadButtonToolTip => "ImageEditor_ToolTip_LoadButton".GetLocalized();
 		public string LoadButtonLabel => "ImageEditor_Label_LoadButton".GetLocalized();

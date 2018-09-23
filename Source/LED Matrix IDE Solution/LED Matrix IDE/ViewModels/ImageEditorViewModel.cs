@@ -120,6 +120,7 @@ namespace LedMatrixIde.ViewModels
 		protected const string DrawIsCheckedKey = "DrawIsCheckedKey";
 		protected const string SandIsCheckedKey = "SandIsCheckedKey";
 		protected const string EraseIsCheckedKey = "EraseIsCheckedKey";
+		protected const string UseRandomSandKey = "UseRandomSandKey";
 
 		/// <summary>
 		/// This is the primary color matrix used to drive the display
@@ -381,6 +382,7 @@ namespace LedMatrixIde.ViewModels
 				this.DrawIsChecked = await viewModelState.TryGetValue<string, object, bool>(ImageEditorViewModel.DrawIsCheckedKey, true);
 				this.SandIsChecked = await viewModelState.TryGetValue<string, object, bool>(ImageEditorViewModel.SandIsCheckedKey, false);
 				this.EraseIsChecked = await viewModelState.TryGetValue<string, object, bool>(ImageEditorViewModel.EraseIsCheckedKey, false);
+				this.UseRandomSand = await viewModelState.TryGetValue<string, object, bool>(ImageEditorViewModel.UseRandomSandKey, false);
 
 				viewModelState.Clear();
 			}
@@ -390,6 +392,7 @@ namespace LedMatrixIde.ViewModels
 			// ***
 			this.PixelColor = await ApplicationData.Current.LocalSettings.ReadAsync<Color>(ImageEditorViewModel.SelectedColorKey, Colors.White);
 			this.BackgroundColor = await ApplicationData.Current.LocalSettings.ReadAsync<Color>(ImageEditorViewModel.BackgroundColorKey, Colors.Black);
+			this.UseRandomSand = await ApplicationData.Current.LocalSettings.ReadAsync<bool>(ImageEditorViewModel.UseRandomSandKey, false);
 
 			this.UndoService.TaskAdded += this.UndoService_TaskAdded;
 		}
@@ -404,6 +407,7 @@ namespace LedMatrixIde.ViewModels
 				viewModelState[ImageEditorViewModel.DrawIsCheckedKey] = this.DrawIsChecked;
 				viewModelState[ImageEditorViewModel.SandIsCheckedKey] = this.SandIsChecked;
 				viewModelState[ImageEditorViewModel.EraseIsCheckedKey] = this.EraseIsChecked;
+				viewModelState[ImageEditorViewModel.UseRandomSandKey] = this.UseRandomSand;
 			}
 
 			// ***
@@ -411,6 +415,7 @@ namespace LedMatrixIde.ViewModels
 			// ***
 			await ApplicationData.Current.LocalSettings.SaveAsync<Color>(ImageEditorViewModel.SelectedColorKey, this.PixelColor);
 			await ApplicationData.Current.LocalSettings.SaveAsync<Color>(ImageEditorViewModel.BackgroundColorKey, this.BackgroundColor);
+			await ApplicationData.Current.LocalSettings.SaveAsync<bool>(ImageEditorViewModel.UseRandomSandKey, this.UseRandomSand);
 
 			this.UndoService.TaskAdded -= this.UndoService_TaskAdded;
 			base.OnNavigatingFrom(e, viewModelState, suspending);

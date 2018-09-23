@@ -241,7 +241,7 @@
   <data name="ImageEditor_BuildHere" xml:space="preserve">
     <value>Build Here</value>
   </data>
-  <data name="ImageEditor_ProjectName" xml:space="preserve">
+  <data name="ImageEditor_ProjectNameLabel" xml:space="preserve">
     <value>Project Name</value>
   </data>
   <data name="Exception" xml:space="preserve">
@@ -336,5 +336,11 @@
   </data>
   <data name="ImageEditor_Label_UndoButton" xml:space="preserve">
     <value>Undo</value>
+  </data>
+  <data name="ImageEditor_DrawSandLabel" xml:space="preserve">
+    <value>Draw sand</value>
+  </data>
+  <data name="ImageEditor_RandomSandLabel" xml:space="preserve">
+    <value>Random sand</value>
   </data>
 </root>
