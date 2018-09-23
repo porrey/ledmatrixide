@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Windows.UI;
+using ImageManager;
 
 namespace CodeBuilder.Decorators
 {
@@ -18,14 +18,15 @@ namespace CodeBuilder.Decorators
 			{
 				for (uint column = 0; column < project.ColorMatrix.Width; column++)
 				{
-					Color color = project.ColorMatrix.ColorItems[row, column];
+					ColorItem colorItem = project.ColorMatrix.ColorItems[row, column];
 
 					if (i == 0)
 					{
 						returnValue.Append("\t");
 					}
 
-					if (color.A == 0 || color == Colors.Black)
+					if (colorItem.ItemType == ColorItem.ColorItemType.Background ||
+						colorItem.ItemType == ColorItem.ColorItemType.Sand)
 					{
 						returnValue.Append($"0");
 					}

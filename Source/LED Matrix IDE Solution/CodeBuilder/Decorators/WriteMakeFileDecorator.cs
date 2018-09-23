@@ -11,7 +11,7 @@ namespace CodeBuilder.Decorators
 		{
 			StringBuilder contents = new StringBuilder();
 			contents.AppendLine($"{project.Name}: {project.CppFileName()} {project.HeaderFileName()} $(LIBS)");
-			contents.AppendLine($"\t$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) - o $@");
+			contents.AppendLine($"\t$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@");
 			contents.AppendLine($"\tstrip $@");
 
 			buildService.FireBuildEvent(BuildEventArgs.BuildEventType.Information, $"Writing make file '{project.MakeFileName()}'.");

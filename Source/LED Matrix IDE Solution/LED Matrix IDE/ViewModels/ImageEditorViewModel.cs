@@ -173,12 +173,7 @@ namespace LedMatrixIde.ViewModels
 		/// bar application bar buttons that are not
 		/// bound to an ICommand.
 		/// </summary>
-		public bool DrawIsEnabled => !this.PickColorIsChecked;
-		public bool SandIsEnabled => !this.PickColorIsChecked;
-		public bool EraseIsEnabled => !this.PickColorIsChecked;
-		public bool EraseColorIsEnabled => !this.PickColorIsChecked;
-		public bool ColorPickerIsEnabled => !this.PickColorIsChecked;
-		public bool BackgroundColorPickerIsEnabled => !this.PickColorIsChecked;
+		public bool SandIsEnabled => !this.UseRandomSand;
 
 		/// <summary>
 		/// This group of properties control Command Bar
@@ -209,6 +204,33 @@ namespace LedMatrixIde.ViewModels
 			{
 				this.SetProperty(ref _drawIsChecked, value);
 				this.Group.SetItem(nameof(this.DrawIsChecked), _drawIsChecked);
+			}
+		}
+
+		private bool _useRandomSand = false;
+		public bool UseRandomSand
+		{
+			get
+			{
+				return _useRandomSand;
+			}
+			set
+			{
+				this.SetProperty(ref _useRandomSand, value);
+				this.RaisePropertyChanged(nameof(this.SandIsEnabled));
+			}
+		}
+
+		private int _randomSandCount = 320;
+		public int RandomSandCount
+		{
+			get
+			{
+				return _randomSandCount;
+			}
+			set
+			{
+				this.SetProperty(ref _randomSandCount, value);
 			}
 		}
 
@@ -778,7 +800,9 @@ namespace LedMatrixIde.ViewModels
 						Name = this.ProjectName,
 						ColorMatrix = this.ColorMatrix,
 						PixelColumns = 12,
-						MaskColumns = 24
+						MaskColumns = 24,
+						UseRandomSand = this.UseRandomSand,
+						RandomSandCount = (uint)this.RandomSandCount
 					};
 
 					bool result = await this.BuildService.Build(project, folder);

@@ -255,15 +255,25 @@ int main(int argc, char **argv)
 					}}
 				}}
 
-				// ***
-				// *** Set up initial sand coordinates
-				// *** using the array in image.h.
-				// ***
-				for(i = 0; i &lt; NUM_GRAINS; i++) 
+				if (USE_RANDOM_SAND)
 				{{
-					uint8_t x = grains[i][0];
-					uint8_t y = grains[i][1];
-					sand-&gt;setPosition(i, x, y);
+					// ***
+					// *** Initialize random snowflake positions
+					// ***
+					sand-&gt;randomize();
+				}}
+				else
+				{{
+					// ***
+					// *** Set up initial sand coordinates
+					// *** using the array in image.h.
+					// ***
+					for(i = 0; i &lt; NUM_GRAINS; i++) 
+					{{
+						uint8_t x = grains[i][0];
+						uint8_t y = grains[i][1];
+						sand-&gt;setPosition(i, x, y);
+					}}
 				}}
 				
 				while(running) 
@@ -320,26 +330,38 @@ int main(int argc, char **argv)
 					// ***
 					// *** Draw the sand on the canvas.
 					// ***
-					for(i = 0; i &lt; nGrains; i++) 
+					if (!USE_RANDOM_SAND)
 					{{
-						// ***
-						// *** Get the position of the grain.
-						// ***
-						sand-&gt;getPosition(i, &amp;x, &amp;y);
-						
-						// ***
-						// *** Get the color of the grain.
-						// ***
-						uint color = grains[i][2];
-						
-						uint8_t r = (color &gt;&gt; 16);
-						uint8_t g = (color &gt;&gt; 8);
-						uint8_t b = (color &gt;&gt; 0);
+						for(i = 0; i &lt; nGrains; i++) 
+						{{
+							// ***
+							// *** Get the position of the grain.
+							// ***
+							sand-&gt;getPosition(i, &amp;x, &amp;y);
+							
+							// ***
+							// *** Get the color of the grain.
+							// ***
+							uint color = grains[i][2];
+							
+							uint8_t r = (color &gt;&gt; 16);
+							uint8_t g = (color &gt;&gt; 8);
+							uint8_t b = (color &gt;&gt; 0);
 
-						// ***
-						// *** Draw the sand pixel.
-						// ***
-						led_canvas_set_pixel(canvas, x, y, r, b, g);
+							// ***
+							// *** Draw the sand pixel.
+							// ***
+							led_canvas_set_pixel(canvas, x, y, r, b, g);
+						}}
+					}}
+					else
+					{{
+						for(i = 0; i &lt; nGrains; i++) 
+						{{
+							
+							sand-&gt;getPosition(i, &amp;x, &amp;y);
+							led_canvas_set_pixel(canvas, x, y, 200, 200, 100);
+						}}
 					}}
 
 					// ***

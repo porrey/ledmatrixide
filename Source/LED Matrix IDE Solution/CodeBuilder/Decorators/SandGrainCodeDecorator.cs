@@ -12,8 +12,16 @@ namespace CodeBuilder.Decorators
 			(bool result, string text) = (false, String.Empty);
 
 			StringBuilder code = new StringBuilder();
+			uint grainCount = 0;
 
-			uint grainCount = project.ColorMatrix.GetPixelCount(ColorItem.ColorItemType.Sand);
+			if (!project.UseRandomSand)
+			{
+				 grainCount = project.ColorMatrix.GetPixelCount(ColorItem.ColorItemType.Sand);
+			}
+			else
+			{
+				grainCount = project.RandomSandCount;
+			}
 
 			code.AppendLine("// ***");
 			code.AppendLine("// *** Define the number of grains of sand on matrix.");
@@ -27,32 +35,50 @@ namespace CodeBuilder.Decorators
 			code.AppendLine("const uint32_t grains[NUM_GRAINS][3] =");
 			code.AppendLine("{");
 
-			uint index = 0;
-
-			for (uint row = 0; row < project.ColorMatrix.Height; row++)
+			if (!project.UseRandomSand)
 			{
-				for (uint column = 0; column < project.ColorMatrix.Width; column++)
+				uint index = 0;
+
+				for (uint row = 0; row < project.ColorMatrix.Height; row++)
 				{
-					ColorItem colorItem = project.ColorMatrix.ColorItems[row, column];
-
-					if (colorItem.ItemType == ColorItem.ColorItemType.Sand)
+					for (uint column = 0; column < project.ColorMatrix.Width; column++)
 					{
-						Color color = colorItem;
-						code.Append($"\t{column.ToString().PadLeft(2, ' ')}, {row.ToString().PadLeft(2, ' ')}, {color.ColorToHex()}");
-						index++;
+						ColorItem colorItem = project.ColorMatrix.ColorItems[row, column];
 
-						if (index < grainCount)
+						if (colorItem.ItemType == ColorItem.ColorItemType.Sand)
 						{
-							code.AppendLine(",");
+							Color color = colorItem;
+							code.Append($"\t{column.ToString().PadLeft(2, ' ')}, {row.ToString().PadLeft(2, ' ')}, {color.ColorToHex()}");
+							index++;
+
+							if (index < grainCount)
+							{
+								code.AppendLine(",");
+							}
 						}
 					}
 				}
+
+				code.AppendLine();
 			}
 
-			result = (grainCount > 0);
-
+			code.AppendLine("};");
 			code.AppendLine();
-			code.Append("};");
+			code.AppendLine("// ***");
+			code.AppendLine("// *** Determines if the initial sand");
+			code.AppendLine("// *** position(s) are randomized.");
+			code.AppendLine("// ***");
+
+			if (project.UseRandomSand)
+			{
+				code.Append("#define USE_RANDOM_SAND 1");
+			}
+			else
+			{
+				code.Append("#define USE_RANDOM_SAND 0");
+			}
+
+			result = project.UseRandomSand ? true : (grainCount > 0);
 
 			return (result, code.ToString());
 		}
