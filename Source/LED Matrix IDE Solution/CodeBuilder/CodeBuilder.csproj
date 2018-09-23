@@ -106,7 +106,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Decorators\ActivePixelCountDecorator.cs" />
     <Compile Include="Decorators\CreateHeaderFileDecorator.cs" />
     <Compile Include="Decorators\HexColorDecorator.cs" />
     <Compile Include="Decorators\ImageCodeDecorator.cs" />
