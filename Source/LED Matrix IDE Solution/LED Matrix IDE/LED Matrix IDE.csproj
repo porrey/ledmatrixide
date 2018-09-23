@@ -302,7 +302,6 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".editorconfig" />
     <None Include="LED_Matrix_IDE_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
