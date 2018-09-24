@@ -1,4 +1,19 @@
 # LED Matrix IDE
+----------
+
+# Table of Contents #
+- Overview
+- Opening the Source Code
+- Using the Application
+- How it Works
+	- Background
+	- Main Code
+		- Initialization
+		- Rendering
+			- Drawing the Image
+			- Drawing the Sand
+
+# Overview #
 
 This Universal Windows Application  provides and IDE to create images and C++ code for the Adafruit 64x64 LED matrix and the [LED Matrix Sand Toy](https://learn.adafruit.com/matrix-led-sand "LED Matrix Sand Toy"). This is a great 3D Printing project that uses the [Adafruit 64x64 RGB LED Matrix](https://www.adafruit.com/product/3649 "Adafruit 64x64 RGB LED Matrix") and the [Adafruit RGB Matrix Bonnet for Raspberry Pi](https://www.adafruit.com/product/3211 "Adafruit RGB Matrix Bonnet for Raspberry Pi").
 
@@ -192,3 +207,5 @@ The sand is drawn in a similar manner. For each grain defined, get it's current 
     }
 
 All of this work in the loop is done to an off-screen canvas which is swapped out on each refresh (double buffering).
+
+*Last updated: 9/24/2018 6:45:07 AM*
