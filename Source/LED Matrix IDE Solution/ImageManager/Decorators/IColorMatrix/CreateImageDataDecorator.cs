@@ -27,9 +27,7 @@ namespace ImageManager
 		/// <summary>
 		/// Convert the ColorMatrix to a BGRA array.
 		/// </summary>
-		/// <param name="height"></param>
-		/// <param name="width"></param>
-		/// <returns></returns>
+		/// <returns>Image data in BGRA pixel format.</returns>
 		public static Task<byte[]> CreateImageDataAsync(this IColorMatrix sourceColorMatrix)
 		{
 			byte[] returnValue = new byte[sourceColorMatrix.Width * sourceColorMatrix.Height * 4];

@@ -17,7 +17,6 @@
 // see http://www.gnu.org/licenses/.
 //
 using System.Threading.Tasks;
-using Matrix;
 using Project;
 using Windows.Storage;
 
@@ -29,10 +28,12 @@ namespace ImageManager
 		{
 			bool returnValue = false;
 
+			// ***
+			// *** The data is always mapped to BGRA8 pixel format.
+			// ***
 			byte[] data = await project.ColorMatrix.CreateImageDataAsync();
 			await data.CreateImageAsync(project.ColorMatrix.Height, project.ColorMatrix.Width, file);
 			await project.SaveProjectMetaData(file);
-
 			returnValue = true;
 
 			return returnValue;

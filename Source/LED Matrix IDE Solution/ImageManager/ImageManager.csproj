@@ -125,6 +125,10 @@
     <Compile Include="Decorators\IColorMatrix\CopyFromDecorator.cs" />
     <Compile Include="Decorators\IColorMatrix\CopyToDecorator.cs" />
     <Compile Include="Decorators\Image Bytes\BitmapDecoderDecorator.cs" />
+    <Compile Include="Interfaces\IPixelMapper.cs" />
+    <Compile Include="Interfaces\IPixelMapperFactory.cs" />
+    <Compile Include="Pixel Mapper\Bgra8Pixelmapper.cs" />
+    <Compile Include="Pixel Mapper\PixelMapperFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Decorators\Image Bytes\DecodedBytesDecorator.cs" />
     <EmbeddedResource Include="Properties\ImageConverter.rd.xml" />

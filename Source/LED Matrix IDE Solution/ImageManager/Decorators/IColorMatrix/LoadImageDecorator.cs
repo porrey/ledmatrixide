@@ -39,6 +39,13 @@ namespace ImageManager
 			using (Stream imageStream = await file.OpenStreamForReadAsync())
 			{
 				BitmapDecoder decoder = await BitmapDecoder.CreateAsync(imageStream.AsRandomAccessStream());
+
+				// ***
+				// *** Get the pixel  mapper.
+				// ***
+				IPixelMapperFactory factory = new PixelMapperFactory();
+				IPixelMapper mapper = await factory.GetMapper(decoder.BitmapPixelFormat);
+
 				PixelDataProvider data = await decoder.GetPixelDataAsync();
 				byte[] bytes = data.DetachPixelData();
 
@@ -62,7 +69,7 @@ namespace ImageManager
 							// ***
 							// *** Get the color from the image data.
 							// ***
-							Color color = await bytes.GetPixelAsync(row, column, width, height);
+							Color color = await mapper.GetPixelAsync(bytes, row, column, width, height);
 
 							// ***
 							// *** The default color item type is pixel.
