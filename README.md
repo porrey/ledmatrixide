@@ -16,30 +16,30 @@ Open, build and deploy the application. start the application either from your S
 
 The first step in creating an image for the LED Sand Toy is to import an image. The application will re-size any image you import but I recommend prepping the image in a good editor. Remember to leave room for the sand. An image 40 pixels by 40 pixels works well.
 
-When ready, click the **Open File** toolbar button and select your image.
+When ready, click the **Open File** tool bar button and select your image.
 
 ![](https://github.com/porrey/ledmatrixide/raw/master/Images/Screenshots/ScreenShot02.png)
 
-The application provides some simple editing features, but is not intended to be a full editor. make any necessary tweaks to your image. If you make a mistake, there are **Undo** and **Redo** options.
+The application provides some simple editing features, but is not intended to be a full editor. Make any necessary tweaks to your image. If you make a mistake, there are **Undo** and **Redo** options.
 
 Next add the sand. There are two options to add sand. First, you can have it added randomly by the device. In this case you specify the number a grains you would like generated. The second option is to specify the starting location and color of each grain.
 
-Select the **Sand Mode** tool from the tool bar and select your foreground color. Draw the pixels directly on the matrix keeping in mind that clicking an area with a image pixel will replace that pixel. Undo works here as well so don't worry about making mistakes.
+Select the **Sand Mode** tool from the tool bar and select your foreground color. Draw the pixels directly on the matrix keeping in mind that clicking an area with an image pixel will replace that pixel. Undo works here as well so don't worry about making mistakes.
 
-If you would like to have matrix display a background color chose the **Background Color** command from the toolbar. Image pixels can have an alpha channel and will be blended with the background when the code runs on the device.
+If you would like to display a background color on the matrix chose the **Background Color** command from the tool bar. Image pixels can have an alpha channel and will be blended with the background when the code runs on the device.
 
 ![](https://github.com/porrey/ledmatrixide/raw/master/Images/Screenshots/ScreenShot03.png)
 
-I recommend saving the image file at this point. The application will save the image as a TIFF file preserving the pixels, the background color you choose and the sand pixels (color and placement).
+I recommend saving the image at this point. The application will save the image as a TIFF file preserving the pixels, the background color you choose and the sand pixels (color and placement).
 
-Once you have completed your image and saved it, build the code by choosing the **Build** command on the toolbar. The build will use the project name to name the code files so choose a name you like.
+Once you have completed your image and saved it, build the code by choosing the **Build** command on the tool bar. Build will use the project name for the code file name so choose a name you like.
 
-The first step in the build is to choose an output folder.
+When you click build you will need to choose a folder to output the files into.
 
 ![](https://github.com/porrey/ledmatrixide/raw/master/Images/Screenshots/ScreenShot04.png)
 
-Choose a folder and click **Build Here**.
+Select your output folder and click **Build Here**.
 
 ![](https://github.com/porrey/ledmatrixide/raw/master/Images/Screenshots/ScreenShot05.png)
 
-The build process will create and instructions file explaining how to build the code on your device.
+The build process will create an instructions file explaining how to build the code on your device.
