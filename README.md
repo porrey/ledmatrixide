@@ -100,11 +100,11 @@ Once initialized, the **Adafruit_PixelDust** instance needs to know the obstacle
 
 In the code above, **x1** and **y1** are offsets used to center the mask in the case where it is smaller than 64 by 64 pixels. The mask is always the same size as the image.
 
-> The UWP application generates the mask by keeping track of whether pixel drawn on the matrix is a background, sand or image pixel. The image pixels are set to a value of 1 in the mask array while the background and sand pixels are set to 0.
+> The UWP application generates the mask by keeping track of whether each pixel drawn on the matrix is a background, sand or image pixel. The image pixels are set to a value of 1 in the mask array while the background and sand pixels are set to 0.
 
 The next step in the initialization is defining where to put the sand grains when the application on the device starts. The UWP application provides two ways to define the starting position. The first is to place them randomly on the device at start-up. In this case you simply define the number of grains to start with.
 
-The count is define in the header file.
+The count is defined in the header file.
 
     #define NUM_GRAINS 320
 
@@ -121,7 +121,6 @@ The code in the C++ file is:
     {
     	...
     }
-
 
 The second manner in which sand grains are defined is by drawing them on the matrix canvas. In this case, the position portion of the sand array is used to set the initial position of each grain.
 
@@ -143,17 +142,15 @@ The second manner in which sand grains are defined is by drawing them on the mat
     	}
     }
 
-
 ### Rendering ###
 
 The second section of the code is where the rendering of the display takes place. This section starts with the `while(running)` statement.
 
-Within this loop, the accelerometer is read, the sand grains are iterated (the physics is applied), the background is cleared (using the background color if specified), the image is drawn and then the sand pixels are drawn.
+Within this loop, the accelerometer is read, the sand grains are iterated (the physics is applied), the background is cleared (using the background color if specified), the image is drawn and finally the sand grains are drawn.
 
 #### Drawing the Image ####
 
 The image is drawn by reading the image array for each pixel, converting the color integer into it's ARGB components and then blending it with the background color as shown below.
-
 
     for(y = 0; y < IMAGE_HEIGHT; y++) 
     {
@@ -216,4 +213,4 @@ The sand is drawn in a similar manner. For each grain defined, get it's current 
 
 All of this work in the loop is done to an off-screen canvas which is swapped out on each refresh (double buffering).
 
-*Last updated: 9/24/2018 6:45:07 AM*
+*Last updated: 9/24/2018 7:08:59 AM*
