@@ -1,6 +1,8 @@
 # LED Matrix IDE
 ----------
 
+![Adafruit LED Matrix](https://cdn-learn.adafruit.com/assets/assets/000/051/320/original/raspberry_pi_hero-timer-still-loop.gif?1519697739)
+
 # Table of Contents #
 - Overview
 - Opening the Source Code
