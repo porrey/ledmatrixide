@@ -1,0 +1,13 @@
+﻿1. Copy the files 'maze-image.cpp' and 'maze-image.h' to the Raspberry Pi into the folder '/home/pi/Adafruit_PixelDust/raspberry_pi/'.
+
+2. Log into the Raspberry Pi and change to the code folder using the command 'cd Adafruit_PixelDust/raspberry_pi/'.
+
+3. Edit the file Makefile using the command 'nano Makefile'.
+
+4. Copy the contents of the file 'maze-make.txt' and paste them into makefile above the line 'clean:'.
+
+5. Find the EXEC= line and add the project name 'maze' to end of the line ensuring there is a space before the project name.
+
+6. Save the file with the command Ctrl-O and then exit using the command Ctrl-X.
+
+7. Type 'make' at the command line to build the program.

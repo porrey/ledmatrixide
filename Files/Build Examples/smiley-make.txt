@@ -1,0 +1,3 @@
+﻿smiley: smiley-image.cpp smiley-image.h $(LIBS)
+	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
+	strip $@

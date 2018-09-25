@@ -1,0 +1,3 @@
+﻿maze: maze-image.cpp maze-image.h $(LIBS)
+	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
+	strip $@

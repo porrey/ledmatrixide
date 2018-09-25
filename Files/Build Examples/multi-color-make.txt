@@ -1,0 +1,3 @@
+﻿multi-color: multi-color-image.cpp multi-color-image.h $(LIBS)
+	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
+	strip $@
