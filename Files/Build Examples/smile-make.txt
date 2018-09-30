@@ -1,3 +1,0 @@
-﻿smile: smile-image.cpp smile-image.h $(LIBS)
-	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
-	strip $@
