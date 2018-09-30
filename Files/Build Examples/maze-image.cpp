@@ -188,7 +188,7 @@ int main(int argc, char **argv)
 							uint color = image_color[y][x];
 							
 							// ***
-							// *** Break the color into it's components
+							// *** Break the color into its components
 							// ***
 							uint8_t a = (color >> 24);
 							uint8_t r = normalBlendColor((color >> 16), BG_RED, a);
@@ -219,6 +219,9 @@ int main(int argc, char **argv)
 							// ***
 							uint color = grains[i][2];
 							
+							// ***
+							// *** Break the color into its components
+							// ***
 							uint8_t r = (color >> 16);
 							uint8_t g = (color >> 8);
 							uint8_t b = (color >> 0);

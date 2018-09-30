@@ -28,11 +28,6 @@ Adafruit_LIS3DH      lis3dh;
 volatile bool        running = true;
 
 // ***
-// *** Runtime grain count (adapts to res)
-// ***
-int nGrains = NUM_GRAINS;
-
-// ***
 // *** Background color (r,g,b)
 // ***
 #define BG_RED    0
@@ -111,7 +106,7 @@ int main(int argc, char **argv)
 			// *** This is because the grains have specific colors by index
 			// *** (sorting would mess that up).
 			// ***
-			sand = new Adafruit_PixelDust(width, height, nGrains, 1, 64, false);
+			sand = new Adafruit_PixelDust(width, height, NUM_GRAINS, 1, 64, false);
 			
 			if(sand->begin()) 
 			{
@@ -193,7 +188,7 @@ int main(int argc, char **argv)
 							uint color = image_color[y][x];
 							
 							// ***
-							// *** Break the color into it's components
+							// *** Break the color into its components
 							// ***
 							uint8_t a = (color >> 24);
 							uint8_t r = normalBlendColor((color >> 16), BG_RED, a);
@@ -212,7 +207,7 @@ int main(int argc, char **argv)
 					// ***
 					if (!USE_RANDOM_SAND)
 					{
-						for(i = 0; i < nGrains; i++) 
+						for(i = 0; i < NUM_GRAINS; i++) 
 						{
 							// ***
 							// *** Get the position of the grain.
@@ -224,6 +219,9 @@ int main(int argc, char **argv)
 							// ***
 							uint color = grains[i][2];
 							
+							// ***
+							// *** Break the color into its components
+							// ***
 							uint8_t r = (color >> 16);
 							uint8_t g = (color >> 8);
 							uint8_t b = (color >> 0);
@@ -236,7 +234,7 @@ int main(int argc, char **argv)
 					}
 					else
 					{
-						for(i = 0; i < nGrains; i++) 
+						for(i = 0; i < NUM_GRAINS; i++) 
 						{
 							
 							sand->getPosition(i, &x, &y);

@@ -1,13 +1,23 @@
 ﻿1. Copy the files 'smiley-image.cpp' and 'smiley-image.h' to the Raspberry Pi into the folder '/home/pi/Adafruit_PixelDust/raspberry_pi/'.
 
-2. Log into the Raspberry Pi and change to the code folder using the command 'cd Adafruit_PixelDust/raspberry_pi/'.
+ 2. Log into the Raspberry Pi and change to the code folder using the command 'cd Adafruit_PixelDust/raspberry_pi/'.
 
-3. Edit the file Makefile using the command 'nano Makefile'.
+ 3. Edit the file Makefile using the command 'nano Makefile'.
 
-4. Copy the contents of the file 'smiley-make.txt' and paste them into makefile above the line 'clean:'.
+ 4. Copy the contents of the file 'smiley-make.txt' and paste them into makefile above the line 'clean:'.
 
-5. Find the EXEC= line and add the project name 'smiley' to end of the line ensuring there is a space before the project name.
+ 5. Find the EXEC= line and add the project name 'smiley' to end of the line ensuring there is a space before the project name.
 
-6. Save the file with the command Ctrl-O and then exit using the command Ctrl-X.
+ 6. Save the file with the command Ctrl-O and then exit using the command Ctrl-X.
 
-7. Type 'make' at the command line to build the program.
+ 7. Type 'make' at the command line to build the program.
+
+ 8. Edit the buttons.py script to add the new program to the mode button using the command 'nano buttons.py'.
+
+ 9. Find the line 'PROGRAMS = ["' and add the text ',"smiley"' (including the comma and double quotes) before the last bracket ']'.
+ 
+10. Optionally, change the 100 in the line '"--led-brightness=100"' to 50 to get the best color matching with the application.
+
+11. Save the file with the command Ctrl-O and then exit using the command Ctrl-X.
+
+11. Start the program by executing the command 'python buttons.py &'.
