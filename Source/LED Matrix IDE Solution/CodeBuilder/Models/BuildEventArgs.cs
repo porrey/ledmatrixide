@@ -16,6 +16,7 @@
 // along with the LED Matrix IDE Solution. If not, 
 // see http://www.gnu.org/licenses/.
 //
+using System;
 using Windows.UI.Xaml;
 
 namespace CodeBuilder
@@ -37,5 +38,6 @@ namespace CodeBuilder
 
 		public string Message { get; protected set; }
 		public BuildEventType EventType { get; protected set; }
+		public DateTimeOffset Timestamp { get; } = DateTimeOffset.Now;
 	}
 }
