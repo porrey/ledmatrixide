@@ -25,7 +25,7 @@ namespace ImageManager
 	{
 		public static Task<IColorMatrix> CloneAsync(this IColorMatrix sourceColorMatrix)
 		{
-			IColorMatrix returnValue = new ColorMatrix(sourceColorMatrix.Height, sourceColorMatrix.Width);
+			IColorMatrix returnValue = new ColorMatrix(sourceColorMatrix.Width, sourceColorMatrix.Height);
 
 			for (uint row = 0; row < sourceColorMatrix.Height; row++)
 			{

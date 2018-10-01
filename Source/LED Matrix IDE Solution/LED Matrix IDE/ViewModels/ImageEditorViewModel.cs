@@ -38,6 +38,7 @@ using Windows.System;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Navigation;
 
 namespace LedMatrixIde.ViewModels
@@ -71,16 +72,11 @@ namespace LedMatrixIde.ViewModels
 			// ***
 			this.Group = new BooleanPropertyGroup
 			(
-				(nameof(this.DrawIsChecked), (b) => { this.DrawIsChecked = b; }
-			),
-				(nameof(this.SandIsChecked), (b) => { this.SandIsChecked = b; }
-			),
-				(nameof(this.EraseIsChecked), (b) => { this.EraseIsChecked = b; }
-			),
-				(nameof(this.EraseColorIsChecked), (b) => { this.EraseColorIsChecked = b; }
-			),
-				(nameof(this.PickColorIsChecked), (b) => { this.PickColorIsChecked = b; }
-			)
+				(nameof(this.DrawIsChecked), (b) => { this.DrawIsChecked = b; }),
+				(nameof(this.SandIsChecked), (b) => { this.SandIsChecked = b; }),
+				(nameof(this.EraseIsChecked), (b) => { this.EraseIsChecked = b; }),
+				(nameof(this.EraseColorIsChecked), (b) => { this.EraseColorIsChecked = b; }),
+				(nameof(this.PickColorIsChecked), (b) => { this.PickColorIsChecked = b; })
 			);
 
 			// ***
@@ -132,7 +128,7 @@ namespace LedMatrixIde.ViewModels
 		/// This is the primary color matrix used to drive the display
 		/// and the code build process.
 		/// </summary>
-		public IColorMatrix ColorMatrix { get; } = new ColorMatrix(ImageEditorViewModel.DefaultRowCount, ImageEditorViewModel.DefaultColumnCount);
+		public IColorMatrix ColorMatrix { get; } = new ColorMatrix(ImageEditorViewModel.DefaultColumnCount, ImageEditorViewModel.DefaultRowCount);
 
 		/// <summary>
 		/// Track changes as a list of Tasks that can be execute to Undo or Redo changes.
@@ -373,6 +369,7 @@ namespace LedMatrixIde.ViewModels
 		/// Contains the items displayed in the output window.
 		/// </summary>
 		public ObservableCollection<BuildEventArgs> OutputItems { get; } = new ObservableCollection<BuildEventArgs>();
+		public CollectionViewSource Data = new CollectionViewSource();
 
 		public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
 		{
@@ -620,30 +617,20 @@ namespace LedMatrixIde.ViewModels
 					// *** Get a copy of the current color matrix.
 					// ***
 					IColorMatrix oldColorMatrix = await this.ColorMatrix.CloneAsync();
+					IMatrixProject oldProject = this.CurrentProject;
 
 					// ***
+					// *** Read the image/project from an image file.
 					// ***
-					// ***
-					IMatrixProject project = await this.ColorMatrix.LoadAsync(file, ImageEditorViewModel.DefaultColumnCount, ImageEditorViewModel.DefaultColumnCount);
-					IColorMatrix newMatrix = await this.ColorMatrix.CloneAsync();
-
-					// ***
-					// *** Restore project settings
-					// ***
-					this.ProjectName = !String.IsNullOrWhiteSpace(project.Name) ? project.Name : file.DisplayName.Replace(" ", "");
-					this.BackgroundColor = project.ColorMatrix.BackgroundColor;
-
-					// ***
-					// *** Get count of sand pixels.
-					// ***
-					uint count = this.ColorMatrix.GetPixelCount(ColorItem.ColorItemType.Sand);
-					this.UseRandomSand = (count == 0);
+					IMatrixProject project = await file.LoadFromImageAsync(ImageEditorViewModel.DefaultColumnCount, ImageEditorViewModel.DefaultColumnCount);
+					await this.ColorMatrix.CopyFrom(project.ColorMatrix);
+					await this.ApplyProjectSettings(project);
 
 					// ***
 					// *** Set up the undo task.
 					// ***
-					async Task undoAction() { await this.ColorMatrix.CopyFrom(oldColorMatrix); }
-					async Task redoAction() { await this.ColorMatrix.CopyFrom(newMatrix); }
+					async Task undoAction() { await this.ColorMatrix.CopyFrom(oldColorMatrix); await this.ApplyProjectSettings(oldProject); }
+					async Task redoAction() { await this.ColorMatrix.CopyFrom(project.ColorMatrix); await this.ApplyProjectSettings(project); }
 					await this.UndoService.AddUndoTask(undoAction, redoAction, $"Load File [{file.Name}]");
 				}
 			}
@@ -929,11 +916,28 @@ namespace LedMatrixIde.ViewModels
 			new MatrixProject()
 			{
 				Name = this.ProjectName,
+				BackgroundColor = this.BackgroundColor,
 				ColorMatrix = this.ColorMatrix,
-				PixelColumns = 12,
-				MaskColumns = 24,
+				PixelOutputColumns = 12,
+				MaskOutputColumns = 24,
+				AccelerometerScaling = 1,
+				Elasticity = 64,
+				SortParticles = this.UseRandomSand,
 				UseRandomSand = this.UseRandomSand,
 				RandomSandCount = (uint)this.RandomSandCount
 			};
+
+		protected Task ApplyProjectSettings(IMatrixProject project)
+		{
+			this.ProjectName = project.Name;
+			this.UseRandomSand = project.UseRandomSand;
+			this.RandomSandCount = (int)project.RandomSandCount;
+			this.BackgroundColor = project.BackgroundColor;
+
+			//project.PixelOutputColumns;
+			//project.MaskOutputColumns;
+
+			return Task.FromResult(0);
+		}
 	}
 }

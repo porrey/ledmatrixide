@@ -28,7 +28,7 @@ namespace Matrix
 		public event EventHandler<PixelChangedEventArgs> PixelChanged = null;
 		public event EventHandler BackgroundChanged = null;
 
-		public ColorMatrix(uint height, uint width)
+		public ColorMatrix(uint width, uint height)
 		{
 			this.Height = height;
 			this.Width = width;
