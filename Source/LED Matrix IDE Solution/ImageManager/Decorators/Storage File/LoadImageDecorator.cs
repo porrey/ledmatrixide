@@ -29,11 +29,11 @@ namespace ImageManager
 {
 	public static class LoadImageDecorator
 	{
-		public static async Task<IMatrixProject> LoadAsync(this IColorMatrix sourceColorMatrix, StorageFile file, uint maximumHeight, uint maximumWidth)
+		public static async Task<IMatrixProject> LoadFromImageAsync(this StorageFile file, uint maximumHeight, uint maximumWidth)
 		{
 			IMatrixProject returnValue = new MatrixProject()
 			{
-				ColorMatrix = sourceColorMatrix
+				ColorMatrix = new ColorMatrix(maximumWidth, maximumHeight)
 			};
 
 			using (Stream imageStream = await file.OpenStreamForReadAsync())
@@ -94,7 +94,7 @@ namespace ImageManager
 								itemType = ColorItem.ColorItemType.Background;
 							}
 
-							await sourceColorMatrix.SetItem(row + startRow, column + startColumn, color, itemType);
+							await returnValue.ColorMatrix.SetItem(row + startRow, column + startColumn, color, itemType);
 						}
 					}
 

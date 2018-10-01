@@ -28,14 +28,29 @@ namespace CodeBuilder.Decorators
 	{
 		public static async Task WriteCodeFile(this IMatrixProject project, StorageFolder folder,  IBuildService buildService)
 		{
+			// ***
+			// *** Get the template from the resource file.
+			// ***
 			buildService.FireBuildEvent(BuildEventArgs.BuildEventType.Information, "Reading code template.");
 			ResourceContext resourceContext = ResourceContext.GetForViewIndependentUse();
 			ResourceMap resourceMap = ResourceManager.Current.MainResourceMap.GetSubtree("CodeBuilder/Code");
 			ResourceCandidate resourceValue = resourceMap.GetValue("cpp", resourceContext);
-
 			string template = resourceValue.ValueAsString;
-			string contents = String.Format(template, project.Name, project.ColorMatrix.BackgroundColor.R, project.ColorMatrix.BackgroundColor.G, project.ColorMatrix.BackgroundColor.B);
 
+			// ***
+			// *** Fill in the template parameters.
+			// ***
+			string contents = String.Format(template, project.Name,
+									project.ColorMatrix.BackgroundColor.R,
+									project.ColorMatrix.BackgroundColor.G,									
+									project.ColorMatrix.BackgroundColor.B,
+									project.AccelerometerScaling,
+									project.Elasticity,
+									project.SortParticles.ToString().ToLower());
+
+			// ***
+			// *** Write the file.
+			// ***
 			buildService.FireBuildEvent(BuildEventArgs.BuildEventType.Information, $"Writing C++ code file '{project.CppFileName()}'.");
 			StorageFile file = await folder.CreateFileAsync(project.CppFileName(), CreationCollisionOption.ReplaceExisting);
 			await FileIO.WriteTextAsync(file, contents, Windows.Storage.Streams.UnicodeEncoding.Utf8);

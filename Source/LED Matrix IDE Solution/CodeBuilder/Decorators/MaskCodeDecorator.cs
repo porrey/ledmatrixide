@@ -59,7 +59,7 @@ namespace CodeBuilder.Decorators
 						returnValue.Append(", ");
 					}
 
-					if ((i + 1) % project.MaskColumns == 0)
+					if ((i + 1) % project.MaskOutputColumns == 0)
 					{
 						returnValue.AppendLine();
 						returnValue.Append("\t");

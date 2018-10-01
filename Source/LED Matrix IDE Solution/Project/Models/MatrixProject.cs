@@ -17,16 +17,21 @@
 // see http://www.gnu.org/licenses/.
 //
 using Matrix;
+using Windows.UI;
 
 namespace Project
 {
 	public class MatrixProject : IMatrixProject
 	{
 		public string Name { get; set; }
+		public Color BackgroundColor { get; set; } = Colors.Black;
 		public IColorMatrix ColorMatrix { get; set; }
-		public uint PixelColumns { get; set; }
-		public uint MaskColumns { get; set; }
-		public bool UseRandomSand { get; set; }
-		public uint RandomSandCount { get; set; }
+		public uint PixelOutputColumns { get; set; }
+		public uint MaskOutputColumns { get; set; }
+		public bool UseRandomSand { get; set; } = false;
+		public uint RandomSandCount { get; set; } = 0;
+		public uint AccelerometerScaling { get; set; } = 1;
+		public uint Elasticity { get; set; } = 64;
+		public bool SortParticles { get; set; } = false;
 	}
 }

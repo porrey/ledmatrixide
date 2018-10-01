@@ -65,7 +65,7 @@ namespace CodeBuilder.Decorators
 						returnValue.Append(", ");
 					}
 
-					if ((i + 1) % project.PixelColumns == 0)
+					if ((i + 1) % project.PixelOutputColumns == 0)
 					{
 						returnValue.AppendLine();
 						returnValue.Append("\t");

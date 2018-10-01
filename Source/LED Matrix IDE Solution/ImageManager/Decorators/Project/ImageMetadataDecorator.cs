@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Project;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
@@ -17,8 +18,8 @@ namespace ImageManager
 
 			properties.DateTaken = DateTimeOffset.Now;
 			properties.CameraManufacturer = resLoader.GetString("AppDisplayName");
-			properties.CameraModel = project.ColorMatrix.BackgroundColor.ToHexString();
 			properties.Title = project.Name;
+			properties.CameraModel = JsonConvert.SerializeObject(project);
 
 			await properties.SavePropertiesAsync();
 		}
@@ -30,11 +31,26 @@ namespace ImageManager
 			if (properties.CameraModel.IsHexColor())
 			{
 				project.ColorMatrix.BackgroundColor = properties.CameraModel.ToColor();
-			}
 
-			if (!String.IsNullOrEmpty(properties.Title))
+				if (!String.IsNullOrEmpty(properties.Title))
+				{
+					project.Name = properties.Title;
+				}
+			}
+			else
 			{
-				project.Name = properties.Title;
+				if (properties.CameraModel.Substring(0, 1) == "{")
+				{
+					IMatrixProject projectProperties = JsonConvert.DeserializeObject<MatrixProject>(properties.CameraModel);
+					project.AccelerometerScaling = projectProperties.AccelerometerScaling;
+					project.Elasticity = projectProperties.Elasticity;
+					project.MaskOutputColumns = projectProperties.MaskOutputColumns;
+					project.Name = projectProperties.Name;
+					project.PixelOutputColumns = projectProperties.PixelOutputColumns;
+					project.RandomSandCount = projectProperties.RandomSandCount;
+					project.SortParticles = projectProperties.SortParticles;
+					project.UseRandomSand = projectProperties.UseRandomSand;
+				}
 			}
 		}
 	}
