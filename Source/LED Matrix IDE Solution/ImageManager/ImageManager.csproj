@@ -113,8 +113,8 @@
     <Compile Include="Decorators\IColorMatrix\ReplaceColorDecorator.cs" />
     <Compile Include="Decorators\Color\ColorBlendDecorator.cs" />
     <Compile Include="Decorators\IColorMatrix\GetPaletteDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\SaveImageDecorator.cs" />
-    <Compile Include="Decorators\IColorMatrix\LoadImageDecorator.cs" />
+    <Compile Include="Decorators\Project\SaveImageDecorator.cs" />
+    <Compile Include="Decorators\Storage File\LoadImageDecorator.cs" />
     <Compile Include="Decorators\IColorMatrix\RotateClockwiseDecorator.cs" />
     <Compile Include="Decorators\IColorMatrix\RotateCounterClockwiseDecorator.cs" />
     <Compile Include="Decorators\IColorMatrix\FlipVerticalDecorator.cs" />
