@@ -1,3 +1,3 @@
-﻿blank: blank-image.cpp blank-image.h $(LIBS)
+﻿bar: bar-image.cpp bar-image.h $(LIBS)
 	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
 	strip $@

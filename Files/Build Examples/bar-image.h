@@ -1,7 +1,7 @@
 ﻿// ***
 // *** Define the number of grains of sand on matrix.
 // ***
-#define NUM_GRAINS 320
+#define NUM_GRAINS 384
 
 // ***
 // *** Defines the initial position and color

@@ -1,8 +1,13 @@
 ﻿/*!
- * @file blank-image.cpp
+ * @file bar-image.cpp
  *
+ * This code is based on the Adafruit code found
+ * at https://github.com/adafruit/Adafruit_PixelDust/tree/master/raspberry_pi
+ * 
  * Example for Adafruit_PixelDust on Raspberry Pi.
- * Places a raster obstacle in the middle of the playfield.
+ * Places an image Aas an obstacle in the middle 
+ * of the playfield.
+ *
  * REQUIRES rpi-rgb-led-matrix LIBRARY!
  * I2C MUST BE ENABLED using raspi-config!
  *
@@ -21,7 +26,7 @@
 // ***
 // *** This file contains the image and obstacle bitmaps.
 // ***
-#include "blank-image.h"
+#include "bar-image.h"
 
 struct RGBLedMatrix *matrix = NULL;
 Adafruit_LIS3DH      lis3dh;
@@ -33,6 +38,29 @@ volatile bool        running = true;
 #define BG_RED    0
 #define BG_GREEN  0
 #define BG_BLUE   0
+
+// ***
+// *** Accelerometer scaling (1-255). The accelerometer X, Y and Z values
+// *** passed to the iterate() function will be multiplied by this value 
+// *** and then divided by 256, e.g. pass 1 to divide accelerometer input
+// *** by 256, 128 to divide by 2.
+// ***
+#define ACCELEROMETER_SCALING 1
+
+// ***
+// *** Particle elasticity (0-255). This determines the sand
+// *** grains' "bounce". Higher numbers yield bouncier particles.
+// ***
+#define ELASTICITY 64
+
+// ***
+// *** If true, particles are sorted bottom-to-top when iterating. Sorting
+// *** sometimes (not always) makes the physics less "Looney Tunes," as lower
+// *** particles get out of the way of upper particles.  It can be computationally
+// *** expensive if there's lots of grains, and isn't good if you're coloring 
+// *** grains by index (because they're constantly reordering).
+// ***
+#define SORT_PARTICLES true
 
 // ***
 // *** Signal handler allows matrix to be properly deinitialized.
@@ -59,8 +87,8 @@ void irqHandler(int dummy)
 uint8_t normalBlendColor(uint8_t color, uint8_t background, uint8_t alpha)
 {
     float a = (float)(alpha / 255.0);
-    float oneminusalpha = 1 - a;
-    return ((color * a) + (oneminusalpha * background));
+    float oneMinusAlpha = 1 - a;
+    return ((color * a) + (oneMinusAlpha * background));
 }
 
 int main(int argc, char **argv) 
@@ -106,7 +134,7 @@ int main(int argc, char **argv)
 			// *** This is because the grains have specific colors by index
 			// *** (sorting would mess that up).
 			// ***
-			sand = new Adafruit_PixelDust(width, height, NUM_GRAINS, 1, 64, false);
+			sand = new Adafruit_PixelDust(width, height, NUM_GRAINS, ACCELEROMETER_SCALING, ELASTICITY, SORT_PARTICLES);
 			
 			if(sand->begin()) 
 			{
@@ -269,5 +297,4 @@ int main(int argc, char **argv)
 
 	return 0;
 }
-
 #endif
