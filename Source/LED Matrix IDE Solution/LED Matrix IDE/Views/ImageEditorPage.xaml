@@ -446,7 +446,7 @@
 			<!-- Matrix -->
 			<controls:PixelMatrix x:Name="LedMatrix"
 								  Grid.Row="2"
-								  Margin="0,0,0,0"
+								  Margin="0,0,15,0"
 								  BorderThickness="4"
 								  RowCount="{Binding RowCount, Mode=OneTime}"
 								  ColumnCount="{Binding ColumnCount, Mode=OneTime}"
