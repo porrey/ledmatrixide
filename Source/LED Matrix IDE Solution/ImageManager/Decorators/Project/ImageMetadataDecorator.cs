@@ -39,7 +39,7 @@ namespace ImageManager
 			}
 			else
 			{
-				if (properties.CameraModel.Substring(0, 1) == "{")
+				if (!String.IsNullOrWhiteSpace(properties.CameraModel) && properties.CameraModel.Substring(0, 1) == "{")
 				{
 					IMatrixProject projectProperties = JsonConvert.DeserializeObject<MatrixProject>(properties.CameraModel);
 					project.AccelerometerScaling = projectProperties.AccelerometerScaling;
