@@ -4,7 +4,7 @@
   <mp:PhoneIdentity PhoneProductId="CD68418F-47FB-47B6-BA1D-D42371D21F82" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>LedMatrixIde</DisplayName>
-    <PublisherDisplayName>Daniel</PublisherDisplayName>
+    <PublisherDisplayName>Daniel Porrey</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
