@@ -1,6 +1,8 @@
 # LED Matrix Sand Toy IDE
 
-#### Universal Windows Platform (UWP) application for creating images and code for the Adafruit 64x64 LED Matrix and the LED Matrix Sand Toy. ####
+Latest Version: 1.2 as of 1/27/2022
+
+Universal Windows Platform (UWP) application for creating images and code for the Adafruit 64x64 LED Matrix and the LED Matrix Sand Toy.
 
 ![Adafruit LED Matrix](https://cdn-learn.adafruit.com/assets/assets/000/051/320/original/raspberry_pi_hero-timer-still-loop.gif?1519697739)
 
