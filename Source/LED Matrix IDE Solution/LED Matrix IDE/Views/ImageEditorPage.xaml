@@ -4,7 +4,6 @@
 	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	  xmlns:controls="using:LedMatrixControl"
-	  xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
 	  xmlns:prismMvvm="using:Prism.Windows.Mvvm"
 	  prismMvvm:ViewModelLocator.AutoWireViewModel="True"
 	  Style="{StaticResource PageStyle}"
@@ -450,7 +449,7 @@
 								  BorderThickness="4"
 								  RowCount="{Binding RowCount, Mode=OneTime}"
 								  ColumnCount="{Binding ColumnCount, Mode=OneTime}"
-								  extensions:Mouse.Cursor="Hand" />
+								  />
 		</Grid>
 	</Grid>
 </Page>

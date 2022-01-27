@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2026
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LED Matrix IDE", "LED Matrix IDE\LED Matrix IDE.csproj", "{88875FB0-DBA6-4B69-9546-F4414E42BF30}"
 EndProject
@@ -28,6 +28,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{88875FB0-DBA6-4B69-9546-F4414E42BF30}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{88875FB0-DBA6-4B69-9546-F4414E42BF30}.Debug|Any CPU.Build.0 = Debug|x86
 		{88875FB0-DBA6-4B69-9546-F4414E42BF30}.Debug|ARM.ActiveCfg = Debug|ARM
 		{88875FB0-DBA6-4B69-9546-F4414E42BF30}.Debug|ARM.Build.0 = Debug|ARM
 		{88875FB0-DBA6-4B69-9546-F4414E42BF30}.Debug|ARM.Deploy.0 = Debug|ARM
